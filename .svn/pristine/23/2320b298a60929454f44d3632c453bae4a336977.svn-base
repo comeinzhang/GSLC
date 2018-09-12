@@ -1,0 +1,16 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Goods_Img;
+
+
+
+public interface B_Goods_ImgMapper {
+    List<B_Goods_Img> selectByGoods_id(@Param("goods_id")Integer goods_id,@Param("type")Short type);
+    int saveGoodsImg(B_Goods_Img goods_Img);
+    int delGoodsImg(Integer goodsId,Short type);
+    int updateByPrimaryKeySelective(B_Goods_Img goods_Img);
+}

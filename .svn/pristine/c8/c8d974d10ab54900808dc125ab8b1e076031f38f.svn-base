@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_UserMapper" >
+  <resultMap id="BaseResultMap" type="B_User" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="OPEN_ID" property="openId" jdbcType="VARCHAR" />
+    <result column="GARDEN_ID" property="gardenId" jdbcType="VARCHAR" />
+    <result column="UNIONID" property="unionId" jdbcType="VARCHAR" />
+    <result column="REFER_ID" property="referId" jdbcType="INTEGER" />
+    <result column="OWER_ID" property="owerId" jdbcType="INTEGER" />
+    <result column="REFER_PATH" property="referPath" jdbcType="VARCHAR" />
+    <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="PWD2" property="pwd2" jdbcType="VARCHAR" />
+    <result column="ADDR" property="addr" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR" />
+    <result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+    <result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="SMALLINT" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="REGIST_TIME" property="registTime" jdbcType="TIMESTAMP" />
+    <result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="SIGNATURE" property="signature" jdbcType="VARCHAR" />
+    <result column="qrcode_url" property="qrcodeUrl" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="SMALLINT" />
+    <result column="AUTHED" property="authed" jdbcType="SMALLINT" />
+    <result column="USER_ROLE_ID" property="userRoleId" jdbcType="VARCHAR" />
+    <result column="CHECK_CODE" property="referCode" jdbcType="VARCHAR" />
+    <result column="JIFEN_YES" property="jifenYes" jdbcType="DECIMAL" />
+    <result column="JIFEN_NO" property="jifenNo" jdbcType="DECIMAL" />
+    <result column="COMS_YES" property="comsYes" jdbcType="DECIMAL" />
+    <result column="COMS_NO" property="comsNo" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+    <result column="OWE_NUM" property="oweNum" jdbcType="DECIMAL" />
+    <result column="BONUS_NUM" property="bonusNum" jdbcType="DECIMAL" />
+    <result column="TOTAL_COMS" property="totalComs" jdbcType="DECIMAL" />
+    <result column="MONTH_COMS" property="monthComs" jdbcType="DECIMAL" />
+    <result column="RECHARGE_NUM" property="rechargeNum" jdbcType="DECIMAL" />
+    <result column="TotalPay" property="totalpay" jdbcType="DECIMAL" />
+    <result column="AlonePay" property="alonepay" jdbcType="DECIMAL" />
+    <result column="MonthPay" property="monthpay" jdbcType="DECIMAL" />
+    <result column="WeekPay" property="weekpay" jdbcType="DECIMAL" />
+    <result column="OFFER_NUM" property="offerNum" jdbcType="DECIMAL" />
+    <result column="surplusPay" property="surpluspay" jdbcType="DECIMAL" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="REFER_NUM" property="referNum" jdbcType="DECIMAL" />
+    <result column="PAYMENT" property="payment" jdbcType="DECIMAL" />
+    <result column="TOTAL_BONUS" property="totalBonus" jdbcType="DECIMAL" />
+    <result column="MONTH_BONUS" property="monthBonus" jdbcType="DECIMAL" />
+    <result column="TOTAL_REFER" property="totalRefer" jdbcType="DECIMAL" />
+    <result column="MONTH_REFER" property="monthRefer" jdbcType="DECIMAL" />
+    <result column="TOTAL_PAYMENT" property="totalPayment" jdbcType="DECIMAL" />
+    <result column="MONTH_PAYMENT" property="monthPayment" jdbcType="DECIMAL" />
+    <result column="PBC_USER" property="pbcUser" jdbcType="DECIMAL" />
+    <result column="PBC_SELLER" property="pbcSeller" jdbcType="DECIMAL" />
+    <result column="PBC_BLOCK" property="pbcBlock" jdbcType="DECIMAL" />
+    <result column="RECHARGE_BLOCK" property="rechargeBlock" jdbcType="DECIMAL" />
+    <result column="TOTAL_PBC" property="totalPbc" jdbcType="DECIMAL" />
+    <result column="SHARE_CODE1" property="shareCode1" jdbcType="VARCHAR" />
+    <result column="SHARE_CODE2" property="shareCode2" jdbcType="VARCHAR" />
+    <result column="CREDIT_S" property="creditS" jdbcType="INTEGER" />
+    <result column="CREDIT_M" property="creditM" jdbcType="INTEGER" />
+    <result column="CREDIT_L" property="creditL" jdbcType="INTEGER" />
+    <result column="CREDIT_T" property="creditT" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, LOGIN_NAME,ADDR,SHARE_CODE1,SHARE_CODE2,CHECK_CODE,CREDIT_S,CREDIT_M,CREDIT_L,CREDIT_T, qrcode_url,OPEN_ID,TOTAL_PBC,RECHARGE_NUM,TOTAL_COMS,AUTHED,MONTH_COMS, GARDEN_ID,STATUS, WeekPay,UNIONID, REFER_ID,OWER_ID, REFER_PATH, PWD,PWD2, PHONE, EMAIL, OWE_NUM,NICK_NAME, REAL_NAME, ID_CARD, SEX, HEAD_IMG_URL,TotalPay,surplusPay,MonthPay, 
+    BIRTHDAY, REGIST_TIME, LOGIN_TIME, USER_TYPE, SIGNATURE, BONUS_NUM,USER_ROLE_ID, JIFEN_YES, JIFEN_NO, COMS_YES, COMS_NO, BALANCE, UPDATE_TIME,RECHARGE_BLOCK,
+    REFER_NUM,PAYMENT,TOTAL_BONUS,MONTH_BONUS,TOTAL_REFER,MONTH_REFER,TOTAL_PAYMENT,MONTH_PAYMENT,AlonePay,OFFER_NUM,PBC_USER,PBC_SELLER,PBC_BLOCK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByRoleId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where LOCATE(#{roleId,jdbcType=VARCHAR},USER_ROLE_ID)>0
+  </select>
+  <!-- 登录 -->
+  <select id="selectByNamePwd" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where LOGIN_NAME = #{login_name,jdbcType=VARCHAR} and PWD=#{pwd,jdbcType=VARCHAR} and status=0
+  </select>
+  <!--我的下级代理  -->
+  <select id="selectByroleIdandAddr" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where LOCATE(#{roleId,jdbcType=VARCHAR},USER_ROLE_ID)>0 and LOCATE(#{addr,jdbcType=VARCHAR},TRIM(ADDR))>0
+    order by MONTH_COMS DESC
+  </select>
+  <!--商家上级代理  -->
+  <select id="selectAgentByShopAddr" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where LOCATE(#{roleId,jdbcType=VARCHAR},USER_ROLE_ID)>0 and LOCATE(TRIM(ADDR),#{addr,jdbcType=VARCHAR})>0
+  </select>
+  <select id="selectUserByReferId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where 1=1
+    <if test="referId!=null and referId!=''">
+    	and REFER_ID = #{referId,jdbcType=INTEGER} 
+    </if>
+    <if test="referCode!=null and referCode!=''">
+    	and CHECK_CODE = #{referCode,jdbcType=VARCHAR} 
+    </if>
+  </select>
+  
+  <select id="selectUserByReferIdListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where 1=1
+    <if test="referId!=null and referId!=''">
+    	and REFER_ID = #{referId,jdbcType=INTEGER} 
+    </if>
+    <if test="referCode!=null and referCode!=''">
+    	and CHECK_CODE = #{referCode,jdbcType=VARCHAR} 
+    </if>
+  </select>
+  
+  <select id="selectUserByOwerId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where OWER_ID = #{owerId,jdbcType=INTEGER} 
+    order by MONTH_COMS DESC
+  </select>
+  <!-- 注册 -->
+  <select id="selectByName" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where LOGIN_NAME = #{login_name,jdbcType=VARCHAR}
+  </select>
+  <!-- 注册 -->
+  <select id="selectByOpenId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where OPEN_ID = #{openId,jdbcType=VARCHAR}
+  </select>
+  <!-- 注册 -->
+  <select id="selectByUnionId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where UNIONID = #{unionId,jdbcType=VARCHAR} and status=0
+  </select>
+  <!-- 注册 -->
+  <select id="selectByPhone" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where PHONE = #{phone,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByShartCode" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where (SHARE_CODE1 = #{shareCode,jdbcType=VARCHAR} or SHARE_CODE2 = #{shareCode,jdbcType=VARCHAR}) and STATUS=0
+  </select>
+  
+  <select id="selectByShartCode2" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user
+    where SHARE_CODE2 = #{shareCode2,jdbcType=VARCHAR} and STATUS=0
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_user
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="B_User" keyProperty="id" useGeneratedKeys="true">
+    insert into b_user (OPEN_ID,UNIONID,qrcode_url, LOGIN_NAME,ADDR, PWD,PWD2, GARDEN_ID,REFER_ID,OWER_ID, REFER_PATH,
+      PHONE, EMAIL, NICK_NAME, STATUS,TOTAL_COMS,MONTH_COMS,BONUS_NUM,AUTHED,TOTAL_PBC,
+      REAL_NAME, ID_CARD, SEX, TotalPay,MonthPay,surplusPay,RECHARGE_NUM,RECHARGE_BLOCK,
+      HEAD_IMG_URL, BIRTHDAY, REGIST_TIME, OFFER_NUM,WeekPay,PBC_SELLER,PBC_USER,PBC_BLOCK,
+      LOGIN_TIME, USER_TYPE, SIGNATURE, USER_ROLE_ID, JIFEN_YES, JIFEN_NO, COMS_YES, COMS_NO, BALANCE,OWE_NUM,
+      REFER_NUM,PAYMENT,TOTAL_BONUS,MONTH_BONUS,TOTAL_REFER,MONTH_REFER,TOTAL_PAYMENT,MONTH_PAYMENT,AlonePay,SHARE_CODE1,SHARE_CODE2,CHECK_CODE,
+      CREDIT_S,CREDIT_M,CREDIT_L,CREDIT_T
+      )
+    values (#{openId,jdbcType=VARCHAR},#{unionId,jdbcType=VARCHAR},#{qrcodeUrl,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR},#{addr,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},#{pwd2,jdbcType=VARCHAR}, #{gardenId,jdbcType=INTEGER},#{referId,jdbcType=INTEGER},#{owerId,jdbcType=INTEGER},#{referPath,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{totalComs,jdbcType=DECIMAL},#{monthComs,jdbcType=DECIMAL},#{bonusNum,jdbcType=DECIMAL},#{authed,jdbcType=SMALLINT},#{totalPbc,jdbcType=DECIMAL},
+      #{realName,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{sex,jdbcType=SMALLINT}, #{totalpay,jdbcType=DECIMAL},#{monthpay,jdbcType=DECIMAL},#{surpluspay,jdbcType=DECIMAL},#{rechargeNum,jdbcType=DECIMAL},#{rechargeBlock,jdbcType=DECIMAL},
+      #{headImgUrl,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{registTime,jdbcType=TIMESTAMP}, #{offerNum,jdbcType=DECIMAL},#{weekpay,jdbcType=DECIMAL},#{pbcSeller,jdbcType=DECIMAL},#{pbcUser,jdbcType=DECIMAL},#{pbcBlock,jdbcType=DECIMAL},
+      #{loginTime,jdbcType=TIMESTAMP}, #{userType,jdbcType=SMALLINT}, #{signature,jdbcType=VARCHAR}, #{userRoleId,jdbcType=INTEGER}, #{jifenYes,jdbcType=DECIMAL}, #{jifenNo,jdbcType=DECIMAL}, #{comsYes,jdbcType=DECIMAL}, #{comsNo,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{oweNum,jdbcType=DECIMAL},
+      #{referNum,jdbcType=DECIMAL},#{payment,jdbcType=DECIMAL},#{totalBonus,jdbcType=DECIMAL},#{monthBonus,jdbcType=DECIMAL},#{totalRefer,jdbcType=DECIMAL},#{monthRefer,jdbcType=DECIMAL},#{totalPayment,jdbcType=DECIMAL},#{monthPayment,jdbcType=DECIMAL},#{alonepay,jdbcType=DECIMAL},#{shareCode1,jdbcType=VARCHAR},#{shareCode2,jdbcType=VARCHAR},#{referCode,jdbcType=VARCHAR},
+      #{creditS,jdbcType=INTEGER},#{creditM,jdbcType=INTEGER},#{creditL,jdbcType=INTEGER},#{creditT,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="openId != null" >
+        OPEN_ID = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null" >
+        qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null" >
+        UNIONID = #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        ADDR = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="gardenId != null" >
+        GARDEN_ID =  #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="referId != null" >
+        REFER_ID =  #{referId,jdbcType=INTEGER},
+      </if>
+      <if test="owerId != null" >
+        OWER_ID =  #{owerId,jdbcType=INTEGER},
+      </if>
+      <if test="referPath != null" >
+        REFER_PATH =  #{referPath,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd2 != null" >
+        PWD2 = #{pwd2,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        NICK_NAME = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        REAL_NAME = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        ID_CARD = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="headImgUrl != null" >
+        HEAD_IMG_URL = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registTime != null" >
+        REGIST_TIME = #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginTime != null" >
+        LOGIN_TIME = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userType != null" >
+        USER_TYPE = #{userType,jdbcType=SMALLINT},
+      </if>
+      <if test="signature != null" >
+        SIGNATURE = #{signature,jdbcType=SMALLINT},
+      </if>
+      <if test="userRoleId != null" >
+        USER_ROLE_ID = #{userRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="shareCode1 != null" >
+        SHARE_CODE1 = #{shareCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="shareCode2 != null" >
+        SHARE_CODE2 = #{shareCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="jifenYes != null" >
+        JIFEN_YES = #{jifenYes,jdbcType=DECIMAL},
+      </if>
+      <if test="jifenNo != null" >
+        JIFEN_NO = #{jifenNo,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateReferPath">
+    update b_user u set u.REFER_PATH=REPLACE(u.REFER_PATH,'${topReferPath}-','${topReferId}-')
+    where u.REFER_PATH like '${topReferPath}-%'
+  </update>
+  <update id="updatePhoneAndAddr" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="addr != null" >
+        ADDR = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null" >
+        qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="referId != null" >
+        REFER_ID =  #{referId,jdbcType=INTEGER},
+      </if>
+      <if test="gardenId != null" >
+        GARDEN_ID =  #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="referPath != null" >
+        REFER_PATH =  #{referPath,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        LOGIN_TIME = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd2 != null" >
+        PWD2 = #{pwd2,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        OPEN_ID = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null" >
+        qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null" >
+        UNIONID = #{unionId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateComsYes" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="comsYes != null" >
+        COMS_YES = #{comsYes,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateComsNo" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="comsNo != null" >
+        COMS_NO = #{comsNo,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateOfferNum" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="offerNum != null" >
+        OFFER_NUM = #{offerNum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateComs" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="totalComs != null" >
+        TOTAL_COMS = #{totalComs,jdbcType=DECIMAL},
+      </if>
+      <if test="monthComs != null" >
+        MONTH_COMS = #{monthComs,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateBalance" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="balance != null" >
+        BALANCE = #{balance,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateHeadImg" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="headImgUrl != null" >
+        HEAD_IMG_URL = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateNickName" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="nickName != null" >
+        NICK_NAME = #{nickName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateTotalpay" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="totalpay != null" >
+        TotalPay = #{totalpay,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updatePbcUser" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="pbcUser != null" >
+        PBC_USER = #{pbcUser,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePbcSeller" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="pbcSeller != null" >
+        PBC_SELLER = #{pbcSeller,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePbcBlock" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="pbcBlock != null" >
+        PBC_BLOCK = #{pbcBlock,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updateSex" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="sex != null" >
+        SEX = #{sex,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateRechargeNum" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="rechargeNum != null" >
+        RECHARGE_NUM = #{rechargeNum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateRechargeBlock" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="rechargeBlock != null" >
+        RECHARGE_BLOCK = #{rechargeBlock,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateOweNum" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="oweNum != null" >
+        OWE_NUM = #{oweNum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateOwerId" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="owerId != null" >
+        OWER_ID =  #{owerId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateBonusNum" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="bonusNum != null" >
+        BONUS_NUM = #{bonusNum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateUserRoleId" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="userRoleId != null" >
+        USER_ROLE_ID = #{userRoleId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getCountComsByroleIdandAddr" resultType="int">
+    select 
+    IFNULL(sum(TOTAL_COMS),0)
+    from b_user
+    where LOCATE(#{roleId,jdbcType=VARCHAR},USER_ROLE_ID)>0 and LOCATE(#{addr,jdbcType=VARCHAR},ADDR)>0
+  </select>
+  <select id="getCountComsUserByReferId" resultType="int">
+    select 
+    IFNULL(sum(TOTAL_BONUS),0)
+    from b_user
+    where REFER_ID = #{referId,jdbcType=INTEGER} 
+  </select>
+  <select id="getCountComsUserByOwerId" resultType="int">
+    select 
+    IFNULL(sum(TOTAL_REFER),0)
+    from b_user
+    where OWER_ID = #{owerId,jdbcType=INTEGER} 
+  </select>
+  <update id="updateJifenYes" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="jifenYes != null" >
+        JIFEN_YES = #{jifenYes,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+   <update id="updateMonthpay" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="monthpay != null" >
+        MonthPay = #{monthpay,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateWeekpay" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="weekpay != null">
+        WeekPay = #{weekpay,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateSurpluspay" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="surpluspay != null" >
+        surplusPay = #{surpluspay,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateAlonepay" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="alonepay != null" >
+        AlonePay = #{alonepay,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updateReferNum" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="referNum != null" >
+        REFER_NUM = #{referNum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePayment" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="payment != null" >
+        PAYMENT = #{payment,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateBonus" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="totalBonus != null" >
+        TOTAL_BONUS = #{totalBonus,jdbcType=DECIMAL},
+      </if>
+      <if test="monthBonus != null" >
+        MONTH_BONUS = #{monthBonus,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateRefer" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="totalRefer != null" >
+        TOTAL_REFER = #{totalRefer,jdbcType=DECIMAL},
+      </if>
+      <if test="monthRefer != null" >
+        MONTH_REFER = #{monthRefer,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateTPayment" parameterType="B_User" >
+    update b_user
+    <set >
+     <if test="totalPayment != null" >
+        TOTAL_PAYMENT = #{totalPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="monthPayment != null" >
+        MONTH_PAYMENT = #{monthPayment,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateCreditS" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="creditS != null" >
+        CREDIT_S = #{creditS,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateCreditM" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="creditM != null" >
+        CREDIT_M = #{creditM,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateCreditL" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="creditL != null" >
+        CREDIT_L = #{creditL,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateCreditT" parameterType="B_User" >
+    update b_user
+    <set >
+      <if test="creditT != null" >
+        CREDIT_T = #{creditT,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

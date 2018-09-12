@@ -1,0 +1,255 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class Voucher {
+    private Integer id;
+
+    private String title;
+
+    private String summart;
+
+    private Integer publisherId;
+
+    private Integer buyerNum;
+
+    private Double selledMoney;
+
+    private Double targetMoney;
+
+    private Date startTime;
+
+    private Date endTime;
+
+    private String overTime;
+
+    private String headImgUrl;
+
+    private Date createTime;
+
+    private Short status;
+
+    private String rang;
+
+    private Short autois;
+
+    private Short indexis;
+
+    private String targ;
+
+    private Short type;
+
+    private String ext0;
+
+    private String ext1;
+
+    private String ext2;
+
+    private String ext3;
+
+    private String ext4;
+
+    private Date updateTime;
+
+    private byte[] content;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public String getSummart() {
+        return summart;
+    }
+
+    public void setSummart(String summart) {
+        this.summart = summart == null ? null : summart.trim();
+    }
+
+    public Integer getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Integer publisherId) {
+        this.publisherId = publisherId;
+    }
+
+    public Integer getBuyerNum() {
+        return buyerNum;
+    }
+
+    public void setBuyerNum(Integer buyerNum) {
+        this.buyerNum = buyerNum;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl == null ? null : headImgUrl.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public String getRang() {
+        return rang;
+    }
+
+    public void setRang(String rang) {
+        this.rang = rang == null ? null : rang.trim();
+    }
+
+    public Short getAutois() {
+        return autois;
+    }
+
+    public void setAutois(Short autois) {
+        this.autois = autois;
+    }
+
+    public Short getIndexis() {
+        return indexis;
+    }
+
+    public void setIndexis(Short indexis) {
+        this.indexis = indexis;
+    }
+
+    public String getTarg() {
+        return targ;
+    }
+
+    public void setTarg(String targ) {
+        this.targ = targ == null ? null : targ.trim();
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
+    }
+
+    public String getExt0() {
+        return ext0;
+    }
+
+    public void setExt0(String ext0) {
+        this.ext0 = ext0 == null ? null : ext0.trim();
+    }
+
+    public String getExt1() {
+        return ext1;
+    }
+
+    public void setExt1(String ext1) {
+        this.ext1 = ext1 == null ? null : ext1.trim();
+    }
+
+    public String getExt2() {
+        return ext2;
+    }
+
+    public void setExt2(String ext2) {
+        this.ext2 = ext2 == null ? null : ext2.trim();
+    }
+
+    public String getExt3() {
+        return ext3;
+    }
+
+    public void setExt3(String ext3) {
+        this.ext3 = ext3 == null ? null : ext3.trim();
+    }
+
+    public String getExt4() {
+        return ext4;
+    }
+
+    public void setExt4(String ext4) {
+        this.ext4 = ext4 == null ? null : ext4.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
+	public Double getSelledMoney() {
+		return selledMoney;
+	}
+
+	public void setSelledMoney(Double selledMoney) {
+		this.selledMoney = selledMoney;
+	}
+
+	public Double getTargetMoney() {
+		return targetMoney;
+	}
+
+	public void setTargetMoney(Double targetMoney) {
+		this.targetMoney = targetMoney;
+	}
+
+	public String getOverTime() {
+		return overTime;
+	}
+
+	public void setOverTime(String overTime) {
+		this.overTime = overTime;
+	}
+}

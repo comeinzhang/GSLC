@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Goods_StoreMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Goods_Store" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="FLAG" property="flag" jdbcType="SMALLINT" />
+    <result column="CATALOG_ID" property="catalogId" jdbcType="INTEGER" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <association property="goods" javaType="com.tyh.model.B_Goods">
+	    <id column="ID_G" property="id" jdbcType="INTEGER" />
+	    <result column="CATALOG_ID" property="catalogId" jdbcType="INTEGER" />
+	    <result column="NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+	    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+	    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+	    <result column="PRICE_BEFORE" property="priceBefore" jdbcType="DECIMAL" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GOODS_ID,FLAG, USER_ID,CATALOG_ID, UPDATE_TIME
+  </sql>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select 
+    b.*,a.id id_g,a.catalog_id,a.name,a.price,a.price_before,a.status,a.head_img_url 
+    from b_goods a, b_goods_store b
+    where b.user_id = #{userId,jdbcType=INTEGER} and a.id=b.goods_id
+    <if test="catalog_id != null" >
+        and b.catalog_id=#{catalog_id}
+     </if>
+  </select>
+  <select id="selectGoodsCountByUserId" resultType="int" parameterType="java.lang.Integer" >
+    select 
+    IFNULL(count(1),0) 
+    from b_goods_store 
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectStorerByGoodsId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods_store
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectInStore" resultType="B_Goods_Store" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods_store
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER} and USER_ID = #{userId,jdbcType=INTEGER} and FLAG=#{flag,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_goods_store
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="B_Goods_Store" keyProperty="id" useGeneratedKeys="true">
+    insert into b_goods_store (GOODS_ID, USER_ID, catalog_id,FLAG)
+    values ( #{goods.id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{catalogId,jdbcType=INTEGER}, #{flag,jdbcType=SMALLINT})
+  </insert>
+  <delete id="deleteInStore">
+    delete from b_goods_store
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER} and USER_ID = #{userId,jdbcType=INTEGER} and FLAG=#{flag,jdbcType=SMALLINT}
+  </delete>
+</mapper>

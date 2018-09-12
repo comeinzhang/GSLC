@@ -1,0 +1,35 @@
+package com.tyh.service;
+
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.SchoolMapper;
+import com.tyh.model.School;
+
+
+
+@Service
+public class SchoolService {
+	
+	@Resource
+	private SchoolMapper mapper;
+	
+	 public int insertSelective(School record){
+		 return mapper.insertSelective(record);
+	 }
+
+	 public School selectByPrimaryKey(Integer id){
+		 return mapper.selectByPrimaryKey(id);
+	 }
+	 
+	 public School selectBySchoolId(String schoolId){
+		 return mapper.selectBySchoolId(schoolId);
+	 }
+
+	 public int updateByPrimaryKeySelective(School record){
+		 return mapper.updateByPrimaryKeySelective(record);
+	 }
+}

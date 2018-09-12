@@ -1,0 +1,145 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_User_Voucher {
+    private Integer id;
+
+    private Integer vId;
+    
+    private String imgUrl;
+    
+    private String name;
+
+    private Double price;
+    
+    private Double remainNum;
+
+    private Integer userId;
+
+    private Date recetime;
+
+    private Date usetime;
+
+    private String overtime;
+
+    private Integer vNum;
+
+    private String orderNum;
+
+    private Short status;
+
+    private Date updateTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getvId() {
+        return vId;
+    }
+
+    public void setvId(Integer vId) {
+        this.vId = vId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Date getRecetime() {
+        return recetime;
+    }
+
+    public void setRecetime(Date recetime) {
+        this.recetime = recetime;
+    }
+
+    public Date getUsetime() {
+        return usetime;
+    }
+
+    public void setUsetime(Date usetime) {
+        this.usetime = usetime;
+    }
+
+    public String getOvertime() {
+        return overtime;
+    }
+
+    public void setOvertime(String overtime) {
+        this.overtime = overtime;
+    }
+
+    public Integer getvNum() {
+        return vNum;
+    }
+
+    public void setvNum(Integer vNum) {
+        this.vNum = vNum;
+    }
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum == null ? null : orderNum.trim();
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Double getRemainNum() {
+		return remainNum;
+	}
+
+	public void setRemainNum(Double remainNum) {
+		this.remainNum = remainNum;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+}

@@ -1,0 +1,1236 @@
+package com.tyh.service;
+
+
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tyh.common.CommonParam;
+import com.tyh.mapper.B_GoodsMapper;
+import com.tyh.mapper.B_OrderMapper;
+import com.tyh.mapper.B_Order_DetailMapper;
+import com.tyh.mapper.B_ReturnMapper;
+import com.tyh.mapper.B_ShopMapper;
+import com.tyh.mapper.B_SpecMapper;
+import com.tyh.mapper.B_UserMapper;
+import com.tyh.mapper.B_User_AddrMapper;
+import com.tyh.mapper.B_User_RoleMapper;
+import com.tyh.mapper.B_User_VoucherMapper;
+import com.tyh.mapper.ComsDetailMapper;
+import com.tyh.mapper.JifenDetailMapper;
+import com.tyh.mapper.OrderActionMapper;
+import com.tyh.mapper.RedPacketMapper;
+import com.tyh.mapper.RedPacketRecordMapper;
+import com.tyh.mapper.VoucherMapper;
+import com.tyh.model.B_Goods;
+import com.tyh.model.B_Order;
+import com.tyh.model.B_Order_Detail;
+import com.tyh.model.B_Return;
+import com.tyh.model.B_Shop;
+import com.tyh.model.B_Spec;
+import com.tyh.model.B_User;
+import com.tyh.model.B_User_Voucher;
+import com.tyh.model.ComsDetail;
+import com.tyh.model.JifenDetail;
+import com.tyh.model.OrderAction;
+import com.tyh.model.ProConfigMap;
+import com.tyh.model.RedPacket;
+import com.tyh.model.RedPacketRecord;
+import com.tyh.model.Voucher;
+import com.tyh.unitl.DateUtils;
+import com.tyh.unitl.PageInfo;
+
+
+@Service
+public class B_OrderService {
+	
+	@Resource
+	private B_OrderMapper mapper;
+	@Resource
+	private B_Order_DetailMapper detailMapper;
+	@Resource
+	private B_ShopMapper shopMapper;
+	@Resource
+	private B_SpecMapper specMapper;
+	@Resource
+	private OrderActionMapper orderActionMapper;
+	@Autowired
+    private B_GoodsMapper goodsMapper;
+	@Autowired
+    private B_UserMapper userMapper;
+	@Autowired
+    private ComsDetailMapper comsDetailMapper;
+	@Autowired
+    private JifenDetailMapper jifenDetailMapper;
+	@Autowired
+    private B_User_RoleMapper userRoleMapper;
+	@Autowired
+	private B_User_AddrMapper userAddrMapper;
+	@Resource
+	private RedPacketRecordMapper redRecordMapper;
+	@Resource
+	private RedPacketMapper redPacketMapper;
+	@Autowired
+    private B_ReturnMapper returnMapper ;
+	@Autowired
+    private B_User_VoucherMapper userVoucherMapper;
+	@Autowired
+    private VoucherMapper voucherMapper ;
+	
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	public int insert(B_Order record){
+    	return mapper.insert(record);
+    }
+
+	public B_Order selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+
+	public int updateByPrimaryKeySelective(B_Order record){
+    	return mapper.updateByPrimaryKeySelective(record);
+    }
+	
+	public int updateBycId(Integer cId){
+    	return mapper.updateBycId(cId);
+    }
+	//不包含产品
+	public B_Order selectByorderNum(String orderNum){
+    	return mapper.selectByorderNum(orderNum);
+    }
+	public List<B_Order> selectByMergeNum(String mergeNum,Short status){
+    	return mapper.selectByMergeNum(mergeNum,status);
+    }
+	public List selectUserOrderCount(Integer buyUserId){
+		return mapper.selectUserOrderCount(buyUserId);
+	}
+	public int selectShopOrderCount(Integer sellerUserId){
+		return mapper.selectShopOrderCount(sellerUserId);
+	}
+	//包含产品
+	public List<B_Order> selectByStatusOrUser(Integer buyUserId,Integer sellerUserId,Short status,String flag,Integer goodsId){
+		return mapper.selectByStatusOrUser(buyUserId,sellerUserId, status,flag,goodsId);
+	}
+	//app订单接口
+	public List<B_Order> selectByStatusOrUserListPage(PageInfo page,Integer buyUserId,Integer sellerUserId,Short status,Short payWay,Integer goodsId,Short sign,Short assessed){
+		return mapper.selectByStatusOrUserListPage(page,buyUserId,sellerUserId, status,payWay,goodsId,sign,assessed);
+	}
+	//包含产品
+	public B_Order getOrderByOrderNum(String orderNum){
+		return mapper.getOrderByOrderNum(orderNum);
+	}
+	
+	//GSLC订单接口
+	public List<B_Order> selectGslcOrderListPage(PageInfo page,Integer buyUserId,Integer sellerUserId,Short status,Short sign,Date nowday,String orderBy,String userId){
+		return mapper.selectGslcOrderListPage(page,buyUserId,sellerUserId, status,sign,nowday,orderBy,userId);
+	}
+	
+	public int deleteByOrderNum(String orderNum){
+		return mapper.deleteByOrderNum(orderNum);
+	}
+	
+	public int deleteByMergeNum(String mergeNum,Short status){
+		return mapper.deleteByMergeNum(mergeNum,status);
+	}
+	
+	public List<B_Order> getGardenBreakerOrderList(Integer limit,Integer gardenId){
+		return mapper.getGardenBreakerOrderList(limit,gardenId);
+	}
+	
+	public List<B_Order> selectBreakerOrderByPosterId(Integer posterId,Short status){
+		return mapper.selectBreakerOrderByPosterId(posterId, status);
+	}
+	
+	 public void saveOrderAction(Integer orderId, Integer orderDetailId, Short orderStatus){
+    	OrderAction oa = new OrderAction();
+    	oa.setOrderId(orderId);
+    	oa.setOrderDetailId(orderDetailId);
+    	oa.setStatus(orderStatus);
+    	oa.setCreateTime(new Date());
+    	orderActionMapper.insert(oa);
+    }
+	 
+	 /**
+	 * @param order
+	 * @param detailList
+	 */
+	@Transactional
+	 public void dealComsAndJIfenAfterPaySus(B_Order order, List<B_Order_Detail> detailList){
+		//
+		 if(detailList!=null && detailList.size()>0){
+			 for (B_Order_Detail b_Order_Detail : detailList) {
+				B_Goods goods = goodsMapper.selectByPrimaryKey(b_Order_Detail.getGoods().getId());
+				B_User orderUser = userMapper.selectByPrimaryKey(order.getBuyUserId());
+				B_User referXF = null;
+				if(StringUtils.isNotBlank(orderUser.getReferPath()) && !orderUser.getReferPath().equals(orderUser.getId()+"")){
+					referXF = userMapper.selectByPrimaryKey(Integer.parseInt(orderUser.getReferPath().split("-")[0]));
+				}
+				//购买者佣金：
+				if(goods.getComsType()==CommonParam.COMS_TYPE_XF){
+					//用户购买消费类型商品，（消费合伙人打折，其他不打折），自己余额增加折前商品金额；
+					Double balance = orderUser.getBalance();
+					orderUser.setBalance((balance==null?0:balance)+b_Order_Detail.getPriceSource());
+					userMapper.updateByPrimaryKeySelective(orderUser);
+					//佣金明细
+					ComsDetail cd = new ComsDetail();
+					cd.setUserId(orderUser.getId());
+					cd.setOrderId(order.getId());
+					cd.setOrderNum(order.getOrderNum());
+					cd.setOrderDetailId(b_Order_Detail.getId());
+					cd.setGoodsId(goods.getId());
+					cd.setGoodsName(goods.getName());
+					cd.setGoodsPrice(b_Order_Detail.getPriceSource());
+					cd.setComs(b_Order_Detail.getPriceSource());
+					cd.setComsType(goods.getComsType());
+					cd.setStatus((short)1);
+					cd.setCreateTime(new Date());
+					this.comsDetailMapper.insert(cd);
+				}
+				//推荐人佣金：
+				if(referXF!=null){
+					if(goods.getComsType()==CommonParam.COMS_TYPE_TY && referXF.getUserRoleId().contains(CommonParam.USER_ROLE_XF+"")){
+						//用户购买体验类型商品，上级消费合伙人情况：上级消费合伙人余额减去价格（如果不够扣就不扣），预期收益增加价格；
+						//等待订单已支付7天后或已收货后，从预期收益减去商品金额，到账收益增加相应金额。
+						Double balance = referXF.getBalance();
+						balance = balance==null?0:balance;
+						if(goods.getDiscountPrice()!=null){
+							if(balance>=b_Order_Detail.getPriceSource()){
+								referXF.setBalance(balance-goods.getDiscountPrice());
+							}
+						}else{
+							if(balance>=b_Order_Detail.getPriceSource()){
+								referXF.setBalance(balance-b_Order_Detail.getPriceSource());
+							}
+						}
+						Double comsNo = referXF.getComsNo();
+						referXF.setComsNo(comsNo==null?0:comsNo+b_Order_Detail.getPriceSource());
+						userMapper.updateByPrimaryKeySelective(referXF);
+
+						//佣金明细
+						ComsDetail cd = new ComsDetail();
+						cd.setUserId(referXF.getId());
+						cd.setOrderId(order.getId());
+						cd.setOrderNum(order.getOrderNum());
+						cd.setOrderDetailId(b_Order_Detail.getId());
+						cd.setGoodsId(goods.getId());
+						cd.setGoodsName(goods.getName());
+						cd.setGoodsPrice(b_Order_Detail.getPriceSource());
+						cd.setComs(b_Order_Detail.getPriceSource());
+						cd.setComsType(goods.getComsType());
+						cd.setStatus((short)0);
+						cd.setCreateTime(new Date());
+						this.comsDetailMapper.insert(cd);
+					}else if(goods.getComsType()==CommonParam.COMS_TYPE_XF && !orderUser.getUserRoleId().contains(CommonParam.USER_ROLE_XF+"") && referXF.getUserRoleId().contains(CommonParam.USER_ROLE_XF+"")){
+						//用户购买消费类型商品:如果用户角色为消费合伙人打折;
+						//否则上级消费合伙人情况，上级消费合伙人到帐收益增加计算收益（商品价格*商品自己佣金比例*消费合伙人佣金比例），购买用户角色变为消费合伙人。
+						Double referComs = null;
+						if(goods.getComsGoodsXf()!=null && goods.getComsGoods()!=null){
+							referComs = b_Order_Detail.getPriceSource()*goods.getComsGoods()*goods.getComsGoodsXf();
+						}
+						if(referComs!=null){
+							Double comsYes = referXF.getComsYes();
+							referXF.setComsYes((comsYes==null?0:comsYes)+referComs);
+							userMapper.updateByPrimaryKeySelective(referXF);
+							
+							//佣金明细
+							ComsDetail cd = new ComsDetail();
+							cd.setUserId(referXF.getId());
+							cd.setOrderId(order.getId());
+							cd.setOrderNum(order.getOrderNum());
+							cd.setOrderDetailId(b_Order_Detail.getId());
+							cd.setGoodsId(goods.getId());
+							cd.setGoodsName(goods.getName());
+							cd.setGoodsPrice(b_Order_Detail.getPriceSource());
+							cd.setComs(referComs);
+							cd.setComsType(goods.getComsType());
+							cd.setStatus((short)1);
+							cd.setCreateTime(new Date());
+							this.comsDetailMapper.insert(cd);
+						}
+						//购买用户角色变为消费合伙人
+						orderUser.setUserRoleId(CommonParam.USER_ROLE_XF+"");
+						userMapper.updateByPrimaryKeySelective(orderUser);
+						//更新为消费合伙人后，所有下级用户处理上下级路径
+						if(StringUtils.isNotBlank(orderUser.getReferPath())){
+							userMapper.updateReferPath(orderUser.getId(), orderUser.getReferPath());
+						}
+						
+					}
+				}
+				
+				//计算积分
+				if(goods.getJifenGoods()!=null){
+					double jifen = b_Order_Detail.getPriceSource()*goods.getJifenGoods();
+					orderUser.setJifenNo((orderUser.getJifenNo()==null?0:orderUser.getJifenNo())+jifen);
+					userMapper.updateByPrimaryKeySelective(orderUser);
+					//积分明细
+					JifenDetail jd = new JifenDetail();
+					jd.setUserId(orderUser.getId());
+					jd.setOrderId(order.getId());
+					jd.setOrderNum(order.getOrderNum());
+					jd.setOrderDetailId(b_Order_Detail.getId());
+					jd.setGoodsId(goods.getId());
+					jd.setGoodsName(goods.getName());
+					jd.setGoodsPrice(b_Order_Detail.getPriceSource());
+					jd.setJifen(jifen);
+					jd.setStatus((short)0);
+					jd.setCreateTime(new Date());
+					this.jifenDetailMapper.insert(jd);
+				}
+			}
+		 }
+	 }
+	@Transactional
+	 public void dealYphComsAfterPaySus(String orderNum){
+		B_Order order = mapper.getOrderByOrderNum(orderNum);
+		if (order.getAssessed()==0) {
+			B_User buyer = userMapper.selectByPrimaryKey(order.getBuyUserId());
+	        B_User seller = userMapper.selectByPrimaryKey(order.getSellUserId());
+	        	buyer.setTotalpay(buyer.getTotalpay()+order.getTotalPrice());//消费总金额
+		        userMapper.updateTotalpay(buyer);
+		       //本月消费
+				buyer.setMonthpay(order.getTotalPrice()+buyer.getMonthpay());
+				userMapper.updateMonthpay(buyer);
+				Double totalPrice = order.getTotalPrice();
+				if (order.getPayWay()!=4) {
+					totalPrice = totalPrice-order.getPrePayment();
+				}else {
+					totalPrice=0.0;
+				}
+		        if (totalPrice!=0) {
+		        	buyer.setAlonepay(buyer.getAlonepay()+totalPrice);//纯现金消费总额
+		        	userMapper.updateAlonepay(buyer);
+					if (buyer.getAlonepay()>=Double.parseDouble(ProConfigMap.configMap.get("consumerPrice"))) {
+						buyer.setUserRoleId(buyer.getUserRoleId()+","+CommonParam.USER_ROLE_COMER);
+						userMapper.updateUserRoleId(buyer);
+					}
+			        buyer.setSurpluspay(buyer.getSurpluspay()+totalPrice);//未分红包金额
+			        userMapper.updateSurpluspay(buyer);
+			        buyer.setJifenYes(buyer.getJifenYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("returnPoints")));
+			        userMapper.updateJifenYes(buyer);
+			        //积分
+			        RedPacketRecord record1 = new RedPacketRecord();
+					record1.setUserId(buyer.getId());
+					record1.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("returnPoints")));
+					record1.setRedNum(0);
+					record1.setLooked((short) 0);
+					record1.setOrderNum(order.getOrderNum());
+					record1.setCreateTime(DateUtils.currtime());
+					record1.setType((short) 11);
+					redRecordMapper.insertSelective(record1);
+			        //赠送买家红包
+//			        Double n = buyer.getSurpluspay()/Double.parseDouble(ProConfigMap.configMap.get("monetary"));
+//			        int redNum = n.intValue();
+//			        if (redNum>0) {
+//						RedPacket redPacket= redPacketMapper.selectByUserId(buyer.getId());
+//						if (redPacket!=null) {
+//							redPacket.setRemaindNum(redNum+redPacket.getRemaindNum());
+//							redPacket.setAllNum(redNum+redPacket.getAllNum());
+//							redPacketMapper.updateByPrimaryKeySelective(redPacket);
+//						}else {
+//							redPacket = new RedPacket();
+//							redPacket.setRemaindNum(redNum);
+//							redPacket.setRemaindmoney(0.0);
+//							redPacket.setReturnamount(0.0);
+//							redPacket.setUserId(buyer.getId());
+//							redPacket.setAllNum(redNum);
+//							redPacket.setCreateTime(new Date());
+//							redPacketMapper.insertSelective(redPacket);
+//						}
+//						buyer.setSurpluspay(buyer.getSurpluspay()-redNum*Double.parseDouble(ProConfigMap.configMap.get("monetary")));
+//						userMapper.updateSurpluspay(buyer);
+//						RedPacketRecord record = new RedPacketRecord();
+//						record.setUserId(buyer.getId());
+//						record.setGivemoney(0d);
+//						record.setRedNum(redNum);
+//						record.setLooked((short) 0);
+//						record.setCreateTime(DateUtils.currtime());
+//						record.setType((short) 9);
+//						redRecordMapper.insertSelective(record);
+//					}
+			        //直荐员会
+			        if (buyer.getReferId()!=null) {
+			        	B_User buyerRefer = userMapper.selectByPrimaryKey(buyer.getReferId());
+			        	//佣金
+			        	buyerRefer.setBonusNum(buyerRefer.getBonusNum()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkMember")));
+			        	userMapper.updateBonusNum(buyerRefer);
+			        	//业绩
+				        buyerRefer.setTotalBonus(buyerRefer.getTotalBonus()+totalPrice);
+				        buyerRefer.setMonthBonus(buyerRefer.getMonthBonus()+totalPrice);
+				        userMapper.updateBonus(buyerRefer);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(buyerRefer.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkMember")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 17);
+						redRecordMapper.insertSelective(record);
+					}
+			        
+			        //店铺统计,赠送红包
+			        B_Shop shop = shopMapper.selectByUserId(seller.getId(), 1);
+			        shop.setTotalMoney(totalPrice+shop.getTotalMoney());//店铺业绩
+			        //本月业绩
+					shop.setMonthMoney(totalPrice+shop.getMonthMoney());
+			        shop.setMaxMoney(1+shop.getMaxMoney());//订单总数
+			        if (order.getSign()==4) {
+						shop.setLineMoney(shop.getLineMoney()+totalPrice);//线下业绩
+					}else {
+						shop.setOnlineMoney(shop.getOnlineMoney()+totalPrice);//线上业绩
+					}
+			        shopMapper.updateByPrimaryKeySelective(shop);
+			        //直荐商家
+			        if (shop.getReferId()!=null) {
+			        	B_User sellerRefer = userMapper.selectByPrimaryKey(shop.getReferId());
+			        	//佣金
+			        	sellerRefer.setReferNum(sellerRefer.getReferNum()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkSeller")));
+			        	userMapper.updateReferNum(sellerRefer);
+			        	//业绩
+			        	sellerRefer.setTotalRefer(sellerRefer.getTotalRefer()+totalPrice);
+			        	sellerRefer.setMonthRefer(sellerRefer.getMonthRefer()+totalPrice);
+			        	userMapper.updateRefer(sellerRefer);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(sellerRefer.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkSeller")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 16);
+						redRecordMapper.insertSelective(record);
+						//感恩奖
+//						if (sellerRefer.getOwerId()!=null) {
+//							B_User ower = userMapper.selectByPrimaryKey(sellerRefer.getOwerId());
+//							ower.setOweNum(ower.getOweNum()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("oweFee")));
+//				        	userMapper.updateOweNum(ower);
+//				        	RedPacketRecord record2 = new RedPacketRecord();
+//				        	record2.setUserId(ower.getId());
+//				        	record2.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("oweFee")));
+//				        	record2.setRedNum(0);
+//				        	record2.setLooked((short) 0);
+//				        	record2.setOrderNum(order.getOrderNum());
+//				        	record2.setCreateTime(DateUtils.currtime());
+//				        	record2.setType((short) 18);
+//							redRecordMapper.insertSelective(record2);
+//						}
+					}
+			        //商家非现金支付
+			        if (order.getPayWay()!=2) {
+			        	Double givemoney = order.getTotalPrice()*(1-Double.parseDouble(ProConfigMap.configMap.get("gatherFee")));
+			        	Double delMoney=0.0;
+			        	if (order.getSign()!=4){
+							List<B_Order_Detail> detailList = detailMapper.getByorderNum(order.getOrderNum());
+							for (Iterator iterator = detailList.iterator(); iterator.hasNext();) {
+								B_Order_Detail orderDetail = (B_Order_Detail) iterator.next();
+//								if (orderDetail.getShareId()!=null) {
+//									B_User shareUser = userMapper.selectByPrimaryKey(orderDetail.getShareId());
+//									B_Spec spec = specMapper.selectByPrimaryKey(orderDetail.getSpecId());
+//									Double specComs = spec.getComs()*orderDetail.getStock();
+//									if (specComs>0) {
+//										delMoney=delMoney+specComs;
+//										shareUser.setBonusNum(specComs);
+//										userMapper.updateBonusNum(shareUser);
+//										
+//										RedPacketRecord record = new RedPacketRecord();
+//										record.setUserId(shareUser.getId());
+//										record.setGivemoney(specComs);
+//										record.setRedNum(0);
+//										record.setLooked((short) 0);
+//										record.setOrderNum(order.getOrderNum());
+//										record.setDetailId(orderDetail.getId());
+//										record.setCreateTime(DateUtils.currtime());
+//										record.setType((short) 29);
+//										redRecordMapper.insertSelective(record);
+//										
+//										RedPacketRecord rec = new RedPacketRecord();
+//										rec.setUserId(seller.getId());
+//										rec.setGivemoney(specComs);
+//										rec.setRedNum(0);
+//										rec.setLooked((short) 0);
+//										rec.setOrderNum(order.getOrderNum());
+//										rec.setDetailId(orderDetail.getId());
+//										rec.setCreateTime(DateUtils.currtime());
+//										rec.setType((short) 24);
+//										redRecordMapper.insertSelective(rec);
+//									}
+//								}
+								if (orderDetail.getShopId()!=null) {
+									B_Shop shopOfSell = shopMapper.selectByPrimaryKey(orderDetail.getShopId());
+									if (!shopOfSell.getId().equals(shop.getId())) {
+										B_Spec spec = specMapper.selectByPrimaryKey(orderDetail.getSpecId());
+										Double specComs = spec.getComs()*orderDetail.getStock();
+										if (specComs>0) {
+											delMoney=delMoney+specComs;
+											B_User shopSeller = userMapper.selectByPrimaryKey(shopOfSell.getUserId());
+											//商家佣金
+											shopSeller.setPayment(shopSeller.getPayment()+specComs);
+											userMapper.updatePayment(shopSeller);
+											
+											RedPacketRecord record = new RedPacketRecord();
+											record.setUserId(shopSeller.getId());
+											record.setGivemoney(specComs);
+											record.setRedNum(0);
+											record.setLooked((short) 0);
+											record.setOrderNum(order.getOrderNum());
+											record.setDetailId(orderDetail.getId());
+											record.setCreateTime(DateUtils.currtime());
+											record.setType((short) 10);
+											redRecordMapper.insertSelective(record);
+											
+											RedPacketRecord rec = new RedPacketRecord();
+											rec.setUserId(seller.getId());
+											rec.setGivemoney(specComs);
+											rec.setRedNum(0);
+											rec.setLooked((short) 0);
+											rec.setOrderNum(order.getOrderNum());
+											rec.setDetailId(orderDetail.getId());
+											rec.setCreateTime(DateUtils.currtime());
+											rec.setType((short) 24);
+											redRecordMapper.insertSelective(rec);
+										}
+									}
+								}
+							}
+						}
+			        	seller.setPayment(seller.getPayment()+givemoney-delMoney);
+		        		seller.setTotalPayment(seller.getTotalPayment()+order.getTotalPrice());
+		        		seller.setMonthPayment(seller.getMonthPayment()+order.getTotalPrice());
+			        	userMapper.updateTPayment(seller);
+			        	userMapper.updatePayment(seller);
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(seller.getId());
+						record.setGivemoney(givemoney-delMoney);
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 12);
+						redRecordMapper.insertSelective(record);
+			        }
+			        String addr = shop.getUserAddr().trim();
+			        //省级代理
+			        List<B_User> provincialAgencyList = userMapper.selectAgentByShopAddr(CommonParam.USER_ROLE_PRO, addr);
+			        for(B_User user:provincialAgencyList){
+			        	user.setComsYes(user.getComsYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("provincialAgency")));
+			        	userMapper.updateComsYes(user);
+			        	//业绩
+			        	user.setTotalComs(user.getTotalComs()+totalPrice);
+			        	user.setMonthComs(user.getMonthComs()+totalPrice);
+			        	userMapper.updateComs(user);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(user.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("provincialAgency")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 13);
+						redRecordMapper.insertSelective(record);
+			        }
+			        //市级代理
+			        List<B_User> cityAgencyList = userMapper.selectAgentByShopAddr(CommonParam.USER_ROLE_CITY, addr);
+			        for(B_User user:cityAgencyList){
+			        	user.setComsYes(user.getComsYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("cityAgency")));
+			        	userMapper.updateComsYes(user);
+			        	//业绩
+			        	user.setTotalComs(user.getTotalComs()+totalPrice);
+			        	user.setMonthComs(user.getMonthComs()+totalPrice);
+			        	userMapper.updateComs(user);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(user.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("cityAgency")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 14);
+						redRecordMapper.insertSelective(record);
+			        }
+			        //区县代理
+			        List<B_User> countyAgencyList = userMapper.selectAgentByShopAddr(CommonParam.USER_ROLE_COUNT, addr);
+			        for(B_User user:countyAgencyList){
+			        	user.setComsYes(user.getComsYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("countyAgency")));
+			        	userMapper.updateComsYes(user);
+			        	//业绩
+			        	user.setTotalComs(user.getTotalComs()+totalPrice);
+			        	user.setMonthComs(user.getMonthComs()+totalPrice);
+			        	userMapper.updateComs(user);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(user.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("countyAgency")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 15);
+						redRecordMapper.insertSelective(record);
+			        }
+				}else {
+					if (order.getPayWay()!=2) {
+			        	seller.setComsYes(seller.getComsYes()+(order.getTotalPrice())*(1-Double.parseDouble(ProConfigMap.configMap.get("gatherFee"))));
+			        	userMapper.updateComsYes(seller);
+			        	seller.setTotalComs(seller.getTotalComs()+(order.getTotalPrice()));
+		        		seller.setMonthComs(seller.getMonthComs()+(order.getTotalPrice()));
+		        		userMapper.updateComs(seller);
+		        		RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(seller.getId());
+						record.setGivemoney(order.getTotalPrice()*(1-Double.parseDouble(ProConfigMap.configMap.get("gatherFee"))));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 12);
+						redRecordMapper.insertSelective(record);
+			        }
+				}
+		        order.setChange_time(DateUtils.currtime());
+		        order.setAssessed((short) 1);
+		        mapper.updateByPrimaryKeySelective(order);
+			}
+	 }
+	@Transactional
+	public void dealChOrder(String orderNum){
+		B_Order order = mapper.getOrderByOrderNum(orderNum);
+		B_Return return1 = returnMapper.selectByOrderNum(orderNum);
+		if (order.getStatus()==4) {
+	        B_User buyer = userMapper.selectByPrimaryKey(order.getBuyUserId());
+	        B_User seller = userMapper.selectByPrimaryKey(order.getSellUserId());
+	        //退款
+	        if (return1.getType()==0) {
+	        	if (order.getPayWay()!=4) {
+	        		buyer.setBalance(buyer.getBalance()+return1.getRePrice());
+					userMapper.updateBalance(buyer);
+					RedPacketRecord record3 = new RedPacketRecord();
+					record3.setUserId(buyer.getId());
+					record3.setGivemoney(return1.getRePrice());
+					record3.setRedNum(0);
+					record3.setLooked((short) 0);
+					record3.setOrderNum(orderNum);
+					record3.setCreateTime(DateUtils.currtime());
+					record3.setType((short) 20);
+					redRecordMapper.insertSelective(record3);
+				}else {
+					buyer.setRechargeNum(buyer.getRechargeNum()+return1.getRePrice());
+					userMapper.updateRechargeNum(buyer);
+					RedPacketRecord record3 = new RedPacketRecord();
+					record3.setUserId(buyer.getId());
+					record3.setGivemoney(return1.getRePrice());
+					record3.setRedNum(0);
+					record3.setLooked((short) 0);
+					record3.setOrderNum(orderNum);
+					record3.setCreateTime(DateUtils.currtime());
+					record3.setType((short) 27);
+					redRecordMapper.insertSelective(record3);
+				}
+	        	if (order.getAssessed()==1) {
+	        		seller.setPayment(seller.getPayment()-return1.getRePrice());
+					userMapper.updateRechargeNum(seller);
+					RedPacketRecord record3 = new RedPacketRecord();
+					record3.setUserId(seller.getId());
+					record3.setGivemoney(return1.getRePrice());
+					record3.setRedNum(0);
+					record3.setLooked((short) 0);
+					record3.setOrderNum(orderNum);
+					record3.setCreateTime(DateUtils.currtime());
+					record3.setType((short) 26);
+					redRecordMapper.insertSelective(record3);
+				}
+			}
+	        if (return1.getType()==1&&order.getAssessed()==0) {
+	        	buyer.setTotalpay(buyer.getTotalpay()+order.getTotalPrice());//消费总金额
+		        userMapper.updateTotalpay(buyer);
+		       //本月消费
+				buyer.setMonthpay(order.getTotalPrice()+buyer.getMonthpay());
+				userMapper.updateMonthpay(buyer);
+				Double totalPrice = order.getTotalPrice();
+				if (order.getPayWay()!=4) {
+					totalPrice = totalPrice-order.getPrePayment();
+					if (order.getPrePayment()==0) {
+						sendVoucher(order);
+					}
+				}else {
+					totalPrice=0.0;
+				}
+		        if (totalPrice!=0) {
+		        	buyer.setAlonepay(buyer.getAlonepay()+totalPrice);//纯现金消费总额
+		        	userMapper.updateAlonepay(buyer);
+					if (buyer.getAlonepay()>=Double.parseDouble(ProConfigMap.configMap.get("consumerPrice"))) {
+						buyer.setUserRoleId(buyer.getUserRoleId()+","+CommonParam.USER_ROLE_COMER);
+						userMapper.updateUserRoleId(buyer);
+					}
+					
+			        buyer.setSurpluspay(buyer.getSurpluspay()+totalPrice);//未分红包金额
+			        userMapper.updateSurpluspay(buyer);
+			        buyer.setJifenYes(buyer.getJifenYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("returnPoints")));
+			        userMapper.updateJifenYes(buyer);
+			        RedPacketRecord record1 = new RedPacketRecord();
+					record1.setUserId(buyer.getId());
+					record1.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("returnPoints")));
+					record1.setRedNum(0);
+					record1.setLooked((short) 0);
+					record1.setOrderNum(order.getOrderNum());
+//					record1.setDetailId(detail.getId());
+					record1.setCreateTime(DateUtils.currtime());
+					record1.setType((short) 11);
+					redRecordMapper.insertSelective(record1);
+					//业绩
+//					buyer.setTotalComs(buyer.getTotalComs()+totalPrice);
+//					buyer.setMonthComs(buyer.getMonthComs()+totalPrice);
+//					userMapper.updateComs(buyer);
+			        //赠送买家红包
+			        Double n = buyer.getSurpluspay()/Double.parseDouble(ProConfigMap.configMap.get("monetary"));
+			        int redNum = n.intValue();
+			        if (redNum>0) {
+						RedPacket redPacket= redPacketMapper.selectByUserId(buyer.getId());
+						if (redPacket!=null) {
+							redPacket.setRemaindNum(redNum+redPacket.getRemaindNum());
+							redPacket.setAllNum(redNum+redPacket.getAllNum());
+							redPacketMapper.updateByPrimaryKeySelective(redPacket);
+						}else {
+							redPacket = new RedPacket();
+							redPacket.setRemaindNum(redNum);
+							redPacket.setRemaindmoney(0.0);
+							redPacket.setReturnamount(0.0);
+							redPacket.setUserId(buyer.getId());
+							redPacket.setAllNum(redNum);
+							redPacket.setCreateTime(new Date());
+//							redPacket.setStatus((short) 0);
+							redPacketMapper.insertSelective(redPacket);
+						}
+						buyer.setSurpluspay(buyer.getSurpluspay()-redNum*Double.parseDouble(ProConfigMap.configMap.get("monetary")));
+						userMapper.updateSurpluspay(buyer);
+						RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(buyer.getId());
+						record.setGivemoney(0d);
+						record.setRedNum(redNum);
+						record.setLooked((short) 0);
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 9);
+						redRecordMapper.insertSelective(record);
+					}
+			        //直荐员会
+			        if (buyer.getReferId()!=null) {
+			        	B_User buyerRefer = userMapper.selectByPrimaryKey(buyer.getReferId());
+			        	//佣金
+			        	buyerRefer.setBonusNum(buyerRefer.getBonusNum()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkMember")));
+			        	userMapper.updateBonusNum(buyerRefer);
+			        	//业绩
+				        buyerRefer.setTotalBonus(buyerRefer.getTotalBonus()+totalPrice);
+				        buyerRefer.setMonthBonus(buyerRefer.getMonthBonus()+totalPrice);
+				        userMapper.updateBonus(buyerRefer);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(buyerRefer.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkMember")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 17);
+						redRecordMapper.insertSelective(record);
+					}
+			        
+			        //店铺统计,赠送红包
+			        B_Shop shop = shopMapper.selectByUserId(seller.getId(), 1);
+			        shop.setTotalMoney(totalPrice+shop.getTotalMoney());//店铺业绩
+			        //本月业绩
+					shop.setMonthMoney(totalPrice+shop.getMonthMoney());
+			        shop.setMaxMoney(1+shop.getMaxMoney());//订单总数
+			        if (order.getSign()==4) {
+						shop.setLineMoney(shop.getLineMoney()+totalPrice);//线下业绩
+					}else {
+						shop.setOnlineMoney(shop.getOnlineMoney()+totalPrice);//线上业绩
+					}
+			        shopMapper.updateByPrimaryKeySelective(shop);
+			      //直荐商家
+			        if (shop.getReferId()!=null) {
+			        	B_User sellerRefer = userMapper.selectByPrimaryKey(shop.getReferId());
+			        	//佣金
+			        	sellerRefer.setReferNum(sellerRefer.getReferNum()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkSeller")));
+			        	userMapper.updateReferNum(sellerRefer);
+			        	//业绩
+			        	sellerRefer.setTotalRefer(sellerRefer.getTotalRefer()+totalPrice);
+			        	sellerRefer.setMonthRefer(sellerRefer.getMonthRefer()+totalPrice);
+			        	userMapper.updateRefer(sellerRefer);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(sellerRefer.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("clerkSeller")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 16);
+						redRecordMapper.insertSelective(record);
+						//感恩奖
+						if (sellerRefer.getOwerId()!=null) {
+							B_User ower = userMapper.selectByPrimaryKey(sellerRefer.getOwerId());
+							ower.setOweNum(ower.getOweNum()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("oweFee")));
+				        	userMapper.updateOweNum(ower);
+				        	RedPacketRecord record2 = new RedPacketRecord();
+				        	record2.setUserId(ower.getId());
+				        	record2.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("oweFee")));
+				        	record2.setRedNum(0);
+				        	record2.setLooked((short) 0);
+				        	record2.setOrderNum(order.getOrderNum());
+//				        	record2.setDetailId(detail.getId());
+				        	record2.setCreateTime(DateUtils.currtime());
+				        	record2.setType((short) 18);
+							redRecordMapper.insertSelective(record2);
+						}
+					}
+			        //商家非现金支付
+			        if (order.getPayWay()!=2) {
+			        	Double givemoney = order.getTotalPrice()*(1-Double.parseDouble(ProConfigMap.configMap.get("gatherFee")));
+			        	Double delMoney=0.0;
+			        	if (order.getSign()!=4){
+							List<B_Order_Detail> detailList = detailMapper.getByorderNum(order.getOrderNum());
+							for (Iterator iterator = detailList.iterator(); iterator.hasNext();) {
+								B_Order_Detail orderDetail = (B_Order_Detail) iterator.next();
+								if (orderDetail.getShareId()!=null) {
+									B_User shareUser = userMapper.selectByPrimaryKey(orderDetail.getShareId());
+									B_Spec spec = specMapper.selectByPrimaryKey(orderDetail.getSpecId());
+									Double specComs = spec.getComs()*orderDetail.getStock();
+									if (specComs>0) {
+										delMoney=delMoney+specComs;
+										shareUser.setBonusNum(specComs);
+										userMapper.updateBonusNum(shareUser);
+										
+										RedPacketRecord record = new RedPacketRecord();
+										record.setUserId(shareUser.getId());
+										record.setGivemoney(specComs);
+										record.setRedNum(0);
+										record.setLooked((short) 0);
+										record.setOrderNum(order.getOrderNum());
+										record.setDetailId(orderDetail.getId());
+										record.setCreateTime(DateUtils.currtime());
+										record.setType((short) 29);
+										redRecordMapper.insertSelective(record);
+										
+//										RedPacketRecord rec = new RedPacketRecord();
+//										rec.setUserId(seller.getId());
+//										rec.setGivemoney(specComs);
+//										rec.setRedNum(0);
+//										rec.setLooked((short) 0);
+//										rec.setOrderNum(order.getOrderNum());
+//										rec.setDetailId(orderDetail.getId());
+//										rec.setCreateTime(DateUtils.currtime());
+//										rec.setType((short) 24);
+//										redRecordMapper.insertSelective(rec);
+									}
+								}
+//								if (orderDetail.getShopId()!=null) {
+//									B_Shop shopOfSell = shopMapper.selectByPrimaryKey(orderDetail.getShopId());
+//									if (!shopOfSell.getId().equals(shop.getId())) {
+//										B_Spec spec = specMapper.selectByPrimaryKey(orderDetail.getSpecId());
+//										Double specComs = spec.getComs()*orderDetail.getStock();
+//										if (specComs>0) {
+//											delMoney=delMoney+specComs;
+//											B_User shopSeller = userMapper.selectByPrimaryKey(shopOfSell.getUserId());
+//											//商家佣金
+//											shopSeller.setPayment(shopSeller.getPayment()+specComs);
+//											userMapper.updatePayment(shopSeller);
+//											
+//											RedPacketRecord record = new RedPacketRecord();
+//											record.setUserId(shopSeller.getId());
+//											record.setGivemoney(specComs);
+//											record.setRedNum(0);
+//											record.setLooked((short) 0);
+//											record.setOrderNum(order.getOrderNum());
+//											record.setDetailId(orderDetail.getId());
+//											record.setCreateTime(DateUtils.currtime());
+//											record.setType((short) 10);
+//											redRecordMapper.insertSelective(record);
+//											
+//											RedPacketRecord rec = new RedPacketRecord();
+//											rec.setUserId(seller.getId());
+//											rec.setGivemoney(specComs);
+//											rec.setRedNum(0);
+//											rec.setLooked((short) 0);
+//											rec.setOrderNum(order.getOrderNum());
+//											rec.setDetailId(orderDetail.getId());
+//											rec.setCreateTime(DateUtils.currtime());
+//											rec.setType((short) 24);
+//											redRecordMapper.insertSelective(rec);
+//										}
+//									}
+//								}
+							}
+						}
+			        	seller.setPayment(seller.getPayment()+givemoney-delMoney);
+		        		seller.setTotalPayment(seller.getTotalPayment()+order.getTotalPrice());
+		        		seller.setMonthPayment(seller.getMonthPayment()+order.getTotalPrice());
+			        	userMapper.updateTPayment(seller);
+			        	userMapper.updatePayment(seller);
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(seller.getId());
+						record.setGivemoney(givemoney-delMoney);
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 12);
+						redRecordMapper.insertSelective(record);
+			        }
+			        String addr = shop.getUserAddr().trim();
+			        //省级代理
+			        List<B_User> provincialAgencyList = userMapper.selectAgentByShopAddr(CommonParam.USER_ROLE_PRO, addr);
+			        for(B_User user:provincialAgencyList){
+//			        	user.setBalance(user.getBalance()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("provincialAgency")));
+			        	user.setComsYes(user.getComsYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("provincialAgency")));
+			        	userMapper.updateComsYes(user);
+			        	//业绩
+			        	user.setTotalComs(user.getTotalComs()+totalPrice);
+			        	user.setMonthComs(user.getMonthComs()+totalPrice);
+			        	userMapper.updateComs(user);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(user.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("provincialAgency")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 13);
+						redRecordMapper.insertSelective(record);
+			        }
+			        //市级代理
+			        List<B_User> cityAgencyList = userMapper.selectAgentByShopAddr(CommonParam.USER_ROLE_CITY, addr);
+			        for(B_User user:cityAgencyList){
+//			        	user.setBalance(user.getBalance()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("cityAgency")));
+			        	user.setComsYes(user.getComsYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("cityAgency")));
+			        	userMapper.updateComsYes(user);
+			        	//业绩
+			        	user.setTotalComs(user.getTotalComs()+totalPrice);
+			        	user.setMonthComs(user.getMonthComs()+totalPrice);
+			        	userMapper.updateComs(user);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(user.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("cityAgency")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 14);
+						redRecordMapper.insertSelective(record);
+			        }
+			        //区县代理
+			        List<B_User> countyAgencyList = userMapper.selectAgentByShopAddr(CommonParam.USER_ROLE_COUNT, addr);
+			        for(B_User user:countyAgencyList){
+//			        	user.setBalance(user.getBalance()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("countyAgency")));
+			        	user.setComsYes(user.getComsYes()+totalPrice*Double.parseDouble(ProConfigMap.configMap.get("countyAgency")));
+			        	userMapper.updateComsYes(user);
+			        	//业绩
+			        	user.setTotalComs(user.getTotalComs()+totalPrice);
+			        	user.setMonthComs(user.getMonthComs()+totalPrice);
+			        	userMapper.updateComs(user);
+			        	//记录
+			        	RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(user.getId());
+						record.setGivemoney(totalPrice*Double.parseDouble(ProConfigMap.configMap.get("countyAgency")));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 15);
+						redRecordMapper.insertSelective(record);
+			        }
+				}else {
+					if (order.getPayWay()!=2) {
+			        	seller.setComsYes(seller.getComsYes()+(order.getTotalPrice())*(1-Double.parseDouble(ProConfigMap.configMap.get("gatherFee"))));
+			        	userMapper.updateComsYes(seller);
+			        	seller.setTotalComs(seller.getTotalComs()+(order.getTotalPrice()));
+		        		seller.setMonthComs(seller.getMonthComs()+(order.getTotalPrice()));
+		        		userMapper.updateComs(seller);
+		        		RedPacketRecord record = new RedPacketRecord();
+						record.setUserId(seller.getId());
+						record.setGivemoney(order.getTotalPrice()*(1-Double.parseDouble(ProConfigMap.configMap.get("gatherFee"))));
+						record.setRedNum(0);
+						record.setLooked((short) 0);
+						record.setLooked((short) 0);
+						record.setOrderNum(order.getOrderNum());
+//						record.setDetailId(detail.getId());
+						record.setCreateTime(DateUtils.currtime());
+						record.setType((short) 12);
+						redRecordMapper.insertSelective(record);
+			        }
+				}
+		        order.setChange_time(DateUtils.currtime());
+		        order.setAssessed((short) 1);
+		        mapper.updateByPrimaryKeySelective(order);
+			}
+		}
+	}
+	public void sendVoucher(B_Order order) {
+		if (StringUtils.isNotBlank(ProConfigMap.configMap.get("voucherGoodsId"))) {
+			List<B_Order_Detail> detailList = detailMapper.getByorderNum(order.getOrderNum());
+			for (Iterator iterator = detailList.iterator(); iterator.hasNext();) {
+				B_Order_Detail detail = (B_Order_Detail) iterator.next();
+				if (detail.getGoodsId().equals(Integer.parseInt(ProConfigMap.configMap.get("voucherGoodsId")))) {
+					B_User buyer = userMapper.selectByPrimaryKey(order.getBuyUserId());
+					for (int i = 0; i < detail.getStock(); i++) {
+						B_User_Voucher voucher = new B_User_Voucher();
+						voucher.setRecetime(new Date());
+						voucher.setStatus((short) 1);
+						voucher.setvNum(1);
+						voucher.setUserId(buyer.getId());
+						voucher.setUpdateTime(new Date());
+						voucher.setPrice(20d);
+						voucher.setRemainNum(20d);
+						userVoucherMapper.insertSelective(voucher);
+						voucher.setPrice(30d);
+						voucher.setRemainNum(30d);
+						userVoucherMapper.insertSelective(voucher);
+						voucher.setPrice(50d);
+						voucher.setRemainNum(50d);
+						userVoucherMapper.insertSelective(voucher);
+						voucher.setPrice(100d);
+						voucher.setRemainNum(100d);
+						userVoucherMapper.insertSelective(voucher);
+						voucher.setPrice(100d);
+						voucher.setRemainNum(100d);
+						userVoucherMapper.insertSelective(voucher);
+						voucher.setPrice(200d);
+						voucher.setRemainNum(200d);
+						userVoucherMapper.insertSelective(voucher);
+					}
+					if (StringUtils.isNotBlank(buyer.getReferPath())) {
+						String[] referIds = buyer.getReferPath().split("-");
+						if (StringUtils.isNotBlank(ProConfigMap.configMap.get("offerNum"))&&StringUtils.isNotBlank(ProConfigMap.configMap.get("minOfferNum"))) {
+							Double offerNum = Double.parseDouble(ProConfigMap.configMap.get("offerNum"));
+							for (int j = referIds.length-1; j >=0; j--) {
+								B_User referUser = userMapper.selectByPrimaryKey(Integer.parseInt(referIds[j]));
+								referUser.setOfferNum(detail.getStock()*offerNum);
+								userMapper.updateOfferNum(referUser);
+								offerNum = offerNum/2;
+								if (offerNum<Double.parseDouble(ProConfigMap.configMap.get("minOfferNum"))) {
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public List<B_User_Voucher> findMyVoucher(String orderId,Integer userId) {
+		String[] orderIds = orderId.split("_");
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int i = 0; i < orderIds.length; i++) {
+			B_Order order = mapper.selectByPrimaryKey(Integer.parseInt(orderIds[i]));
+			List<B_Order_Detail> details = detailMapper.selectByorderNum(order.getOrderNum());
+			for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+				B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator.next();
+				B_Goods goods = goodsMapper.selectByPrimaryKey(b_Order_Detail.getGoodsId());
+				List<Voucher> voucherList = voucherMapper.getVoucherOfStatus(null, null, null, null, b_Order_Detail.getGoodsId()+"");
+				if (voucherList.size()>0) {
+					for (Iterator iterator2 = voucherList.iterator(); iterator2.hasNext();) {
+						Voucher voucher = (Voucher) iterator2.next();
+						Integer voucherId = voucher.getId();
+						if (map.get(voucherId)!=null&&map.get(voucherId)>0) {
+							map.put(voucherId, map.get(voucherId)+b_Order_Detail.getStock());
+						}else {
+							map.put(voucherId, b_Order_Detail.getStock());
+						}
+					}
+				}
+			}
+		}
+		List<B_User_Voucher> userVoucherList = new ArrayList<B_User_Voucher>();
+		List<B_User_Voucher> userVouchers = userVoucherMapper.selectMyVoucherList(userId, (short) 1,null);
+		for (Iterator iterator = userVouchers.iterator(); iterator.hasNext();) {
+			B_User_Voucher b_User_Voucher = (B_User_Voucher) iterator.next();
+			Integer voucherId = b_User_Voucher.getvId();
+			if (map.get(voucherId)!=null&&map.get(voucherId)>0) {
+				Voucher voucher = voucherMapper.selectByPrimaryKey(voucherId);
+				b_User_Voucher.setImgUrl(ProConfigMap.configMap.get("RESOURECE_URL")+voucher.getHeadImgUrl());
+				userVoucherList.add(b_User_Voucher);
+				map.put(voucherId, map.get(voucherId)-1);
+			}
+		}
+		return userVoucherList;
+	}
+	
+	public Map<String, Object> dealOrder(String orderId,String flag) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<B_Order> orderList = new ArrayList<B_Order>();
+		String[] orderIds = orderId.split("_");
+		Double totalPrice = 0d;
+		Double prePayment = 0d;
+		Integer userId = 0;
+		for (int i = 0; i < orderIds.length; i++) {
+			B_Order order = mapper.selectByPrimaryKey(Integer.parseInt(orderIds[i]));
+			totalPrice = totalPrice+order.getTotalPrice();
+			userId = order.getBuyUserId();
+		}
+		if ("1".equals(flag)){
+			B_User user = userMapper.selectByPrimaryKey(userId);
+			if (totalPrice/2>user.getRechargeNum()) {
+				prePayment = user.getRechargeNum();
+			}else {
+				prePayment = totalPrice/2;
+			}
+		}
+		totalPrice = totalPrice-prePayment;
+		map.put("prePayment", prePayment);
+		for (int i = 0; i < orderIds.length; i++) {
+			B_Order order = mapper.selectByPrimaryKey(Integer.parseInt(orderIds[i]));
+			if (prePayment>0) {
+				if (order.getTotalPrice()/2>prePayment) {
+					order.setPrePayment(prePayment);
+					prePayment = 0d;
+				}else {
+					order.setPrePayment(order.getTotalPrice()/2);
+					prePayment = prePayment - order.getTotalPrice()/2;
+				}
+			}else {
+				order.setPrePayment(0d);
+			}
+			mapper.updateByPrimaryKeySelective(order);
+			orderList.add(order);
+		}
+		map.put("orderList", orderList);
+		map.put("totalPrice", totalPrice);
+		return map;
+	}
+	
+	public Map<String, Object> useVoucher(String voucherIds,String orderId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<B_User_Voucher> userVoucherList = new ArrayList<B_User_Voucher>();
+		List<B_Order> orderList = new ArrayList<B_Order>();
+		if (StringUtils.isNotBlank(voucherIds)) {
+			String [] vid = voucherIds.split("-");
+			for (int i = 0; i < vid.length; i++) {
+				B_User_Voucher myvoucher = userVoucherMapper.selectByPrimaryKey(Integer.parseInt(vid[i]));
+				Voucher voucher = voucherMapper.selectByPrimaryKey(myvoucher.getvId());
+				String name = "";
+				if (voucher.getType()==1) {
+					name="抵扣券";
+				}else if (voucher.getType()==2) {
+					name=voucher.getTargetMoney()+"折券";
+				}
+				myvoucher.setName(name);
+				userVoucherList.add(myvoucher);
+				map.put("vName", name);
+			}
+			map.put("userVoucherList", userVoucherList);
+		}
+		String[] orderIds = orderId.split("_");
+		Double totalPrice=0.0;
+		Double prePayment=0.0;
+		for (int i = 0; i < orderIds.length; i++) {
+			B_Order order = mapper.selectByPrimaryKey(Integer.parseInt(orderIds[i]));
+			List<B_Order_Detail> details = detailMapper.getByorderNum(order.getOrderNum());
+			Double orderPrePayment = 0.0; 
+			for (Iterator iterator2 = details.iterator(); iterator2.hasNext();) {
+				B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator2.next();
+				for (Iterator iterator = userVoucherList.iterator(); iterator.hasNext();) {
+					B_User_Voucher b_User_Voucher = (B_User_Voucher) iterator.next();
+					Voucher voucher = voucherMapper.selectByPrimaryKey(b_User_Voucher.getvId());
+					if (voucher.getRang().contains(b_Order_Detail.getGoodsId()+"")&&b_User_Voucher.getStatus()==1&&b_User_Voucher.getRemainNum()>0) {
+						if (voucher.getType()==1) {
+							orderPrePayment = orderPrePayment+b_User_Voucher.getPrice();
+						}else {
+							Double price = b_Order_Detail.getPrice()*(10-voucher.getTargetMoney())/10;
+							if (price>b_User_Voucher.getRemainNum()) {
+								orderPrePayment = orderPrePayment+b_User_Voucher.getRemainNum();
+							}else {
+								orderPrePayment = orderPrePayment+price;
+							}
+						}
+						int stock = b_Order_Detail.getStock();
+						stock--;
+						if (stock==0) {
+							break;
+						}
+						iterator.remove();
+					}
+				}
+			}
+			prePayment = prePayment+orderPrePayment;
+			order.setPrePayment(orderPrePayment);
+			orderList.add(order);
+			totalPrice=totalPrice+order.getTotalPrice()-orderPrePayment;
+		}
+		map.put("orderList", orderList);
+		map.put("totalPrice", totalPrice);
+		map.put("prePayment", prePayment);
+		return map;
+	}
+	
+	public Double updateVoucher(List<B_User_Voucher> userVoucherList,B_Order_Detail detail) {
+		Double orderPrePayment = 0.0;
+		for (Iterator iterator2 = userVoucherList.iterator(); iterator2.hasNext();) {
+			B_User_Voucher b_User_Voucher = (B_User_Voucher) iterator2.next();
+			Voucher voucher = voucherMapper.selectByPrimaryKey(b_User_Voucher.getvId());
+			if (voucher.getRang().contains(detail.getGoodsId()+"")&&b_User_Voucher.getStatus()==1&&b_User_Voucher.getRemainNum()>0) {
+				if (voucher.getType()==1) {
+					orderPrePayment = orderPrePayment+b_User_Voucher.getPrice();
+					b_User_Voucher.setStatus((short) 2);
+					b_User_Voucher.setOrderNum(detail.getOrderNum());
+					b_User_Voucher.setUsetime(new Date());
+					b_User_Voucher.setRemainNum(0d);
+				}else {
+					Double price = detail.getPrice()*(10-voucher.getTargetMoney())/10;
+					if (b_User_Voucher.getRemainNum()>price) {
+						orderPrePayment = orderPrePayment+price;
+						if (StringUtils.isNotBlank(b_User_Voucher.getOrderNum())) {
+							b_User_Voucher.setOrderNum(b_User_Voucher.getOrderNum()+"-"+detail.getOrderNum());
+						}else {
+							b_User_Voucher.setOrderNum(detail.getOrderNum());
+						}
+						b_User_Voucher.setRemainNum(b_User_Voucher.getRemainNum()-price);
+					}else {
+						orderPrePayment = orderPrePayment+b_User_Voucher.getRemainNum();
+						b_User_Voucher.setStatus((short) 2);
+						if (StringUtils.isNotBlank(b_User_Voucher.getOrderNum())) {
+							b_User_Voucher.setOrderNum(b_User_Voucher.getOrderNum()+"-"+detail.getOrderNum());
+						}else {
+							b_User_Voucher.setOrderNum(detail.getOrderNum());
+						}
+						b_User_Voucher.setUsetime(new Date());
+						b_User_Voucher.setRemainNum(0d);
+					}
+				}
+				userVoucherMapper.updateByPrimaryKeySelective(b_User_Voucher);
+				int stock = detail.getStock();
+				stock--;
+				if (stock==0) {
+					break;
+				}
+				iterator2.remove();
+			}
+		}
+		return orderPrePayment;
+	}
+}

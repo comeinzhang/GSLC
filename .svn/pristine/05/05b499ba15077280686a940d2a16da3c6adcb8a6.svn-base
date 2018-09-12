@@ -1,0 +1,26 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.ClassTrainMapper;
+import com.tyh.model.ClassTrain;
+import com.tyh.unitl.PageInfo;
+
+@Service
+public class ClassTrainService {
+	
+	@Resource
+	private ClassTrainMapper mapper;
+	
+	public ClassTrain selectByPrimaryKey(Integer id){
+		return mapper.selectByPrimaryKey(id);
+	}
+
+	public List<ClassTrain> selectByStatusAndCatalogPageList(PageInfo page,Integer classCatalogId,Short status,Integer publisherId){
+		return mapper.selectByStatusAndCatalogPageList(page,classCatalogId,status,publisherId);
+	}
+}

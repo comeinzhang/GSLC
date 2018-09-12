@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Goods_ReplyMapper" >
+  <resultMap id="BaseResultMap" type="B_Goods_Reply" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DETAIL_ID" property="detailId" jdbcType="INTEGER" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="INTEGER" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="SPEC_ID" property="specId" jdbcType="INTEGER" />
+    <result column="REPLY" property="reply" jdbcType="VARCHAR" />
+    <result column="IMG_URL_1" property="imgUrl1" jdbcType="VARCHAR" />
+    <result column="IMG_URL_2" property="imgUrl2" jdbcType="VARCHAR" />
+    <result column="IMG_URL_3" property="imgUrl3" jdbcType="VARCHAR" />
+    <result column="STAR" property="star" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="SMALLINT" />
+    <result column="NICK_FLAG" property="nickFlag" jdbcType="SMALLINT" />
+    <result column="BUY_TIME" property="buyTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GOODS_ID,DETAIL_ID, USER_ID,SPEC_ID, REPLY, IMG_URL_1, IMG_URL_2, IMG_URL_3, STAR, NICK_FLAG, CREATE_TIME, BUY_TIME,TYPE,
+    UPDATE_TIME
+  </sql>
+  <select id="selectByGoods_id" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods_reply
+    where GOODS_ID = #{goods_id,jdbcType=INTEGER}
+    <if test="star!=null">
+    	and STAR=#{star,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null">
+    	and TYPE=#{type,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <insert id="insert" parameterType="B_Goods_Reply" >
+    insert into b_goods_reply ( DETAIL_ID,GOODS_ID, USER_ID, SPEC_ID,
+      REPLY, IMG_URL_1, IMG_URL_2, 
+      IMG_URL_3, STAR, NICK_FLAG, BUY_TIME,TYPE,
+      CREATE_TIME)
+    values ( #{detailId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{specId,jdbcType=INTEGER}, 
+      #{reply,jdbcType=VARCHAR}, #{imgUrl1,jdbcType=VARCHAR}, #{imgUrl2,jdbcType=VARCHAR}, 
+      #{imgUrl3,jdbcType=VARCHAR}, #{star,jdbcType=VARCHAR}, #{nickFlag,jdbcType=SMALLINT}, #{buyTime,jdbcType=TIMESTAMP},#{type,jdbcType=SMALLINT},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="B_Goods_Reply" >
+    insert into b_goods_reply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="goodsId != null" >
+        GOODS_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="specId != null" >
+        SPEC_ID,
+      </if>
+      <if test="reply != null" >
+        REPLY,
+      </if>
+      <if test="imgUrl1 != null" >
+        IMG_URL_1,
+      </if>
+      <if test="imgUrl2 != null" >
+        IMG_URL_2,
+      </if>
+      <if test="imgUrl3 != null" >
+        IMG_URL_3,
+      </if>
+      <if test="star != null" >
+        STAR,
+      </if>
+      <if test="nickFlag != null" >
+        NICK_FLAG,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="buyTime != null" >
+        BUY_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="specId != null" >
+        #{specId,jdbcType=INTEGER},
+      </if>
+      <if test="reply != null" >
+        #{reply,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl1 != null" >
+        #{imgUrl1,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl2 != null" >
+        #{imgUrl2,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl3 != null" >
+        #{imgUrl3,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="nickFlag != null" >
+        #{nickFlag,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyTime != null" >
+        #{buyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

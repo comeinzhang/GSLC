@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.CrowdMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.Crowd" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="pelpel_num" property="pelpelNum" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="target_price" property="targetPrice" jdbcType="DECIMAL" />
+    <result column="target_num" property="targetNum" jdbcType="INTEGER" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="head_img_url" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="video_url" property="videoUrl" jdbcType="VARCHAR" />
+    <result column="video_url1" property="videoUrl1" jdbcType="VARCHAR" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tyh.model.Crowd" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARBINARY" typeHandler="com.tyh.unitl.MyBlobTypeHandler"/>
+    <result column="message" property="message" jdbcType="LONGVARBINARY" typeHandler="com.tyh.unitl.MyBlobTypeHandler"/>
+  </resultMap>
+  <sql id="Blob_Column_List" >
+    content, message
+  </sql>
+  <insert id="insert" parameterType="com.tyh.model.Crowd" >
+    insert into b_crowd (id, user_id,title,summary, pelpel_num, 
+      price, target_price, target_num, 
+      end_time, head_img_url, video_url, 
+      updatetime, content, message
+      )
+    values (#{id,jdbcType=INTEGER},#{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},#{summary,jdbcType=VARCHAR}, #{pelpelNum,jdbcType=INTEGER}, 
+      #{price,jdbcType=DECIMAL}, #{targetPrice,jdbcType=DECIMAL}, #{targetNum,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{headImgUrl,jdbcType=VARCHAR}, #{videoUrl,jdbcType=VARCHAR}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARBINARY}, #{message,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.Crowd" >
+    insert into b_crowd
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="pelpelNum != null" >
+        pelpel_num,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="targetPrice != null" >
+        target_price,
+      </if>
+      <if test="targetNum != null" >
+        target_num,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="headImgUrl != null" >
+        head_img_url,
+      </if>
+      <if test="videoUrl != null" >
+        video_url,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="pelpelNum != null" >
+        #{pelpelNum,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="targetPrice != null" >
+        #{targetPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="targetNum != null" >
+        #{targetNum,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl != null" >
+        #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.Crowd" >
+    update b_crowd
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="pelpelNum != null" >
+        pelpel_num = #{pelpelNum,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="targetPrice != null" >
+        target_price = #{targetPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="targetNum != null" >
+        target_num = #{targetNum,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="headImgUrl != null" >
+        head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl != null" >
+        video_url = #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tyh.model.Crowd" >
+    update b_crowd
+    set user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      pelpel_num = #{pelpelNum,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      target_price = #{targetPrice,jdbcType=DECIMAL},
+      target_num = #{targetNum,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      video_url = #{videoUrl,jdbcType=VARCHAR},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARBINARY},
+      message = #{message,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.Crowd" >
+    update b_crowd
+    set user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      pelpel_num = #{pelpelNum,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      target_price = #{targetPrice,jdbcType=DECIMAL},
+      target_num = #{targetNum,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      video_url = #{videoUrl,jdbcType=VARCHAR},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectCrowdListPage" resultMap="BaseResultMap">
+  	select * from b_crowd  where END_TIME>=now()
+  	<if test="status!=null">
+  		and status=#{status}
+  	</if>
+  </select>
+  <select id="getCrowdById" resultMap="ResultMapWithBLOBs">
+  	select * from b_crowd where id=#{id}
+  </select>
+</mapper>

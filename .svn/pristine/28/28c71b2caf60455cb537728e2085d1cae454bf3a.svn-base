@@ -1,0 +1,19 @@
+package com.tyh.mapper;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.RedPacket;
+
+public interface RedPacketMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(RedPacket record);
+
+    int insertSelective(RedPacket record);
+
+    RedPacket selectByPrimaryKey(Integer id);
+    RedPacket selectByUserId(@Param("userId")Integer userId);
+    int updateByPrimaryKeySelective(RedPacket record);
+
+    int updateByPrimaryKey(RedPacket record);
+}

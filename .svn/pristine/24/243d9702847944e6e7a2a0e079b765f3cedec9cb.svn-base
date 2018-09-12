@@ -1,0 +1,17 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.B_Goods_Bid;
+
+public interface B_Goods_BidMapper {
+    int insert(B_Goods_Bid record);
+
+    int insertSelective(B_Goods_Bid record);
+    
+    B_Goods_Bid fingMaxGoodsBidByGoodsId(Integer goodsId);
+    
+    List<B_Goods_Bid> fingGoodsBidByGoodsId(int goods_id);
+    
+    List<B_Goods_Bid> selectMyBidGoods(int userId);
+}

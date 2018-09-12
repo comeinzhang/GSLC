@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.PickCustomer;
+
+public interface PickCustomerMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(PickCustomer record);
+
+    int insertSelective(PickCustomer record);
+
+    PickCustomer selectByPrimaryKey(Integer id);
+    
+    PickCustomer selectTodayByUserId(@Param("userId") Integer userId);
+
+    int updateByPrimaryKeySelective(PickCustomer record);
+
+    int updateByPrimaryKey(PickCustomer record);
+}

@@ -1,0 +1,40 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.NoticeMapper;
+import com.tyh.model.Notice;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class NoticeService {
+	
+	@Resource
+	private NoticeMapper mapper;
+	
+	public Notice selectByPrimaryKey(Integer id) {
+		return mapper.selectByPrimaryKey(id);
+	}
+	
+	public int getNoticeCountByStatus(Integer userId,Short status) {
+		return mapper.getNoticeCountByStatus(userId, status);
+	}
+	
+	public List<Notice> selectNoticeListPage(PageInfo page,Integer userId) {
+		return mapper.selectNoticeListPage(page, userId);
+	}
+	public int insertNotice(Notice record) {
+		return mapper.insert(record);
+	}
+	public int updateByPrimaryKeySelective(Notice record) {
+		return mapper.updateByPrimaryKeySelective(record);
+	}
+}

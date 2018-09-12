@@ -1,0 +1,36 @@
+package com.tyh.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Shop;
+import com.tyh.unitl.PageInfo;
+
+public interface B_ShopMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_Shop record);
+
+    int insertSelective(B_Shop record);
+
+    B_Shop selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(B_Shop record);
+
+    int updateByPrimaryKey(B_Shop record);
+    
+    B_Shop selectByUserId(@Param("userId")Integer userId,@Param("status")Integer status);
+    
+    List<B_Shop> selectByGardenId(Integer gardenId);
+    
+    List<B_Shop> selectByReferId(Integer referId);
+    
+    List<B_Shop> selectByAddr(String addr);
+    
+    Map getCountComsReferId(@Param("referId")Integer referId,@Param("addr")String addr);
+    
+    List<B_Shop> selectShopListPage(@Param("page")PageInfo page ,@Param("status")Integer status,@Param("name")String name,@Param("addr")String addr,@Param("catalogIdList")List<Integer> catalogIdList,@Param("shopType")Short shopType);
+    List<B_Shop> selectBldShopList(@Param("status")Integer status,@Param("catalogIdList")List<Integer> catalogIdList,@Param("shopType")Short shopType);
+}

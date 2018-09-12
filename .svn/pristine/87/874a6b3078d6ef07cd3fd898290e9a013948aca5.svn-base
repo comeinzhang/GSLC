@@ -1,0 +1,30 @@
+package com.tyh.mapper;
+
+import com.tyh.model.CheckCode;
+import com.tyh.model.CheckCodeExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface CheckCodeMapper {
+    int countByExample(CheckCodeExample example);
+
+    int deleteByExample(CheckCodeExample example);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CheckCode record);
+
+    int insertSelective(CheckCode record);
+
+    List<CheckCode> selectByExample(CheckCodeExample example);
+
+    CheckCode selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") CheckCode record, @Param("example") CheckCodeExample example);
+
+    int updateByExample(@Param("record") CheckCode record, @Param("example") CheckCodeExample example);
+
+    int updateByPrimaryKeySelective(CheckCode record);
+
+    int updateByPrimaryKey(CheckCode record);
+}

@@ -1,0 +1,25 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_User_Voucher;
+
+public interface B_User_VoucherMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_User_Voucher record);
+
+    int insertSelective(B_User_Voucher record);
+
+    B_User_Voucher selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(B_User_Voucher record);
+
+    int updateByPrimaryKey(B_User_Voucher record);
+    
+    B_User_Voucher selectMvByUserOrder(@Param("userId")Integer userId,@Param("orderNum")String orderNum,@Param("status")Short status);
+    
+    List<B_User_Voucher> selectMyVoucherList(@Param("userId")Integer userId,@Param("status")Short status,@Param("orderNum")String orderNum);
+}

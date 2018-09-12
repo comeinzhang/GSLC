@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Deal_MoneyMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Deal_Money" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="shop" property="shop" jdbcType="DECIMAL" />
+    <result column="goods" property="goods" jdbcType="DECIMAL" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, shop, goods, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_deal_money
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_deal_money
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.B_Deal_Money" >
+    insert into b_deal_money (id, shop, goods, 
+      updateTime)
+    values (#{id,jdbcType=INTEGER}, #{shop,jdbcType=DECIMAL}, #{goods,jdbcType=DECIMAL}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.B_Deal_Money" >
+    insert into b_deal_money
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shop != null" >
+        shop,
+      </if>
+      <if test="goods != null" >
+        goods,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="shop != null" >
+        #{shop,jdbcType=DECIMAL},
+      </if>
+      <if test="goods != null" >
+        #{goods,jdbcType=DECIMAL},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Deal_Money" >
+    update b_deal_money
+    <set >
+      <if test="shop != null" >
+        shop = #{shop,jdbcType=DECIMAL},
+      </if>
+      <if test="goods != null" >
+        goods = #{goods,jdbcType=DECIMAL},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.B_Deal_Money" >
+    update b_deal_money
+    set shop = #{shop,jdbcType=DECIMAL},
+      goods = #{goods,jdbcType=DECIMAL},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

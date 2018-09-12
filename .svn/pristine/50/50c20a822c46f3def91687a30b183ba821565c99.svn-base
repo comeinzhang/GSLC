@@ -1,0 +1,278 @@
+package com.tyh.controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tyh.common.CommonParam;
+import com.tyh.model.B_Catalog;
+import com.tyh.model.B_Goods;
+import com.tyh.model.B_Goods_Img;
+import com.tyh.model.B_Shop;
+import com.tyh.model.B_User;
+import com.tyh.model.ProConfigMap;
+import com.tyh.model.ShopGoods;
+import com.tyh.service.B_CatalogService;
+import com.tyh.service.B_GoodsService;
+import com.tyh.service.B_Goods_ImgService;
+import com.tyh.service.B_UserService;
+import com.tyh.service.ShopGoodsService;
+import com.tyh.unitl.DateUtils;
+import com.tyh.unitl.NumberUtil;
+import com.tyh.unitl.PageInfo;
+
+
+@Controller
+@RequestMapping("/shop")
+public class B_ShopController {
+	@Autowired
+    private B_UserService userService;
+	@Autowired
+    private B_Goods_ImgService imgService;
+	@Autowired
+    private ShopGoodsService shopGoodsService;
+	@Autowired
+    private B_CatalogService catalogService;
+	@Autowired
+    private B_GoodsService goodsService;
+	
+	String ASSET_URL = ProConfigMap.configMap.get("RESOURECE_URL");;
+	@RequestMapping("shopCatalog")
+	public String shopCatalog(HttpServletRequest request,Integer shopId){
+		B_Shop shop = userService.selectShopByPrimaryKey(shopId);
+		if (StringUtils.isNotBlank(shop.getCatalogId())) {
+			String[] catalogIds = shop.getCatalogId().split(",");
+			List<B_Catalog> catalogs = new ArrayList<B_Catalog>();
+			for (int i = 0; i < catalogIds.length; i++) {
+				B_Catalog catalog = catalogService.selectByPrimaryKey(Integer.parseInt(catalogIds[i]));
+				catalogs.add(catalog);
+			}
+			request.setAttribute("catalogs", catalogs);
+		}
+		request.setAttribute("shop", shop);
+		return "shop/shopCatalog";
+	}
+	@RequestMapping("shopLm")
+	public String shopLm(HttpServletRequest request){
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")) {
+			request.setAttribute("map", ProConfigMap.configMap);
+			return "shop/shopLm-yph";
+		}else {
+			return "shop/shopLm";
+		}
+	}
+	@RequestMapping("moreShop")
+	public String moreShop(HttpServletRequest request){
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")) {
+			return "shop/moreShop-yph";
+		}else {
+			return "shop/moreShop";
+		}
+	}
+	@ResponseBody
+	@RequestMapping("shopList")
+	public Map<String, Object> shopList(HttpServletRequest request){
+		Map<String, Object> map = new HashMap<String, Object>();
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		String name = request.getParameter("name");
+		String addr = request.getParameter("addr");
+		String shopTypeStr = request.getParameter("shopType");
+		Short shopType = null;
+		if (StringUtils.isNotBlank(shopTypeStr)) {
+			shopType = Short.parseShort(shopTypeStr);
+		}
+		int pageSize = request.getParameter("pageSize")==null?10:Integer.parseInt(request.getParameter("pageSize"));
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Shop> shopList = userService.selectShopListPage(page, 1,name,addr,null,shopType); 
+		
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		map.put("page", page);
+		map.put("list", shopList);
+		return map;
+	}
+	@RequestMapping("shopLmDetail")
+	public String shopLmDetail(HttpServletRequest request,Integer id){
+		B_Shop shop = userService.selectShopByPrimaryKey(id);
+		List<B_Goods_Img> imgList = imgService.selectByGoods_id(id ,(short) 4);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("shop", shop);
+		request.setAttribute("imgList", imgList);
+		return "shop/shopLmDetail";	
+	}
+	@RequestMapping("shopGPS")
+	public String shopGPS(HttpServletRequest request,Integer id){
+		B_Shop shop = userService.selectShopByPrimaryKey(id);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("shop", shop);
+		return "shop/shopGPS";
+	}
+	@ResponseBody
+	@RequestMapping("setShareStatus")
+	public String setShareStatus(HttpServletRequest request,Integer goodsId,Short shareStatus){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		B_Shop shop = userService.selectByUserId(user.getId(), 1);
+		List<ShopGoods> shopGoodsList1= shopGoodsService.selectByShopIdOrGoodsId(shop.getId(), goodsId, null);
+		if (shopGoodsList1.size()>0) {
+			ShopGoods shopGoods = shopGoodsList1.get(0);
+			shopGoods.setStatus(shareStatus);
+			shopGoodsService.updateByPrimaryKeySelective(shopGoods);
+		}else {
+			ShopGoods shopGoods = new ShopGoods();
+			shopGoods.setGoodsId(goodsId);
+			shopGoods.setShopId(shop.getId());
+			shopGoods.setStatus(shareStatus);
+			shopGoods.setCreateTime(DateUtils.currtime());
+			shopGoods.setUpdateTime(DateUtils.currtime());
+			shopGoodsService.insertSelective(shopGoods);
+		}
+		return "success";	
+	}
+	@RequestMapping("shopDetail")
+	public String shopDetail(HttpServletRequest request,Integer id){
+		B_Shop shop = userService.selectShopByPrimaryKey(id);
+		String catalogId = request.getParameter("catalogId");
+		request.setAttribute("catalogId", catalogId);
+		List<B_Catalog> allCatalogs  = catalogService.selectAllSon(null);
+		List<B_Goods> goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_SHOP,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		List<B_Goods_Img> imgList = imgService.selectByGoods_id(id ,(short) 4);
+		boolean wxIn = false;
+ 		String ua = ((HttpServletRequest) request).getHeader("user-agent")  
+ 		        .toLowerCase();  
+ 		if (ua.indexOf("micromessenger") > 0) {// 是微信浏览器  
+ 			wxIn = true;
+ 		}
+		if (!wxIn) {
+			request.setAttribute("flag", "app");
+		}
+		request.setAttribute("shop", shop);
+		request.setAttribute("imgList", imgList);
+		request.setAttribute("allCatalogs", allCatalogs);
+//		request.setAttribute("goodsList", goodsList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")) {
+			return "shop/shopGoodsList-yph";
+		}else {
+			return "shop/shopGoodsList";
+		}
+	}
+	@RequestMapping("bldShopIndex")
+	public String bldShopIndex(HttpServletRequest request){
+		String lon = request.getParameter("lon");
+		String lat = request.getParameter("lat");
+		String addr = request.getParameter("addr");
+		String city = request.getParameter("city");
+		request.setAttribute("lon", lon);
+		request.setAttribute("lat", lat);
+		request.setAttribute("addr", addr);
+		request.setAttribute("city", city);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "shop/bldShop-yph";
+	}
+	@ResponseBody
+	@RequestMapping("bldShopList")
+	public Map<String, Object> bldShopList(HttpServletRequest request){
+		Map<String, Object> map = new HashMap<String, Object>();
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		String lon = request.getParameter("lon");
+		String lat = request.getParameter("lat");
+		String shopTypeStr = request.getParameter("shopType");
+		Short shopType = null;
+		if (StringUtils.isNotBlank(shopTypeStr)) {
+			shopType = Short.parseShort(shopTypeStr);
+		}
+		int pageSize = request.getParameter("pageSize")==null?10:Integer.parseInt(request.getParameter("pageSize"));
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Shop> shopList = userService.selectBldShopList(1, null, shopType);
+		for (Iterator iterator = shopList.iterator(); iterator.hasNext();) {
+			B_Shop b_Shop = (B_Shop) iterator.next();
+			if (StringUtils.isNotBlank(b_Shop.getLon())&&StringUtils.isNotBlank(b_Shop.getLat())) {
+				Double longNum = NumberUtil.getLatLngDistance(Double.parseDouble(lon), Double.parseDouble(lat), Double.parseDouble(b_Shop.getLon()), Double.parseDouble(b_Shop.getLat()));
+				b_Shop.setLongNum(longNum);
+			}
+		}
+		Collections.sort(shopList, new Comparator<B_Shop>() {
+            @Override  
+            public int compare(B_Shop o1, B_Shop o2) {
+            	Double i = o1.getLongNum() - o2.getLongNum();  
+                return i.intValue();  
+            }  
+        });
+		int totalCount = shopList.size();
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		List<B_Shop> bldShopList = new ArrayList<B_Shop>();
+		if (currentPage==lastPage) {
+			bldShopList = shopList.subList(currentResult, shopList.size());
+		}else {
+			bldShopList = shopList.subList(currentResult, currentResult+pageSize);
+		}
+		
+		map.put("page", page);
+		map.put("list", bldShopList);
+		return map;
+	}
+	@RequestMapping("bldAddrIndex")
+	public String bldAddrIndex(HttpServletRequest request){
+		String lon = request.getParameter("lon");
+		String lat = request.getParameter("lat");
+		String addr = request.getParameter("addr");
+		String city = request.getParameter("city");
+		request.setAttribute("lon", lon);
+		request.setAttribute("lat", lat);
+		request.setAttribute("addr", addr);
+		request.setAttribute("city", city);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "shop/bldAddr-yph";
+	}
+}

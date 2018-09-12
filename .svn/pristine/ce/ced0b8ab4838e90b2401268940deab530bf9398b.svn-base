@@ -1,0 +1,114 @@
+package com.tyh.common;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class CommonParam {
+	public static int pageSize = 4;	//分页大小
+
+	//用户默认头像地址后缀
+	public static String USER_HEAD_DEFAULT = "default/user_head_default.jpg";
+	
+	
+	public static long SELLER_RE_TPL = 2091766;//作为商家需要在用户退换货时收到提示短信
+	public static long SELLER_NEW_TPL = 2091776;//作为商家需要在用户下单且支付成功后收到提示短信
+	public static long SELLER_POST_TPL = 2091782;//作为用户需要在商家发货后收到短信
+	public static long BUYER_REC_TPL = 2091986;//作为用户需要在购买商品签收后收到短信
+	public static long SHOP_NEW_TPL = 2091988;//作为代售商家需要在用户下单后收到短信
+	public static long SHOP_RE_TPL = 2091990;//作为代售商家需要在用户退换货后收到短信
+	public static long BUYER_PAY_TPL = 2122928;//用户下单成功之后需要收到下单成功的短信
+	//收藏分类
+	public static Short STORE_TYPE_GOODS = 1;//商品
+	//产品分类ID1：:新品推荐；2：超值优惠；3：为你推荐;4：首页置顶；5：甄选优品；6：新客专享;7：店铺banner；8：秒杀APP首页
+	public static String FLAG_NEW = "1";//新品推荐
+	public static String FLAG_SELL = "2";//超值优惠
+	public static String FLAG_YOU = "3";//为你推荐
+	public static String FLAG_TOP = "4";//首页顶部广告/本店特色
+	public static String FLAG_SUPER = "5";//首页顶部广告/本店特色
+	public static String FLAG_USER = "6";//新客专享
+	public static String FLAG_SHOP = "7";//店铺banner
+	public static String FLAG_APPMS = "8";//秒杀APP首页
+	//产品分类ID
+	public static int FOOD_CATALOG_ID = 1;//果蔬副食
+	public static int TEA_CATALOG_ID = 2;//名茶名酒
+	public static int ARTS_CATALOG_ID = 3;//工艺礼品
+	public static int MEAT_CATALOG_ID = 4;//肉类精选
+	public static int CROP_CATALOG_ID = 5;//粮油米面
+	//首页各分类查询数量
+	public static int FOOD_COUNTS = 3;//生态健康
+	public static int TEA_COUNTS = 3;//家居生活
+	public static int ARTS_COUNTS = 3;//文化艺术
+	public static int MEAT_COUNTS = 4;//儿童收纳
+	public static int CROP_COUNTS = 4;//车载收纳
+	//产品销售类型	1：商户；2：商城自营
+	public static Short USER_SELL_TYPE = 1;
+	public static Short SELF_SELL_TYPE = 2;
+	//产品类型	0:普通商品；1：拍卖商品；2：早餐；3：订制商品；4：预售商品;5:线下商品；6：秒杀商品;7:拼单商品
+	public static Short GOODS_TYPE_NORMAL = 0;
+	public static Short GOODS_TYPE_AUCTION = 1;
+	public static Short GOODS_TYPE_BREAKER = 2;
+	public static Short GOODS_TYPE_DZ = 3;
+	public static Short GOODS_TYPE_PRE = 4;
+	public static Short GOODS_TYPE_LINE = 5;
+	public static Short GOODS_TYPE_SALE = 6;
+	public static Short GOODS_TYPE_PD = 7;
+	//产品审核状态	0：待审核；1：上架/竞拍中；2：下架/停拍；3：待上架/审核通过；4：审核未通过；5：强制下架/强制停拍；6：已删除;
+	public static Short GOODS_STATUS_NO = 0;
+	public static Short GOODS_STATUS_UP = 1;
+	public static Short GOODS_STATUS_DOWN = 2;
+	public static Short GOODS_STATUS_UPING = 3;
+	public static Short GOODS_STATUS_NOT = 4;
+	public static Short GOODS_STATUS_DOWNED = 5;
+	public static Short GOODS_STATUS_CANCEL = 6;
+	//订单状态：0：未付款；1:待派件/已支付；2：派件中；3：已收件；4：已退款；5:退款/换货中；6：待接单；7：已取消；8：待付定金；9：拼单已付 ;10:已评论；  //0：出售中；1：未付款；2：已支付；3：已完成；4：已取消；5：申述
+	public static Short ORDER_STATUS_NO = 0;
+	public static Short ORDER_STATUS_NOEMS = 1;
+	public static Short ORDER_STATUS_EMSING = 2;
+	public static Short ORDER_STATUS_SUCCESS = 3;
+	public static Short ORDER_STATUS_FALSE = 4;
+	public static Short ORDER_STATUS_RECH = 5;
+	public static Short ORDER_STATUS_UNREC = 6;
+	public static Short ORDER_STATUS_CANCEL = 7;
+	public static Short ORDER_STATUS_PRESELL = 8;
+	public static Short ORDER_STATUS_PRESELLED = 9;
+	public static Short ORDER_STATUS_REPLYED = 10;
+	//退换货类型：0：退货；1：换货
+	public static Short RETURN_TYPE = 0;
+	public static Short CHANGE_TYPE = 1;
+	//退换货状态：0：申请中；1：审核通过；2：退换完成；3：审核失败；4:买家已发货；5：商家已发货（换货）商家已收货（退货）
+	public static Short RETURN_STATUS_ING = 0;
+	public static Short RETURN_STATUS_PASS = 1;
+	public static Short RETURN_STATUS_SUCCESS = 2;
+	public static Short RETURN_STATUS_FALSE = 3;
+	public static Short RETURN_STATUS_POST = 4;
+	public static Short RETURN_STATUS_RECEIVE = 5;
+	
+	//佣金类型：0：特色商品；1：体验商品；2：消费商品
+	public static Short COMS_TYPE_TS = 0;
+	public static Short COMS_TYPE_TY = 1;
+	public static Short COMS_TYPE_XF = 2;
+	//kxz
+	//用户角色：0：普通会员；1：体验合伙人；2：消费合伙人
+	public static Integer USER_ROLE_PT = 0;
+	public static Integer USER_ROLE_TY = 1;
+	public static Integer USER_ROLE_XF = 2;
+	//
+	public static String USER_ROLE_PRO = "a";//省代
+	public static String USER_ROLE_CITY = "b";//市代
+	public static String USER_ROLE_COUNT = "c";//区县代
+	public static String USER_ROLE_COMER = "d";//消费商
+	public static String USER_ROLE_MEMBER = "e";//会员
+	public static String USER_ROLE_SALER = "f";//业务员
+	public static String USER_ROLE_SELLER = "g";//商家
+	
+	public static Map<Integer, String> userRoleMap = new HashMap();
+	static{
+		userRoleMap.put(USER_ROLE_PT, "普通会员");//	
+		userRoleMap.put(USER_ROLE_TY, "体验合伙人");// 	
+		userRoleMap.put(USER_ROLE_XF, "消费合伙人"); //
+	}
+	public static String ZFB_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhFoKD1LZa4Wctfy086vlz6TFcMkTYJO2hilSYGHX7yA/6r5uOWVyP3LfM760LlzEXgff1I5u+eGf5sQaX8xOzW8Eg3XtAeLBodCq+4UOLHgQHSwuQoiM/TEKwU00ur+A0JxHGWyObl8m/PPLUqbQmXEYP9tzf8q651QwDZAlkor+ro4W8pL7ePJECRII14sQl8UnJ+UP9nPX6GO8Pe7GiJLYHD4kTiGyt1LOu6hJII293wcz9k/skqUMkv/z3WFmCLw9rQJMOqh3lxN3NSe/UFG/ib0CHcYccirnWC1oYSwN1CuRyP11PS9A41pjFevmY3ZcnwOUbilGqjSAntIixQIDAQAB";
+	public static String APP_ZFB_PRIVATE_KEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCN+VjDGm/f47BP2/YK8WoF4aaQTbg+AQTjc7EL6skGeuMjhj4wj/FS4rVBuS78etivCcmSdQ0O0Yio4AxQSyhnl5HNyMYK2nk/xO/HjtHeAJk89lpniSapJ4Q9Mz/rvGc4KU5MDVSTqQWBvyW7XCUI7C+kXexfSRDjJ8wX+KF+i8Ep5m8Nq1czDd6G7+2/6yyFnGGFSyveOSokECddIqWgA9f4XDirEdlGF+ZVMD+2xKB68hku4P7Fw/ha3n6Kqgxb+aeYEHyH/Xo24/YG5rmvA8qMVU5s676+WPe1THDN+0NMYUNKDMQNdaEeDYNXHxi3Vfe8xrU0L0XJDbGEN357AgMBAAECggEAbEiOo5gJVejyM6afnS8N31iA0rUEXf4m/Vfi5CT5mACoNxMPYbiXpdEVz//uz1De7Xn4jMTL5c54fd0MZz07nu8inKKSMfr52WJaQ4kxljI8rhtzTl5z5zYljQwGp8S1sUcH2cedB1Y1xgTFQYaBFLIXkDS2sOIoiCh1aJ8QhVPsEGhwUH8XZQ8dLwcSXTIPJ5RVkD4LI2ppdpOpORL/51WoMjlf49GXhnDdJCZ61whUkluBBOVqcFeu2eOdlhxjWP0V/IqNIMI+VO9ZmNuXeO7fsyoJUgMosaX+tRP1mripYWQ9WwjWnuOE2L5g9s/1XNOj3CgW3Ft+uCGYSm6O0QKBgQDSaE6bPOuFDSR7KI9pNsGfJs8Cf4ucR5RM4k12tFGdxA0bSAO9v66RruK5DKAd773hSp0lYSXcQmUOSZCnyw6rKAlm6R+AaOwm3/1o8MIkR03013VDDQjeUtg+XoNRN6sYiTEh+BpfBNDr48SXiW89C7J+6G3W6c9gby7LJSUXQwKBgQCsvOjPgOB58wgfCqDbigFUvPwavopbPna0Wem82Z0G1+zYO6tCS3ciU4EPSVqKTN3ZKBX17VGC+9GEmMbL//BOy02jjnkh4X/x9She0UXLis0hIZdkmLpLiwB6mD2WuIn9GTtVDnRJ8TYucA9QyKhyQpXpaYHMr34NFfpeoUn8aQKBgE7z9QsrgPUcSWQthCLm+SDPXz6AvdKWyX9QK+EvKLEasBBcpYq+MrNX/JuTsUGKhKXVacJtAdf00hbaY/2SpJ51F5IWSEvXE0ZDJsQKE8+pMgd+EfJnIbzLOXmt3XjMetdqI5Wrk7m0BPF/NnXmjGdLzF7yuMS8V6TIE7cG6TQhAoGBAJZ8sXptdaLoZs/cS41XqpcvWZbXHuQlA/dVSbub/iBDJvSu7yF/a1e9VfeCWV2ZX8DbGl65FMU/KyYQj0iUPb/3gDkYW1F4CiY6BaStPtf3oYPWpvUd1VcQzyb+0NEpDhYw0C7mu8rbWO+V8tHXLmD0v3Os1kcDMJan6gpdC37ZAoGBAISSXaOqmw7DV2/S207tFdACZiSLNqwjriA2cTNZls78YCMJKtSCsvXo5HQ7uKyBoZYewXeek8azWaik6f+wmXsf2hGEAwPnIktOORsYMvfG46Z+nMdl2/tcao7N1lXTTMnMIjLXpQVvYwrNcyfRCpKzeqy3oVGBm8GY5OVSfgky";
+	//最高级消费合伙人ID
+	public static String TOP_REFER_XF_ID = "1000";
+}

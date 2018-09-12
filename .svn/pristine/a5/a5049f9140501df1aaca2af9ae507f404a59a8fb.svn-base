@@ -1,0 +1,37 @@
+package com.tyh.service;
+
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_ReturnMapper;
+import com.tyh.model.B_Return;
+
+@Service
+public class B_ReturnService {
+	
+	@Resource
+	private B_ReturnMapper mapper;
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	public int insert(B_Return record){
+    	return mapper.insert(record);
+    }
+
+	public B_Return selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+
+	public B_Return selectByOrderNum(String ordrNum){
+    	return mapper.selectByOrderNum(ordrNum);
+    }
+	
+	public int updateByPrimaryKeySelective(B_Return record){
+    	return mapper.updateByPrimaryKeySelective(record);
+    }
+	
+}

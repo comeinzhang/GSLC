@@ -1,0 +1,135 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Catalog {
+    private Integer id;
+
+    private Integer parentId;
+
+    private String code;
+
+    private Short catalogLev;
+
+    private String name;
+    
+    private String imgUrl;
+    
+    private String imgUrl1;
+    
+    private String videoUrl;
+    
+    private String videoUrl1;
+
+    private Short seq;
+    
+    private Short voucher;
+
+    private Date updateTime;
+    
+    private Short flag;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public Short getCatalogLev() {
+        return catalogLev;
+    }
+
+    public void setCatalogLev(Short catalogLev) {
+        this.catalogLev = catalogLev;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Short getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Short seq) {
+        this.seq = seq;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public Short getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Short flag) {
+		this.flag = flag;
+	}
+
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
+
+	public String getVideoUrl1() {
+		return videoUrl1;
+	}
+
+	public void setVideoUrl1(String videoUrl1) {
+		this.videoUrl1 = videoUrl1;
+	}
+
+	public String getImgUrl1() {
+		return imgUrl1;
+	}
+
+	public void setImgUrl1(String imgUrl1) {
+		this.imgUrl1 = imgUrl1;
+	}
+
+	public Short getVoucher() {
+		return voucher;
+	}
+
+	public void setVoucher(Short voucher) {
+		this.voucher = voucher;
+	}
+}

@@ -1,0 +1,78 @@
+package com.tyh.unitl;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+
+
+public class PropertiesUtil {
+	
+	//#应用服务器地址
+	public static String APPID = "";
+	public static String REDIRECT_URI = "";
+	public static String RESPONSE_TYPE = "";
+	public static String SCOPE = "";
+	public static String STATE = "";
+	public static String APPSECRET = "";
+	public static String ASSET_URL = "";
+	public static String DOMAIN_NAME = "";
+	public static String APPID_APP = "";
+	public static String APPSECRET_APP = "";
+	public static String MCH_ID = "";
+	public static String PARTNERKEY = "";
+	public static String MCH_ID_APP = "";
+	public static String PARTNERKEY_APP = "";
+	public static String MULTIMEDIA_PATH= "";
+	//融云配置
+	public static String RY_ENVIRONMENT = "";
+	
+	static{
+		APPID = PropertiesUtil.getProperty("config/config.properties","APPID").trim();
+		REDIRECT_URI = PropertiesUtil.getProperty("config/config.properties","REDIRECT_URI").trim();
+		RESPONSE_TYPE = PropertiesUtil.getProperty("config/config.properties","RESPONSE_TYPE").trim();
+		SCOPE = PropertiesUtil.getProperty("config/config.properties","SCOPE").trim();
+		STATE = PropertiesUtil.getProperty("config/config.properties","STATE").trim();
+		APPSECRET = PropertiesUtil.getProperty("config/config.properties","APPSECRET").trim();
+		ASSET_URL = PropertiesUtil.getProperty("config/config.properties","ASSET_URL").trim();
+		DOMAIN_NAME = PropertiesUtil.getProperty("config/config.properties","DOMAIN_NAME").trim();
+		APPID_APP=PropertiesUtil.getProperty("config/config.properties","APPID_APP").trim();
+		APPSECRET_APP=PropertiesUtil.getProperty("config/config.properties","APPSECRET_APP").trim();
+		MCH_ID=PropertiesUtil.getProperty("config/config.properties","MCH_ID").trim();
+		PARTNERKEY=PropertiesUtil.getProperty("config/config.properties","PARTNERKEY").trim();
+		MCH_ID_APP=PropertiesUtil.getProperty("config/config.properties","MCH_ID_APP").trim();
+		PARTNERKEY_APP=PropertiesUtil.getProperty("config/config.properties","PARTNERKEY_APP").trim();
+		MULTIMEDIA_PATH=PropertiesUtil.getProperty("config/config.properties","MULTIMEDIA_PATH").trim();
+		
+		RY_ENVIRONMENT = PropertiesUtil.getProperty("config/config.properties","RY_ENVIRONMENT").trim();
+	}
+	
+	
+	public static String getProperty(String propertiesFilePath, String key) {
+		InputStream is = null;
+		try {
+			is = PropertiesUtil.class.getClassLoader().getResourceAsStream(propertiesFilePath); 
+			try {
+				Properties properties = new Properties();
+				properties.load(is);
+				String value = properties.getProperty(key);
+				if(value==null){
+					return "";
+				}else{
+					return properties.getProperty(key);
+				}
+			}
+			finally {
+				is.close();
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static void main(String[] args) {
+//		System.out.println(PropertiesUtil.ASSET_URL);
+	}
+
+}

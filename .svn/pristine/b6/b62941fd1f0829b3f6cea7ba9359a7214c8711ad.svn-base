@@ -1,0 +1,43 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_SpecMapper;
+import com.tyh.model.B_Spec;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class B_SpecService {
+	
+	@Resource
+	private B_SpecMapper mapper;
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	public B_Spec selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+
+    public int updateByPrimaryKeySelective(B_Spec record){
+    	return mapper.updateByPrimaryKeySelective(record);
+    }
+    
+    public List<B_Spec> selectByGoodsId(Integer goods_id) {
+		return mapper.selectByGoodsId(goods_id);
+	}
+    public List<B_Spec> selectLessGoodsListPage(PageInfo page,Integer publisherId){
+    	return mapper.selectLessGoodsListPage(page,publisherId);
+    }
+    
+    public int saveSpec(B_Spec spec){
+    	return mapper.saveSpec(spec);
+    }
+}
+

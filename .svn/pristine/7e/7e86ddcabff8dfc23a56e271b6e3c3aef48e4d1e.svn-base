@@ -1,0 +1,92 @@
+package com.tyh.service;
+
+
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_EmsTypeMapper;
+import com.tyh.mapper.B_Order_DetailMapper;
+import com.tyh.mapper.B_Order_TrackMapper;
+import com.tyh.model.B_EmsType;
+import com.tyh.model.B_Order_Detail;
+import com.tyh.model.B_Order_Track;
+import com.tyh.unitl.PageInfo;
+
+
+@Service
+public class B_Order_DetailService {
+	
+	@Resource
+	private B_Order_DetailMapper mapper;
+	@Resource
+	private B_Order_TrackMapper trackMapper;
+	@Resource
+	private B_EmsTypeMapper emsTypeMapper;
+	
+	public int deleteByPrimaryKey(Integer id){
+    	return mapper.deleteByPrimaryKey(id);
+    }
+
+    public int insert(B_Order_Detail record){
+    	return mapper.insert(record);
+    }
+    //包括商品
+    public B_Order_Detail selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+  //bu包括商品
+    public B_Order_Detail selectById(Integer id){
+    	return mapper.selectById(id);
+    }
+
+    public int updateByPrimaryKey(B_Order_Detail record){
+    	return mapper.updateByPrimaryKey(record);
+    }
+    //包括商品
+    public List<B_Order_Detail> selectByorderNum(String orderNum){
+    	return mapper.selectByorderNum(orderNum);
+    }
+    //不包商品
+    public List<B_Order_Detail> getByorderNum(String orderNum){
+    	return mapper.getByorderNum(orderNum);
+    }
+    
+    public int deleteByOrderNum(@Param("orderNum")String orderNum){
+    	return mapper.deleteByOrderNum(orderNum);
+    }
+    
+    public B_Order_Track selectByDetailId(Integer detailId){
+    	return trackMapper.selectByDetailId(detailId);
+    }
+    public B_Order_Track selectByOrderNum(String orderNum){
+    	return trackMapper.selectByOrderNum(orderNum);
+    }
+    public B_EmsType selectByType(String type){
+    	return emsTypeMapper.selectByType(type);
+    }
+    //线下报单记录（yhlm）
+    public List<B_Order_Detail> selectLineDetailListPage(PageInfo page,String sign,Integer sellerUserId){
+    	return mapper.selectLineDetailListPage(page, sign, sellerUserId);
+    }
+    
+  //业绩记录（yhlm）
+    public List<B_Order_Detail> selectBonusListPage(Map<String, Object> map){
+    	return mapper.selectBonusListPage(map);
+    }
+  //本店线上报单统计（yhlm）
+    public BigDecimal selectLineDetailCount(Integer sellerUserId,String monFlag){
+    	return mapper.selectLineDetailCount(sellerUserId, monFlag);
+    }
+    
+    public List selectMergeCount(Integer goodsId,Short status) {
+		return mapper.selectMergeCount(goodsId,status);
+	}
+    
+}

@@ -1,0 +1,25 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.Customer;
+
+public interface CustomerMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Customer record);
+
+    int insertSelective(Customer record);
+
+    Customer selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Customer record);
+
+    int updateByPrimaryKey(Customer record);
+    
+    List<Customer> selectByUserId(@Param("userId")Integer userId);
+    
+    List<Customer> selectTop10();
+}

@@ -1,0 +1,27 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.SysVersionMapper;
+import com.tyh.model.SysVersion;
+
+
+
+@Service
+public class SysService {
+	
+	@Resource
+	private SysVersionMapper mapper;
+	
+	public SysVersion selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+
+	public List<SysVersion> getSysVersionList(Integer deviceType){
+    	return mapper.getSysVersionList(deviceType);
+    }
+}

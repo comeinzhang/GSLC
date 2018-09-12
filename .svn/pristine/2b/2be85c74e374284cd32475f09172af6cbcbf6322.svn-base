@@ -1,0 +1,172 @@
+package com.tyh.service;
+
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.shine.idc.param.redRecordQueryParam;
+import com.tyh.mapper.B_GoodsMapper;
+import com.tyh.mapper.B_Goods_BidMapper;
+import com.tyh.mapper.B_Goods_FocusMapper;
+import com.tyh.mapper.CrowdMapper;
+import com.tyh.mapper.CrowdPresellMapper;
+import com.tyh.mapper.DZReplyMapper;
+import com.tyh.model.B_Goods;
+import com.tyh.model.B_Goods_Bid;
+import com.tyh.model.B_Goods_Focus;
+import com.tyh.model.Crowd;
+import com.tyh.model.CrowdPresell;
+import com.tyh.model.DZReply;
+import com.tyh.model.ShopGoods;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class B_GoodsService {
+	
+	@Resource
+	private B_GoodsMapper mapper;
+	@Resource
+	private B_Goods_BidMapper bidMapper;
+	@Resource
+	private B_Goods_FocusMapper focusMapper;
+	@Resource
+	private CrowdMapper crowdMapper;
+	@Resource
+	private CrowdPresellMapper crowdPresellMapper;
+	@Resource
+	private DZReplyMapper dzReplyMapper;
+	
+	//详情
+	public B_Goods selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+	public B_Goods selectByBarCode(String barCode,Integer publisherId){
+    	return mapper.selectByBarCode(barCode,publisherId);
+    }
+	public int insertSelective(B_Goods record){
+		return mapper.insertSelective(record);
+	}
+    //更新
+    public int updateByPrimaryKey(B_Goods record){
+    	return mapper.updateByPrimaryKey(record);
+    }
+    public int updateByPrimaryKeySelective(B_Goods record){
+    	return mapper.updateByPrimaryKeySelective(record);
+    }
+    public int appReleaseGoods(B_Goods record){
+    	return mapper.appReleaseGoods(record);
+    }
+    public int delGoodsByPrimaryKey(Integer id){
+    	return mapper.delGoodsByPrimaryKey(id);
+    }
+    //查找首页
+    public List<B_Goods> selectByFlag(String catalog_id,String flag,Integer limit,Short status,Short goodsType){
+    	return mapper.selectByFlag(catalog_id,flag, limit,status,goodsType);
+    }
+    public List<B_Goods> selectByCataLog_IdListPage(String catalog_id,String sign,String flag,PageInfo page,Short status,Short goodsType,Integer gardenId){
+    	return mapper.selectByCataLog_IdListPage(catalog_id, sign,flag, page,status,goodsType,gardenId);
+    }
+    public List<B_Goods> getGoodsByKeywordListPage(String flag,String keyword,String orderBy,PageInfo page,Short status,Short goodsType,Integer shopId,List<Integer> catalogIdList,List<ShopGoods> shopGoods){
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("keyword", keyword);
+    	map.put("orderBy", orderBy);
+    	map.put("page", page);
+    	map.put("status", status);
+    	map.put("flag", flag);
+    	map.put("goodsType", goodsType);
+    	map.put("shopId", shopId);
+    	map.put("catalogIdList", catalogIdList);
+    	map.put("shopGoods", shopGoods);
+    	return mapper.getGoodsByKeywordListPage(map);
+    }
+    
+    public List<B_Goods> getSellerGoodsListPage(String flag,String keyword,String orderBy,PageInfo page,Short status,Short goodsType,Integer publisherId){
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("flag", flag);
+    	map.put("keyword", keyword);
+    	map.put("orderBy", orderBy);
+    	map.put("page", page);
+    	map.put("status", status);
+    	map.put("publisherId", publisherId);
+    	map.put("goodsType", goodsType);
+    	return mapper.getSellerGoodsListPage(map);
+    }
+    
+    public List<B_Goods_Bid> fingGoodsBidByGoodsId(int goods_id){
+    	return bidMapper.fingGoodsBidByGoodsId(goods_id);
+    }
+    
+    public B_Goods_Bid fingMaxGoodsBidByGoodsId(Integer goodsId){
+    	return bidMapper.fingMaxGoodsBidByGoodsId(goodsId);
+    }
+    
+    public int insertSelective(B_Goods_Bid record) {
+		return bidMapper.insertSelective(record);
+	}
+    
+    public List<B_Goods_Bid> selectMyBidGoods(int userId){
+    	return bidMapper.selectMyBidGoods(userId);
+    }
+    public int selectShopCountByUserId(int userId){
+    	return focusMapper.selectShopCountByUserId(userId);
+    }
+    public int insertSelective(B_Goods_Focus record){
+    	return focusMapper.insertSelective(record);
+    }
+    public B_Goods_Focus getISFocused(Integer userId,Integer shopId){
+    	return focusMapper.getISFocused(userId, shopId);
+    }
+    public int deleteFocus(Integer id){
+    	return focusMapper.deleteByPrimaryKey(id);
+    }
+    public List<B_Goods_Focus> selectMyFocusListPage(PageInfo page,Integer userId){
+    	return focusMapper.selectMyFocusListPage(page, userId);
+    }
+    public B_Goods_Focus selectFocusByPrimaryKey(Integer id){
+    	return focusMapper.selectByPrimaryKey(id);
+    }
+    public int updateFocusSelective(B_Goods_Focus record){
+    	return focusMapper.updateByPrimaryKeySelective(record);
+    }
+    public List<B_Goods> myGoodsByStatusListPage(String flag,Short status,Integer shopId,PageInfo page,Short goodsType){
+    	return mapper.myGoodsByStatusListPage(flag, status, shopId, page,goodsType);
+    }
+    public List<B_Goods> selectBreakerIndex(String flag,Integer limit,Short status,Integer gardenId,Short goodsType){
+    	return mapper.selectBreakerIndex(flag, limit, status, gardenId,goodsType);
+    }
+    public List<Crowd> selectCrowdListPage(PageInfo page,Short status){
+    	return crowdMapper.selectCrowdListPage(page,status);
+    }
+    public Crowd getCrowdById(Integer id){
+    	return crowdMapper.getCrowdById(id);
+    }
+    public int updateByPrimaryKeySelective(Crowd record){
+    	return crowdMapper.updateByPrimaryKeySelective(record);
+    }
+    public Integer myGoodsCountByStatus(Short endIs,Short status,Integer publisherId,Short goodsType){
+		return mapper.myGoodsCountByStatus(endIs, status, publisherId, goodsType);
+	}
+    public List<CrowdPresell> selectByCid(Integer cId){
+    	return crowdPresellMapper.selectByCid(cId);
+    }
+    
+    public int insertDzSelective(DZReply record){
+    	return dzReplyMapper.insertSelective(record);
+    }
+
+    public DZReply selectDzByPrimaryKey(Integer id){
+    	return dzReplyMapper.selectByPrimaryKey(id);
+    }
+
+    public List<DZReply> selectDzByUserId(Integer userId,Integer dzId){
+    	return dzReplyMapper.selectByUserId(userId, dzId);
+    }
+}

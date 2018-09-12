@@ -1,0 +1,37 @@
+package com.tyh.service;
+
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.ProConfigMapper;
+import com.tyh.model.ProConfig;
+import com.tyh.model.ProConfigMap;
+
+
+@Service
+public class ProConfigService {
+	
+	@Resource
+	private ProConfigMapper proConfigMapper;
+	public void configMap(){
+		List<ProConfig> configList = proConfigMapper.selectConfigList();
+		for (Iterator iterator = configList.iterator(); iterator.hasNext();) {
+			ProConfig config = (ProConfig) iterator.next();
+			ProConfigMap.configMap.put(config.getProkey(), config.getProvalue());
+		}
+	}
+	
+	public void insert(ProConfig proConfig){
+		proConfigMapper.insertSelective(proConfig);
+	}
+	public List<ProConfig> selectByKey(String proKey) {
+		return proConfigMapper.selectByKey(proKey);
+	}
+	public void updateByPrimaryKeySelective(ProConfig proConfig){
+		proConfigMapper.updateByPrimaryKeySelective(proConfig);
+	}
+}

@@ -1,0 +1,1097 @@
+package com.tyh.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.alipay.api.internal.util.AlipaySignature;
+import com.tyh.common.CommonParam;
+import com.tyh.model.B_EmsType;
+import com.tyh.model.B_Goods;
+import com.tyh.model.B_Goods_Img;
+import com.tyh.model.B_Goods_Reply;
+import com.tyh.model.B_Order;
+import com.tyh.model.B_Order_Detail;
+import com.tyh.model.B_Order_Track;
+import com.tyh.model.B_Return;
+import com.tyh.model.B_Shop;
+import com.tyh.model.B_Spec;
+import com.tyh.model.B_User;
+import com.tyh.model.B_User_Addr;
+import com.tyh.model.B_User_Voucher;
+import com.tyh.model.ProConfigMap;
+import com.tyh.model.Recharge;
+import com.tyh.model.RedPacketRecord;
+import com.tyh.model.ReplyUser;
+import com.tyh.model.School;
+import com.tyh.service.B_GoodsService;
+import com.tyh.service.B_Goods_ImgService;
+import com.tyh.service.B_Goods_ReplyService;
+import com.tyh.service.B_OrderService;
+import com.tyh.service.B_Order_DetailService;
+import com.tyh.service.B_ReturnService;
+import com.tyh.service.B_SpecService;
+import com.tyh.service.B_UserService;
+import com.tyh.service.B_User_AddrService;
+import com.tyh.service.B_User_CarService;
+import com.tyh.service.RechargeService;
+import com.tyh.service.RedPacketService;
+import com.tyh.service.SchoolService;
+import com.tyh.service.VoucherService;
+import com.tyh.unitl.DateUtils;
+import com.tyh.unitl.FileUnitl;
+import com.tyh.unitl.JavaSmsApi;
+import com.tyh.unitl.wx.TenpayUtil;
+import com.tyh.unitl.wx.WxPayUtil;
+
+
+
+
+@Controller
+@RequestMapping("/order")
+public class B_OrderController {
+	@Autowired
+    private B_GoodsService goodsService;
+	@Autowired
+    private B_OrderService orderService;
+	@Autowired
+    private B_Order_DetailService order_DetailService;
+	@Autowired
+    private B_UserService userService;
+	@Autowired
+    private B_User_CarService carService ;
+	@Autowired
+    private B_User_AddrService addrService ;
+	@Autowired
+    private B_SpecService specService ;
+	@Autowired
+    private B_ReturnService returnService ;
+	@Autowired
+    private B_Goods_ReplyService replyService ;
+	@Autowired
+	private B_Goods_ImgService imgService;
+	@Autowired
+	private VoucherService voucherService;
+	@Autowired
+	private SchoolService schoolService;
+	@Autowired
+	private RechargeService rechargeService;
+	@Autowired
+	private RedPacketService redPacketService;
+	
+	String ASSET_URL = ProConfigMap.configMap.get("RESOURECE_URL");;
+	
+	@ResponseBody
+	@RequestMapping("/pay_callback")
+	public String pay_callback(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	        Map<String,String> map = new HashMap<String, String>();  
+	        SAXReader reader = new SAXReader();  
+	        InputStream inputStream = request.getInputStream();  
+	        Document document = reader.read(inputStream);  
+	        Element root = document.getRootElement();
+	        List<Element> list = root.elements();  
+	        System.out.println("pay_callback");
+	        for(Element e:list){  
+	            map.put(e.getName(), e.getText());
+	            System.out.println(e.getName()+":"+e.getText());
+	        }  
+	        inputStream.close();  
+ 		String return_code = "";
+ 		if (map.containsKey("return_code")) {
+ 			return_code = map.get("return_code").toString();
+		}
+ 		if (return_code.equals("SUCCESS")) {
+ 			if ("SUCCESS".equals(map.get("result_code"))) {
+ 				String out_trade_no = map.get("out_trade_no").toString();
+ 				String transaction_id = map.get("transaction_id").toString();//微信支付订单号
+ 				if (out_trade_no.contains("CZ")) {
+					String orderNum = out_trade_no;
+					Recharge recharge = rechargeService.selectByOrderNum(orderNum);
+					if (recharge.getStatus()==CommonParam.ORDER_STATUS_NO) {
+						recharge.setStatus(CommonParam.ORDER_STATUS_NOEMS);
+						recharge.setWxNumber(transaction_id);
+						rechargeService.updateByPrimaryKeySelective(recharge);
+						B_User user = userService.selectByPrimaryKey(recharge.getUserId());
+						user.setBalance(user.getBalance()+recharge.getCoints());
+						userService.updateBalance(user);
+						RedPacketRecord record = new RedPacketRecord();
+						record.setCreateTime(DateUtils.currtime());
+						record.setGivemoney(recharge.getCoints());
+						record.setOrderNum(recharge.getOrderNum());
+						record.setDetailId(recharge.getId());
+						record.setRedNum(0);
+						record.setUserId(recharge.getUserId());
+						record.setType((short) 8);
+						redPacketService.insertSelective(record);
+					}
+				}else {
+	 				String[] order_num = out_trade_no.split("V");
+	 				List<B_User_Voucher> userVoucherList = new ArrayList<B_User_Voucher>();
+	 				if (order_num.length==2) {
+	 					String [] vid = order_num[1].split("-");
+	 					for (int i = 0; i < vid.length; i++) {
+	 						B_User_Voucher myvoucher = voucherService.selectMyByPrimaryKey(Integer.parseInt(vid[i]));
+	 						userVoucherList.add(myvoucher);
+	 					}
+					}
+	 				String[] vs = order_num[0].split("-");
+	 				String[] ids = vs[1].split("_");
+	 				for (int i = 0; i < ids.length; i++) {
+	 					B_Order order = orderService.selectByPrimaryKey(Integer.parseInt((ids[i])));
+	 					B_Shop shop = userService.selectByUserId(order.getSellUserId(), 1);
+	 					shop.setTotalMoney(shop.getTotalMoney()+order.getTotalPrice());
+	 					Short status = CommonParam.ORDER_STATUS_NOEMS;
+						if(order.getStatus()!=CommonParam.ORDER_STATUS_NO){
+		 					break;
+		 				}
+	 					//更新订单
+						order.setStatus(status);
+						order.setPayWay((short) 1);
+						order.setWxOrderNum(transaction_id);
+						Double orderPrePayment = 0.0;
+						List<B_Order_Detail> detailList = order_DetailService.selectByorderNum(order.getOrderNum());
+							Double delMoney=0.0;
+							for (B_Order_Detail b_Order_Detail : detailList) {
+								B_Goods goods = b_Order_Detail.getGoods();
+								goods.setSellCount(goods.getSellCount()+b_Order_Detail.getStock());
+								goodsService.updateByPrimaryKey(goods);
+								//记录订单状态处理日志
+								b_Order_Detail.setStatus(status);
+								orderService.saveOrderAction(order.getId(), b_Order_Detail.getId(), b_Order_Detail.getStatus());
+								order_DetailService.updateByPrimaryKey(b_Order_Detail);
+								shop.setMaxMoney(shop.getMaxMoney()+1);
+							}
+							orderService.updateByPrimaryKeySelective(order);
+							if (order.getPrePayment()>0) {
+								B_User user = userService.selectByPrimaryKey(order.getBuyUserId());
+								RedPacketRecord record1 = new RedPacketRecord();
+								record1.setCreateTime(DateUtils.currtime());
+								record1.setGivemoney(order.getPrePayment());
+								record1.setOrderNum(order.getOrderNum());
+								record1.setRedNum(0);
+								record1.setUserId(order.getBuyUserId());
+								record1.setType((short) 22);
+								redPacketService.insertSelective(record1);
+								user.setRechargeNum(user.getRechargeNum()-order.getPrePayment());
+								userService.updateRechargeNum(user);
+							}
+					}
+				}
+ 			}
+		}else {
+            System.out.println("支付失败,错误信息：" + map.get("err_code"));  
+            String resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"  
+                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";  
+            System.out.println(resXml);
+        }
+ 		return "SUCCESS";
+	}
+	@ResponseBody
+	@RequestMapping("/zfbNotify")
+    public String zfbNotify(HttpServletRequest request,HttpServletResponse response) throws Exception{  
+      //获取支付宝POST过来反馈信息
+        Map<String,String>params = new HashMap<String,String>();
+        Map requestParams = request.getParameterMap();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i<values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                            : valueStr + values[i] + ",";
+	         }
+	         //乱码解决，这段代码在出现乱码时使用。
+	         //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+	         params.put(name, valueStr);
+        }
+        System.err.println("支付宝回调："+params);
+        //切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
+        boolean flag = AlipaySignature.rsaCheckV1(params, CommonParam.ZFB_PUBLIC_KEY, "utf-8", "RSA2");
+        if(!flag){
+        	return null;
+        }
+        
+        if("TRADE_SUCCESS".equals((String)params.get("trade_status"))){
+        	//////////执行自己的业务逻辑////////////////  
+//        	String total_amount = (String)params.get("total_amount");  
+        	String out_trade_no = (String)params.get("out_trade_no");  
+        	String trade_no = (String)params.get("trade_no");//支付宝交易号
+            if (out_trade_no.contains("CZ")) {
+				String orderNum = out_trade_no;
+				Recharge recharge = rechargeService.selectByOrderNum(orderNum);
+				if (recharge.getStatus()==CommonParam.ORDER_STATUS_NO) {
+					recharge.setStatus(CommonParam.ORDER_STATUS_NOEMS);
+					recharge.setWxNumber(trade_no);
+					rechargeService.updateByPrimaryKeySelective(recharge);
+					B_User user = userService.selectByPrimaryKey(recharge.getUserId());
+					user.setBalance(user.getBalance()+recharge.getCoints());
+					userService.updateBalance(user);
+					RedPacketRecord record = new RedPacketRecord();
+					record.setCreateTime(DateUtils.currtime());
+					record.setGivemoney(recharge.getCoints());
+					record.setOrderNum(recharge.getOrderNum());
+					record.setDetailId(recharge.getId());
+					record.setRedNum(0);
+					record.setUserId(recharge.getUserId());
+					record.setType((short) 21);
+					redPacketService.insertSelective(record);
+				}
+			}else if (out_trade_no.contains("SJ")) {
+				String orderNum = out_trade_no;
+				String[] ids = orderNum.split("_");
+				Double total_amount=Double.valueOf(params.get("total_amount"));
+				ReplyUser replyUser = userService.selectReplyUserByPrimaryKey(Integer.parseInt(ids[1]));
+				if (replyUser.getStatus()==3) {
+					replyUser.setStatus((short) 1);
+					replyUser.setCode(trade_no);
+					userService.updateReplyUser(replyUser);
+					
+					RedPacketRecord record = new RedPacketRecord();
+					record.setCreateTime(DateUtils.currtime());
+					record.setGivemoney(replyUser.getTotalPrice());
+					record.setDetailId(replyUser.getId());
+					record.setRedNum(0);
+					record.setUserId(replyUser.getUserId());
+					record.setType((short) 33);
+					redPacketService.insertSelective(record);
+				}
+			}else {
+				String[] order_num = out_trade_no.split("V");
+ 				List<B_User_Voucher> userVoucherList = new ArrayList<B_User_Voucher>();
+ 				if (order_num.length==2) {
+ 					String [] vid = order_num[1].split("-");
+ 					for (int i = 0; i < vid.length; i++) {
+ 						B_User_Voucher myvoucher = voucherService.selectMyByPrimaryKey(Integer.parseInt(vid[i]));
+ 						userVoucherList.add(myvoucher);
+ 					}
+				}
+ 				String[] orderIds = order_num[0].split("-");
+ 				String[] ids = orderIds[1].split("_");
+ 				for (int i = 0; i < ids.length; i++) {
+ 					B_Order order = orderService.selectByPrimaryKey(Integer.parseInt((ids[i])));
+ 					Short status = CommonParam.ORDER_STATUS_NOEMS;
+					if(order.getStatus()!=CommonParam.ORDER_STATUS_NO){
+	 					break;
+	 				}
+ 					//更新订单
+					order.setStatus(status);
+					order.setPayWay((short) 5);
+					order.setWxOrderNum(trade_no);
+					List<B_Order_Detail> detailList = order_DetailService.selectByorderNum(order.getOrderNum());
+						for (B_Order_Detail b_Order_Detail : detailList) {
+							B_Goods goods = b_Order_Detail.getGoods();
+							goods.setSellCount(goods.getSellCount()+b_Order_Detail.getStock());
+							goodsService.updateByPrimaryKey(goods);
+							b_Order_Detail.setStatus(status);
+							orderService.saveOrderAction(order.getId(), b_Order_Detail.getId(), b_Order_Detail.getStatus());
+							order_DetailService.updateByPrimaryKey(b_Order_Detail);
+						}
+					orderService.updateByPrimaryKeySelective(order);
+					if (order.getPrePayment()>0) {
+						B_User user = userService.selectByPrimaryKey(order.getBuyUserId());
+						RedPacketRecord record1 = new RedPacketRecord();
+						record1.setCreateTime(DateUtils.currtime());
+						record1.setGivemoney(order.getPrePayment());
+						record1.setOrderNum(order.getOrderNum());
+						record1.setRedNum(0);
+						record1.setUserId(order.getBuyUserId());
+						record1.setType((short) 22);
+						redPacketService.insertSelective(record1);
+						user.setRechargeNum(user.getRechargeNum()-order.getPrePayment());
+						userService.updateRechargeNum(user);
+					}
+				}
+			}	
+        }
+        return "success";
+    }
+	@RequestMapping("/getWxOpenId")
+	public void getWxOpenId(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String code =  request.getParameter("code");
+		String state = request.getParameter("state");
+		HttpSession session = request.getSession();
+		B_User user = (B_User) session.getAttribute("user");
+		if (state.contains("CZ")) {
+			String[] split = state.split("CUT");
+			String coints = split[0];
+			String userId = split[1];
+			String flag = split[2];
+			String order_time = DateUtils.currtimeToString12();
+			String strRandom = TenpayUtil.buildRandom(6) + "";
+			String orderNum= flag+order_time+strRandom;
+			Recharge recharge = new Recharge();
+			BigDecimal b1 = new BigDecimal(coints);
+	        BigDecimal b2 = new BigDecimal(100);
+			recharge.setCoints(b1.divide(b2,2,BigDecimal.ROUND_HALF_UP).doubleValue());
+			recharge.setUserId(Integer.parseInt(userId));
+			recharge.setStatus((short) 0);
+			recharge.setCreateTime(DateUtils.currtime());
+			recharge.setOrderNum(orderNum);
+			rechargeService.insertSelective(recharge);
+			state = coints+"CUT"+orderNum;
+		}
+		WxPayUtil wxHttpUtil = new WxPayUtil();
+		Map<String, Object> map = new HashMap<String, Object>();
+//		if (user==null||"".equals(user)) {
+//			map=wxHttpUtil.dopay(state, code,"","wx");
+//		}else {
+			System.out.println("openId:::::"+user.getOpenId());
+			String openId = user.getOpenId();
+			map=wxHttpUtil.dopay(state, code,"","wx");
+//		}
+		String appId = map.get("appid").toString();
+		String timeStamp = map.get("timeStamp").toString();
+		String nonceStr = map.get("nonceStr").toString();
+		String packagestr = map.get("packageStr").toString();
+		String signType = map.get("signType").toString();
+		String paySign = map.get("paySign").toString();
+		String orderNum = map.get("orderNum").toString();
+		response.sendRedirect("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/order/getPayResult?appId="+appId+"&timeStamp="+timeStamp+"&nonceStr="+nonceStr+"&packagestr="+packagestr+"&signType="+signType+"&paySign="+paySign+"&orderNum="+orderNum);
+	}
+	@ResponseBody
+	@RequestMapping("/getAppPay")
+	public Map<String, Object> getAppPay(Model model,HttpServletRequest request,HttpServletResponse response){
+		String code =  request.getParameter("code");
+		String state = request.getParameter("state");
+		String openId = request.getParameter("openId");
+		WxPayUtil wxHttpUtil = new WxPayUtil();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		String status="0";
+		if (state.contains("CZ")) {
+			String[] split = state.split("CUT");
+			String coints = split[0];
+			String userId = split[1];
+			String flag = split[2];
+			String order_time = DateUtils.currtimeToString12();
+			String strRandom = TenpayUtil.buildRandom(6) + "";
+			String orderNum= flag+order_time+strRandom;
+			Recharge recharge = new Recharge();
+			BigDecimal b1 = new BigDecimal(coints);
+	        BigDecimal b2 = new BigDecimal(100);
+			recharge.setCoints(b1.divide(b2,2,BigDecimal.ROUND_HALF_UP).doubleValue());
+			recharge.setUserId(Integer.parseInt(userId));
+			recharge.setStatus((short) 0);
+			recharge.setCreateTime(DateUtils.currtime());
+			recharge.setOrderNum(orderNum);
+			rechargeService.insertSelective(recharge);
+			state = coints+"CUT"+orderNum;
+		}
+		try {
+			map=wxHttpUtil.dopay(state, "",openId,"app");
+			status="1";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		map1.put("status", status);
+		map1.put("data", map);
+		return map1;
+	}
+	@ResponseBody
+	@RequestMapping("pay")
+	public Map<String, Object> pay(HttpServletRequest request) throws Exception{
+		System.out.println("pay start!!!!!!!!!!!!!!!");
+		HttpSession session = request.getSession();
+		B_User user = (B_User) session.getAttribute("user");
+		String openId = user.getOpenId();
+		String state = request.getParameter("state");
+		WxPayUtil wxHttpUtil = new WxPayUtil();
+		Map<String, Object> map=wxHttpUtil.dopay(state, "",openId,"wx");
+		session.setAttribute("payMap", map);
+		System.out.println(map.get("appid"));
+		return map;
+	}
+	@RequestMapping("/getAppPayResult")
+	public String getAppPayResult(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String orderNum = request.getParameter("orderNum");
+		if (orderNum.contains("CZ")) {
+			Recharge recharge = rechargeService.selectByOrderNum(orderNum);
+			request.setAttribute("totalPrice", recharge.getCoints());
+			return "order/cz_success";
+		}else {
+			B_User_Addr addr= new B_User_Addr();
+			String[] ids = orderNum.split("_");
+			double totalPrice = 0;
+			for (int i = 0; i < ids.length; i++) {
+				B_Order order = orderService.selectByPrimaryKey(Integer.parseInt((ids[i])));
+	//			order = orderService.selectByorderNum(order.getOrderNum());
+				addr = addrService.selectByPrimaryKey(order.getAddrId());
+				totalPrice+=order.getTotalPrice();
+			}
+			request.setAttribute("totalPrice", totalPrice);
+			request.setAttribute("addr", addr);
+			request.setAttribute("ASSET_URl", ASSET_URL);
+			return "order/pay_success_app";
+		}
+	}
+	@RequestMapping("/getPayResult")
+	public String getPayResult(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String appId = request.getParameter("appId");
+		String timeStamp = request.getParameter("timeStamp");
+		String nonceStr = request.getParameter("nonceStr");
+		String packagestr = request.getParameter("packagestr");
+		String signType = request.getParameter("signType");
+		String paySign = request.getParameter("paySign");
+		String orderNum = request.getParameter("orderNum");
+		model.addAttribute("appId", appId);
+		model.addAttribute("timeStamp", timeStamp);
+		model.addAttribute("nonceStr", nonceStr);
+		model.addAttribute("packagestr", packagestr);
+		model.addAttribute("signType", signType);
+		model.addAttribute("paySign", paySign);
+		model.addAttribute("orderNum", orderNum);
+		if (orderNum.contains("CZ")) {
+			Recharge recharge = rechargeService.selectByOrderNum(orderNum);
+			request.setAttribute("totalPrice", recharge.getCoints());
+			return "order/cz_success";
+		}else {
+			B_User_Addr addr= new B_User_Addr();
+			String[] ids = orderNum.split("_");
+			double totalPrice = 0;
+			Double balance = 0.0;
+			for (int i = 0; i < ids.length; i++) {
+				B_Order order = orderService.selectByPrimaryKey(Integer.parseInt((ids[i])));
+//				order = orderService.selectByorderNum(order.getOrderNum());
+				addr = addrService.selectByPrimaryKey(order.getAddrId());
+				totalPrice+=order.getTotalPrice();
+				List<B_Order_Detail> details = order_DetailService.selectByorderNum(order.getOrderNum());
+				for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+					B_Order_Detail detail = (B_Order_Detail) iterator.next();
+					balance = balance+detail.getPrePayment();
+				}
+			}
+			request.setAttribute("balance", balance);
+			request.setAttribute("totalPrice", totalPrice);
+			request.setAttribute("addr", addr);
+			request.setAttribute("ASSET_URl", ASSET_URL);
+			return "order/pay_success";
+		}
+		
+	}
+	@RequestMapping("orderDetail")
+	public String orderDetail(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		String orderNum = request.getParameter("orderNum");
+		B_Order	order = orderService.getOrderByOrderNum(orderNum);
+		B_User_Addr addr = addrService.selectByPrimaryKey(order.getAddrId());
+		B_Shop shop = userService.selectByUserId(order.getSellUserId(), 1);
+		request.setAttribute("order", order);
+		request.setAttribute("shop", shop);
+		request.setAttribute("addr", addr);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "order/order_detail";
+	}
+	@RequestMapping("orderDetail_d")
+	public String orderDetail_d(HttpServletRequest request,HttpServletResponse response,Integer detail_id) throws IOException{
+		B_Order_Detail detail = order_DetailService.selectByPrimaryKey(detail_id);
+		B_Order order = orderService.getOrderByOrderNum(detail.getOrderNum());
+		B_User_Addr addr = addrService.selectByPrimaryKey(order.getAddrId());
+		request.setAttribute("order", order);
+		request.setAttribute("detail", detail);
+		request.setAttribute("addr", addr);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "order/order_detail_d";
+	}
+	@ResponseBody
+	@RequestMapping("deleteOrder")
+	public String deleteOrder(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		String orderNum = request.getParameter("orderNum");
+		B_Order order = orderService.getOrderByOrderNum(orderNum);
+		order.setStatus(CommonParam.ORDER_STATUS_CANCEL);
+		orderService.updateByPrimaryKeySelective(order);
+		List<B_Order_Detail> detailList = order_DetailService.selectByorderNum(orderNum);
+		for (Iterator iterator = detailList.iterator(); iterator.hasNext();) {
+			B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator.next();
+			b_Order_Detail.setStatus(CommonParam.ORDER_STATUS_CANCEL);
+			order_DetailService.updateByPrimaryKey(b_Order_Detail);
+			if (b_Order_Detail.getSpecId()!=null) {
+				B_Spec spec = specService.selectByPrimaryKey(b_Order_Detail.getSpecId());
+				if (spec!=null) {
+					spec.setStock(spec.getStock()+b_Order_Detail.getStock());
+					specService.updateByPrimaryKeySelective(spec);
+				}
+			}
+		}
+		return "success";
+	}
+	@RequestMapping("returnGoods")
+	public String returnGoods(HttpServletRequest request,HttpServletResponse response,Integer detail_id,String returnsId) throws IOException{
+		String type = request.getParameter("type");
+		B_Order_Detail detail = order_DetailService.selectByPrimaryKey(detail_id);
+		String orderNum = request.getParameter("orderNum");
+		B_Order	order = orderService.getOrderByOrderNum(orderNum);
+		B_User_Addr addr = addrService.selectByPrimaryKey(order.getAddrId());
+		request.setAttribute("order", order);
+		request.setAttribute("type", type);
+		request.setAttribute("addr", addr);
+		request.setAttribute("returnsId", returnsId);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "order/return_apply";
+	}
+	@ResponseBody
+	@RequestMapping("applyReturnGoods")
+	public String applyReturnGoods(HttpServletRequest request) throws IOException{
+		Short type = Short.valueOf(request.getParameter("type"));
+		String return_info = request.getParameter("return_info");
+		String orderNum = request.getParameter("orderNum");
+		String returnsId = request.getParameter("returnsId");
+		B_Order order = orderService.getOrderByOrderNum(orderNum);
+		if (order.getSign()==4&&order.getPayWay()==2) {
+			return "fail";
+		}
+		String price = request.getParameter("rePrice");
+		Double rePrice = 0.0;
+		if (StringUtils.isNotBlank(price)) {
+			rePrice = Double.parseDouble(price);
+		}
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		B_Return re = new B_Return();
+		if (StringUtils.isNotBlank(returnsId)) {
+			re = returnService.selectByPrimaryKey(Integer.parseInt(returnsId));
+		}
+		re.setOrderNum(orderNum);
+		re.setRePrice(rePrice);
+		re.setBuyUserId(user.getId());
+		re.setApplyDesc(return_info);
+		re.setCreateTime(DateUtils.currtime());
+		re.setSellerUserId(order.getSellUserId());
+		if (type==0) {
+			if (order.getStatus()==CommonParam.ORDER_STATUS_NOEMS) {
+				re.setStatus(CommonParam.RETURN_STATUS_POST);
+			}else {
+				re.setStatus(CommonParam.RETURN_STATUS_ING);
+			}
+		}else {
+			re.setStatus(CommonParam.RETURN_STATUS_ING);
+		}
+		re.setType(type);
+		if (re.getId()!=null) {
+			returnService.updateByPrimaryKeySelective(re);
+		}else {
+			returnService.insert(re);
+		}
+		List<B_Order_Detail> details = order_DetailService.selectByorderNum(orderNum);
+		for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+			B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator.next();
+			b_Order_Detail.setStatus(CommonParam.ORDER_STATUS_RECH);
+			order_DetailService.updateByPrimaryKey(b_Order_Detail);
+			
+			if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")){
+				if (!b_Order_Detail.getShopId().equals(order.getShopId())) {
+					B_Shop shop = userService.selectShopByPrimaryKey(b_Order_Detail.getShopId());
+					JavaSmsApi.sendMsgByTplId(shop.getPhone(), CommonParam.SHOP_RE_TPL);
+				}
+			}
+		}
+		order.setcId(order.getStatus());
+		order.setStatus(CommonParam.ORDER_STATUS_RECH);
+		orderService.updateByPrimaryKeySelective(order);
+		if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")){
+			B_User seller = userService.selectByPrimaryKey(order.getSellUserId());
+			JavaSmsApi.sendMsgByTplId(seller.getPhone(), CommonParam.SELLER_RE_TPL);
+		}
+		return "success";
+	}
+	@ResponseBody
+	@RequestMapping("delRe")
+	public String delRe(HttpServletRequest request){
+		String orderNum = request.getParameter("orderNum");
+		B_Order order = orderService.selectByorderNum(orderNum);
+		order.setStatus(order.getcId());
+		orderService.updateByPrimaryKeySelective(order);
+		List<B_Order_Detail> details = order_DetailService.selectByorderNum(orderNum);
+		for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+			B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator.next();
+			b_Order_Detail.setStatus(order.getcId());
+			order_DetailService.updateByPrimaryKey(b_Order_Detail);
+		}
+		B_Return return1 = returnService.selectByOrderNum(orderNum);
+		return1.setStatus((short) 6);
+		returnService.updateByPrimaryKeySelective(return1);
+		return "success";
+	}
+	
+	@RequestMapping("returnDetail")
+	public String returnDetail(HttpServletRequest request){
+		String orderNum = request.getParameter("orderNum");
+		B_Return returns = returnService.selectByOrderNum(orderNum);
+		request.setAttribute("returns", returns);
+		return "order/returnGoods_detail";
+	}
+	@ResponseBody
+	@RequestMapping("completeOrder")
+	public String completeOrder(HttpServletRequest request) throws IOException{
+		String orderNum = request.getParameter("orderNum");
+		List<B_Order_Detail> details = order_DetailService.selectByorderNum(orderNum);
+		B_Order order = orderService.selectByorderNum(orderNum);
+		for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+			B_Order_Detail detail = (B_Order_Detail) iterator.next();
+			detail.setStatus(CommonParam.ORDER_STATUS_SUCCESS);
+			order_DetailService.updateByPrimaryKey(detail);
+		}
+		order.setStatus(CommonParam.ORDER_STATUS_SUCCESS);
+		order.setReceiveTime(DateUtils.currtime());
+		orderService.updateByPrimaryKeySelective(order);
+		if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")) {
+			B_User buyer = userService.selectByPrimaryKey(order.getBuyUserId());
+			JavaSmsApi.sendMsgByTplId(buyer.getPhone(), CommonParam.BUYER_REC_TPL);
+		}
+		return "success";
+	}
+	@RequestMapping("insertEMS")
+	public String insertEMS(HttpServletRequest request){
+		int id = Integer.parseInt(request.getParameter("id"));
+		request.setAttribute("id", id);
+		return "order/insertEMS";
+	}
+	@ResponseBody
+	@RequestMapping("saveEMS")
+	public String saveEMS(HttpServletRequest request){
+		Integer id = Integer.parseInt(request.getParameter("id"));
+		String EMS = request.getParameter("EMS");
+		String emscode = request.getParameter("emscode");
+		B_Return retrn = new B_Return();
+		retrn.setId(id);
+		retrn.setBuyerEmsCode(emscode);
+		retrn.setBuyerEms(EMS);
+		retrn.setStatus(CommonParam.RETURN_STATUS_POST);
+		returnService.updateByPrimaryKeySelective(retrn);
+		return "success";
+	}
+	@RequestMapping("checkPro")
+	public String checkPro(HttpServletRequest request){
+		Integer id = Integer.parseInt(request.getParameter("id"));
+		B_Return returns = returnService.selectByPrimaryKey(id);
+		request.setAttribute("returns", returns);
+		return "order/returnPro";
+	}
+	@ResponseBody
+	@RequestMapping("checkTrackPro")
+	public B_Order_Track checkTrackPro(HttpServletRequest request){
+		String orderNum = request.getParameter("orderNum");
+		B_Order_Track track = order_DetailService.selectByOrderNum(orderNum);
+		if (track==null) {
+			return null;
+		}else {
+			B_EmsType emsType = order_DetailService.selectByType(track.getEmsType());
+			request.setAttribute("track", track);
+			request.setAttribute("emsType", emsType);
+			return track;
+		}
+		
+	}
+	@RequestMapping("replyGoods")
+	public String replyGoods(HttpServletRequest request){
+		int id = Integer.parseInt(request.getParameter("id"));
+		B_Order_Detail detail = order_DetailService.selectByPrimaryKey(id);
+		B_Goods goods = detail.getGoods();
+		if (detail.getSpecId()!=null) {
+			B_Spec spec = specService.selectByPrimaryKey(detail.getSpecId());
+			request.setAttribute("spec", spec);
+		}
+		request.setAttribute("goods", goods);
+		request.setAttribute("detail", detail);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goods_reply";
+	}
+	@ResponseBody
+	@RequestMapping("saveReplyImg")
+	public String saveReplyImg(HttpServletRequest request,MultipartFile file){
+		String img_url="";
+		if (!file.isEmpty()) {
+            try {
+            	String ext="";
+            	String qqqString = file.getOriginalFilename();
+            	try {
+            		ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+				} catch (Exception e) {
+					// TODO: handle exception
+					ext=".jpeg";
+				}
+                String url = new FileUnitl().getMediaPath();
+        		String fileName = Calendar.getInstance().getTimeInMillis()+ext;
+                String filePath =url+fileName;
+                File saveDir = new File(filePath);
+                if (!saveDir.getParentFile().exists()){
+                    saveDir.getParentFile().mkdirs();
+                    file.transferTo(saveDir);
+                }else {
+                	file.transferTo(saveDir);
+				}
+                long size = file.getSize();
+                double scale = 1.0d;
+                if(size >= 200*1024){
+                    if(size > 0){
+                        scale = (200*1024f) / size  ;
+                    }
+                    fileName = Calendar.getInstance().getTimeInMillis()+"1.jpg";
+                    new FileUnitl().cutDownImg(filePath,scale, url+fileName);
+                }
+                img_url=new FileUnitl().gethead_img_url()+fileName;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+		return img_url;
+	}
+	@ResponseBody
+	@RequestMapping("saveReplyShopImg")
+	public Map<String, String> saveReplyShopImg(HttpServletRequest request,MultipartFile file){
+		Map<String, String> map = new HashMap<String, String>();
+		String img_url="";
+		if (!file.isEmpty()) {
+            try {
+            	String ext="";
+            	String qqqString = file.getOriginalFilename();
+            	try {
+            		ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+				} catch (Exception e) {
+					// TODO: handle exception
+					ext=".jpeg";
+				}
+                String url = new FileUnitl().getMediaPath();
+        		String fileName = Calendar.getInstance().getTimeInMillis()+ext;
+                String filePath =url+fileName;
+                File saveDir = new File(filePath);
+                img_url=new FileUnitl().gethead_img_url()+fileName;
+                if (!saveDir.getParentFile().exists()){
+                    saveDir.getParentFile().mkdirs();
+                    file.transferTo(saveDir);
+                }else {
+                	file.transferTo(saveDir);
+				}
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+		map.put("img_url", img_url);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("saveSchoolImg")
+	public String saveSchoolImg(HttpServletRequest request,MultipartFile file){
+		String img_url="";
+		School school = new School();
+		if (!file.isEmpty()) {
+            try {
+            	String ext="";
+            	String qqqString = file.getOriginalFilename();
+            	String[] qqq = qqqString.split("_");
+        		School school2 = schoolService.selectBySchoolId(qqq[0]);
+            	System.out.println(qqqString);
+            	try {
+            		ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+				} catch (Exception e) {
+					// TODO: handle exception
+					ext=".jpeg";
+				}
+            	if (ext.equalsIgnoreCase(".docx")&&qqqString.contains("CHN")) {
+					InputStream in = file.getInputStream();
+					XWPFDocument doc = new XWPFDocument(in);
+					List<XWPFParagraph> paras = doc.getParagraphs();
+					String name = "";
+					String content = "";
+					for (Iterator iterator = paras.iterator(); iterator
+							.hasNext();) {
+						XWPFParagraph para = (XWPFParagraph) iterator.next();
+						String text = para.getParagraphText();
+						String style = para.getStyle();
+						if (StringUtils.isNotEmpty(style)&&"1".equals(style)) {
+							name = text;
+						}else {
+							if(StringUtils.isNotEmpty(text)){
+								text="<p>"+text+"</p>";
+								content+=text;
+							}
+						}
+					}
+					in.close();
+					if (school2!=null) {
+//						school2.setName(name);
+						school2.setContent(content);
+						schoolService.updateByPrimaryKeySelective(school2);
+					}else {
+//						school.setName(name);
+						school.setContent(content);
+						school.setUpdateTime(new Date());
+						schoolService.insertSelective(school);
+					}
+				}else if (ext.equalsIgnoreCase(".docx")&&qqqString.contains("ENG")) {
+					InputStream in = file.getInputStream();
+					XWPFDocument doc = new XWPFDocument(in);
+					List<XWPFParagraph> paras = doc.getParagraphs();
+					String name = "";
+					String content = "";
+					for (Iterator iterator = paras.iterator(); iterator
+							.hasNext();) {
+						XWPFParagraph para = (XWPFParagraph) iterator.next();
+						String text = para.getParagraphText();
+						String style = para.getStyle();
+						if (StringUtils.isNotEmpty(style)&&"1".equals(style)) {
+							name = text;
+						}else {
+							if(StringUtils.isNotEmpty(text)){
+								text="<p>"+text+"</p>";
+								content+=text;
+							}
+						}
+					}
+					in.close();
+					if (school2!=null) {
+//						school2.setNameEng(name);
+						school2.setContentEng(content);
+						schoolService.updateByPrimaryKeySelective(school2);
+					}else {
+//						school.setNameEng(name);
+						school.setContentEng(content);
+						school.setUpdateTime(new Date());
+						schoolService.insertSelective(school);
+					}
+				}else if (ext.equalsIgnoreCase(".xlsx")&&qqqString.contains("学校介绍")) {
+					InputStream in = file.getInputStream();
+//					POIFSFileSystem fs = new POIFSFileSystem(in);
+					Workbook wb = WorkbookFactory.create(in);
+					Sheet  sheet = wb.getSheetAt(0);
+				    int rowNum = sheet.getLastRowNum();
+				    for (int i = 1; i <= rowNum; i++) {
+				    	School school3 = new School();
+				    	Row row = sheet.getRow(i);
+			            int j = 0;
+			            int colNum = row.getLastCellNum();
+			            while (j < colNum) {
+			               String str = "";
+			               Cell cell = row.getCell(j,Row.CREATE_NULL_AS_BLANK);
+			               int cellType = cell.getCellType();
+	                        switch(cellType){
+	                            case Cell.CELL_TYPE_BLANK:
+	                            	str = "";
+	                                break;
+	                            case Cell.CELL_TYPE_BOOLEAN:
+	                            	str = Boolean.toString(cell.getBooleanCellValue());
+	                                break;
+	                            case Cell.CELL_TYPE_ERROR:
+	                            	str = "";
+	                                break;
+	                            case Cell.CELL_TYPE_FORMULA:
+	                                cell.setCellType(Cell.CELL_TYPE_STRING);
+	                                str = cell.getStringCellValue();
+	                                if (str != null) {
+	                                	str = str.replaceAll("#N/A", "").trim();
+	                                }
+	                                break;
+	                            case Cell.CELL_TYPE_NUMERIC:
+	                                if (DateUtil.isCellDateFormatted(cell)) {
+	                                	str = String.valueOf(cell.getDateCellValue());
+	                                } else {
+	                                    cell.setCellType(Cell.CELL_TYPE_STRING);
+	                                    String temp = cell.getStringCellValue();
+	                                    // 判断是否包含小数点，如果不含小数点，则以字符串读取，如果含小数点，则转换为Double类型的字符串
+	                                    if (temp.indexOf(".") > -1) {
+	                                    	str = String.valueOf(new Double(temp)).trim();
+	                                    } else {
+	                                    	str = temp.trim();
+	                                    }
+	                                }
+	                                break;
+	                            case Cell.CELL_TYPE_STRING:
+	                            	str = cell.getStringCellValue().trim();
+	                                break;
+	                            default:
+	                            	str = "";
+	                                break;
+	                        }
+			               if (j==0) {
+							school3.setSchoolId(str);
+			               }else if (j==1) {
+			            	   school3.setNameEng(str);
+			               }else if (j==2) {
+			            	   school3.setName(str);
+			               }else if (j==3) {
+							school3.setCity(str);
+			               }else if (j==4) {
+							school3.setCityEng(str);
+			               }else if (j==5) {
+							school3.setProvince(str);
+			               }else if (j==6) {
+							school3.setProvinceEng(str);
+			               }else if (j==7) {
+							school3.setCountry(str);
+			               }else if (j==8) {
+							school3.setCountryEng(str);
+			               }else if (j==9) {
+							school3.setAddressEng(str);
+			               }else if (j==10) {
+							school3.setWebsite(str);
+			               }else if (j==11) {
+							school3.setIntypeEng(str);
+			               }else if (j==12) {
+			            	school3.setIntype(str);
+			               }else if (j==13) {
+							school3.setRegisterNum(str);
+			               }else if (j==14) {
+							school3.setFoundedin(str);
+			               }else if (j==15) {
+							school3.setEstablishmentEng(str);
+			               }else if (j==16) {
+							school3.setEstablishment(str);
+			               }else if (j==17) {
+							school3.setLivingcost(str);
+			               }else if (j==18) {
+							school3.setApplicationfee(str);
+			               }else if (j==19) {
+							school3.setCurrencycode(str);
+			               }else if (j==20) {
+							school3.setTotalstudents(str);
+			               }else if (j==21) {
+							school3.setInternationalstudents(str);
+			               }else if (j==22) {
+							school3.setAccommodationtype(str);
+			               }else if (j==23) {
+							school3.setSchoolmottoEng(str);
+			               }else if (j==24) {
+							school3.setSchoolmotto(str);
+			               }else if (j==25) {
+							school3.setSchoolfrieng(str);
+			               }else if (j==26) {
+							school3.setMascotEng(str);
+			               }else if (j==27) {
+							school3.setMascot(str);
+			               }else if (j==28) {
+							school3.setAreanum(str);
+			               }else if (j==29) {
+							school3.setUndergraduatenum(str);
+			               }else if (j==30) {
+							school3.setPostgraduatenum(str);
+			               }else if (j==31) {
+							school3.setUndergraduatep(str);
+			               }else if (j==32) {
+							school3.setYuannum(str);
+			               }
+			               j++;
+			            }
+			            school3.setUpdateTime(new Date());
+			            schoolService.insertSelective(school3);
+			            System.out.println("iiii==="+i);
+			        }
+				    in.close();
+				}else {
+					 String url = new FileUnitl().getMediaPath();
+		        	 String fileName = Calendar.getInstance().getTimeInMillis()+ext;
+		             String filePath =url+fileName;
+		             File saveDir = new File(filePath);
+		             img_url=new FileUnitl().gethead_img_url()+fileName;
+		             if (!saveDir.getParentFile().exists()){
+		                 saveDir.getParentFile().mkdirs();
+		                 file.transferTo(saveDir);
+		             }else {
+		            	 file.transferTo(saveDir);
+					 }
+		             if (qqqString.contains("top")) {
+						if (school2!=null) {
+							school2.setHeadImgUrl(img_url);
+							schoolService.updateByPrimaryKeySelective(school2);
+						}else {
+							school.setHeadImgUrl(img_url);
+							school.setUpdateTime(new Date());
+							schoolService.insertSelective(school);
+						}
+					 }else if (qqqString.contains("logo")) {
+						if (school2!=null) {
+							school2.setLogoImgUrl(img_url);
+							schoolService.updateByPrimaryKeySelective(school2);
+						}else {
+							school.setLogoImgUrl(img_url);
+							school.setUpdateTime(new Date());
+							schoolService.insertSelective(school);
+						}
+					 }else if (qqqString.contains("proxy")) {
+						if (school2!=null) {
+							school2.setDlImgUrl(img_url);
+							schoolService.updateByPrimaryKeySelective(school2);
+						}else {
+							school.setDlImgUrl(img_url);
+							school.setUpdateTime(new Date());
+							schoolService.insertSelective(school);
+						}
+					 }else {
+						 B_Goods_Img img = new B_Goods_Img();
+			 			 img.setImgUrl(img_url);
+			 			 img.setType((short) 4);
+			 			 img.setSeq((short)1);
+			 			 img.setGoodsId(school2.getId());
+			 			 imgService.saveGoodsImg(img);
+					 }
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+		return img_url;
+	}
+	@ResponseBody
+	@RequestMapping("saveReply")
+	public String saveReply(HttpServletRequest request,B_Goods_Reply reply){
+		Integer detailId = Integer.parseInt(request.getParameter("detailId"));
+		B_Order_Detail detail = order_DetailService.selectById(detailId);
+		detail.setStatus(CommonParam.ORDER_STATUS_REPLYED);
+		order_DetailService.updateByPrimaryKey(detail);
+		B_Order order = orderService.getOrderByOrderNum(detail.getOrderNum());
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		reply.setUserId(user.getId());
+		reply.setNickFlag((short) 0);
+		reply.setDetailId(detailId);
+		reply.setBuyTime(order.getCreateTime());
+		if (detail.getSpecId()!=null) {
+			reply.setSpecId(detail.getSpecId());
+		}
+		reply.setCreateTime(DateUtils.currtime());
+		replyService.insert(reply);
+		
+		boolean assessed = true;
+		List<B_Order_Detail> details = order_DetailService.selectByorderNum(detail.getOrderNum());
+		for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+			B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator.next();
+			if (b_Order_Detail.getStatus()!=10) {
+				assessed=false;
+				break;
+			}
+		}
+		if (assessed) {
+			order.setStatus(CommonParam.ORDER_STATUS_REPLYED);
+			orderService.updateByPrimaryKeySelective(order);
+		}
+		return "success";
+	}
+}

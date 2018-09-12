@@ -1,0 +1,694 @@
+package com.tyh.model;
+
+import java.util.Date;
+import java.util.List;
+
+public class B_Goods {
+    private Integer id;
+
+    private String batchNum;
+    
+    private String barCode;
+    
+    private String catalogId;
+    
+    private String catalogName;
+    
+    private int mergeNum;
+    
+    private Integer shopId;
+    
+    private Integer cId;
+        
+    private Integer gardenId;
+    
+    private String sellTime;
+    
+    private String name;
+
+    private String price;
+
+    private Double priceBefore;
+    
+    private Double postPrice;
+
+    private Integer stock;
+
+    private String summarize;
+
+    private String headImgUrl;
+    
+    private String topImgUrl;
+
+    private String publishTime;
+
+    private Integer publisherId;
+
+    private String publisherName;
+
+    private Short sellType;
+
+    private Short status;
+    
+    private Short shareStatus;
+    
+    private B_Spec spec;
+
+    private Integer clickCount;
+
+    private Integer sellCount;
+
+    private Float star;
+
+    private String flag;
+    
+    private String detailSpec;
+
+    private Date updateTime;
+    
+    private String content;
+    
+    private String service;
+
+    private String endTime;
+    
+    private Double startPrice;
+    
+    private Double increatePrice;
+    
+    private Short freePost;
+    
+    private Short freeReturn;
+    
+    private Double cashPrice;
+    
+    private Double buyoutPrice;
+    
+    private Double referPrice;
+    
+    private String imgUrl;
+    
+    private double maxPrice;
+    
+    private short endIs;
+    
+    private short goodsType;
+    
+    private Double discountPrice;
+    
+    private String videoUrl;
+
+    private String videoUrl1;
+    
+    private Short comsType;
+    private Double comsGoods;
+    private Double comsGoodsPt;
+    private Double comsGoodsTy;
+    private Double comsGoodsXf;
+    private Double jifenGoods;
+    private Double discount;
+    //限购秒杀商品，开始时间、结束时间
+    private String xgBeginTime;
+    private String xgEndTime;
+    
+    //
+    private List<B_Goods_Img> imgList;
+    
+    private List<B_Goods_Bid> bidList;
+    
+    private List<B_Goods_Store> storeList;
+    
+    private B_User publisher;
+    
+    private int storeSize;
+    
+    private Double bidMaxPrice;
+    
+    private Integer bidSize;
+    
+    private int ISFocus;
+    
+    private B_Goods_Store store;
+    
+    private List<B_Spec> specList;
+    
+    private B_Shop shop;
+    //前端提交参数构造
+    private List<B_Goods_Ext> goodsExts;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public String getSummarize() {
+        return summarize;
+    }
+
+    public void setSummarize(String summarize) {
+        this.summarize = summarize == null ? null : summarize.trim();
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl == null ? null : headImgUrl.trim();
+    }
+
+    public Integer getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Integer publisherId) {
+        this.publisherId = publisherId;
+    }
+
+    public String getPublisherName() {
+        return publisherName;
+    }
+
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName == null ? null : publisherName.trim();
+    }
+
+    public Short getSellType() {
+        return sellType;
+    }
+
+    public void setSellType(Short sellType) {
+        this.sellType = sellType;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Integer getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(Integer clickCount) {
+        this.clickCount = clickCount;
+    }
+
+    public Integer getSellCount() {
+        return sellCount;
+    }
+
+    public void setSellCount(Integer sellCount) {
+        this.sellCount = sellCount;
+    }
+
+    public Float getStar() {
+        return star;
+    }
+
+    public void setStar(Float star) {
+        this.star = star;
+    }
+
+    public String getDetailSpec() {
+        return detailSpec;
+    }
+
+    public void setDetailSpec(String detailSpec) {
+        this.detailSpec = detailSpec == null ? null : detailSpec.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getTopImgUrl() {
+		return topImgUrl;
+	}
+
+	public void setTopImgUrl(String topImgUrl) {
+		this.topImgUrl = topImgUrl;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public Short getFreePost() {
+		return freePost;
+	}
+
+	public void setFreePost(Short freePost) {
+		this.freePost = freePost;
+	}
+
+	public Short getFreeReturn() {
+		return freeReturn;
+	}
+
+	public void setFreeReturn(Short freeReturn) {
+		this.freeReturn = freeReturn;
+	}
+
+	public double getCashPrice() {
+		return cashPrice;
+	}
+
+	public String getPublishTime() {
+		return publishTime;
+	}
+
+	public void setPublishTime(String publishTime) {
+		this.publishTime = publishTime;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public double getMaxPrice() {
+		return maxPrice;
+	}
+
+	public void setMaxPrice(double maxPrice) {
+		this.maxPrice = maxPrice;
+	}
+
+	public short getEndIs() {
+		return endIs;
+	}
+
+	public void setEndIs(short endIs) {
+		this.endIs = endIs;
+	}
+
+	public List<B_Goods_Img> getImgList() {
+		return imgList;
+	}
+
+	public void setImgList(List<B_Goods_Img> imgList) {
+		this.imgList = imgList;
+	}
+
+	public List<B_Goods_Bid> getBidList() {
+		return bidList;
+	}
+
+	public void setBidList(List<B_Goods_Bid> bidList) {
+		this.bidList = bidList;
+	}
+
+	public B_User getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(B_User publisher) {
+		this.publisher = publisher;
+	}
+
+	public int getStoreSize() {
+		return storeSize;
+	}
+
+	public void setStoreSize(int storeSize) {
+		this.storeSize = storeSize;
+	}
+
+	public int getISFocus() {
+		return ISFocus;
+	}
+
+	public void setISFocus(int iSFocus) {
+		ISFocus = iSFocus;
+	}
+
+	public B_Goods_Store getStore() {
+		return store;
+	}
+
+	public void setStore(B_Goods_Store store) {
+		this.store = store;
+	}
+
+	public List<B_Goods_Store> getStoreList() {
+		return storeList;
+	}
+
+	public void setStoreList(List<B_Goods_Store> storeList) {
+		this.storeList = storeList;
+	}
+
+	public short getGoodsType() {
+		return goodsType;
+	}
+
+	public void setGoodsType(short goodsType) {
+		this.goodsType = goodsType;
+	}
+
+	public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+
+	public Integer getGardenId() {
+		return gardenId;
+	}
+
+	public void setGardenId(Integer gardenId) {
+		this.gardenId = gardenId;
+	}
+
+	public String getSellTime() {
+		return sellTime;
+	}
+
+	public void setSellTime(String sellTime) {
+		this.sellTime = sellTime;
+	}
+
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public Integer getcId() {
+		return cId;
+	}
+
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
+
+	public B_Spec getSpec() {
+		return spec;
+	}
+
+	public void setSpec(B_Spec spec) {
+		this.spec = spec;
+	}
+
+	public Double getBidMaxPrice() {
+		return bidMaxPrice;
+	}
+
+	public void setBidMaxPrice(Double bidMaxPrice) {
+		this.bidMaxPrice = bidMaxPrice;
+	}
+
+	public Short getComsType() {
+		return comsType;
+	}
+
+	public void setComsType(Short comsType) {
+		this.comsType = comsType;
+	}
+
+	public Double getComsGoods() {
+		return comsGoods;
+	}
+
+	public void setComsGoods(Double comsGoods) {
+		this.comsGoods = comsGoods;
+	}
+
+	public Double getComsGoodsPt() {
+		return comsGoodsPt;
+	}
+
+	public void setComsGoodsPt(Double comsGoodsPt) {
+		this.comsGoodsPt = comsGoodsPt;
+	}
+
+	public Double getComsGoodsTy() {
+		return comsGoodsTy;
+	}
+
+	public void setComsGoodsTy(Double comsGoodsTy) {
+		this.comsGoodsTy = comsGoodsTy;
+	}
+
+	public Double getComsGoodsXf() {
+		return comsGoodsXf;
+	}
+
+	public void setComsGoodsXf(Double comsGoodsXf) {
+		this.comsGoodsXf = comsGoodsXf;
+	}
+
+	public Double getJifenGoods() {
+		return jifenGoods;
+	}
+
+	public void setJifenGoods(Double jifenGoods) {
+		this.jifenGoods = jifenGoods;
+	}
+
+	public List<B_Goods_Ext> getGoodsExts() {
+		return goodsExts;
+	}
+
+	public void setGoodsExts(List<B_Goods_Ext> goodsExts) {
+		this.goodsExts = goodsExts;
+	}
+
+	public String getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+
+	public Integer getBidSize() {
+		return bidSize;
+	}
+
+	public void setBidSize(Integer bidSize) {
+		this.bidSize = bidSize;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getStartPrice() {
+		return startPrice;
+	}
+
+	public void setStartPrice(Double startPrice) {
+		this.startPrice = startPrice;
+	}
+
+	public Double getIncreatePrice() {
+		return increatePrice;
+	}
+
+	public void setIncreatePrice(Double increatePrice) {
+		this.increatePrice = increatePrice;
+	}
+
+	public Double getBuyoutPrice() {
+		return buyoutPrice;
+	}
+
+	public void setBuyoutPrice(Double buyoutPrice) {
+		this.buyoutPrice = buyoutPrice;
+	}
+
+	public Double getReferPrice() {
+		return referPrice;
+	}
+
+	public void setReferPrice(Double referPrice) {
+		this.referPrice = referPrice;
+	}
+
+	public void setCashPrice(Double cashPrice) {
+		this.cashPrice = cashPrice;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+	public Double getPriceBefore() {
+		return priceBefore;
+	}
+
+	public void setPriceBefore(Double priceBefore) {
+		this.priceBefore = priceBefore;
+	}
+
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
+
+	public String getVideoUrl1() {
+		return videoUrl1;
+	}
+
+	public void setVideoUrl1(String videoUrl1) {
+		this.videoUrl1 = videoUrl1;
+	}
+
+	public Double getPostPrice() {
+		return postPrice;
+	}
+
+	public void setPostPrice(Double postPrice) {
+		this.postPrice = postPrice;
+	}
+
+	public Double getDiscountPrice() {
+		return discountPrice;
+	}
+
+	public void setDiscountPrice(Double discountPrice) {
+		this.discountPrice = discountPrice;
+	}
+
+	public String getCatalogName() {
+		return catalogName;
+	}
+
+	public void setCatalogName(String catalogName) {
+		this.catalogName = catalogName;
+	}
+
+	public List<B_Spec> getSpecList() {
+		return specList;
+	}
+
+	public void setSpecList(List<B_Spec> specList) {
+		this.specList = specList;
+	}
+
+	public Short getShareStatus() {
+		return shareStatus;
+	}
+
+	public void setShareStatus(Short shareStatus) {
+		this.shareStatus = shareStatus;
+	}
+
+	public B_Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(B_Shop shop) {
+		this.shop = shop;
+	}
+
+	public String getBatchNum() {
+		return batchNum;
+	}
+
+	public void setBatchNum(String batchNum) {
+		this.batchNum = batchNum;
+	}
+
+	public String getBarCode() {
+		return barCode;
+	}
+
+	public void setBarCode(String barCode) {
+		this.barCode = barCode;
+	}
+
+	public String getXgBeginTime() {
+		return xgBeginTime;
+	}
+
+	public void setXgBeginTime(String xgBeginTime) {
+		this.xgBeginTime = xgBeginTime;
+	}
+
+	public String getXgEndTime() {
+		return xgEndTime;
+	}
+
+	public void setXgEndTime(String xgEndTime) {
+		this.xgEndTime = xgEndTime;
+	}
+
+	public int getMergeNum() {
+		return mergeNum;
+	}
+
+	public void setMergeNum(int mergeNum) {
+		this.mergeNum = mergeNum;
+	}
+
+	
+
+}

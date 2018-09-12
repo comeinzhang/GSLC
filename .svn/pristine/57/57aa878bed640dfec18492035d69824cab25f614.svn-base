@@ -1,0 +1,185 @@
+package com.tyh.model;
+
+
+public class B_Return {
+    private Integer id;
+    
+    private String orderNum;
+    
+    private B_Order_Detail detail;
+    
+    private Integer detailId;
+
+    private Integer buyUserId;
+    
+    private Integer sellerUserId;
+
+    private Short type;
+
+    private Double rePrice;
+    
+    private String sellerEms;
+    
+    private String sellerEmsCode;
+    
+    private String buyerEms;
+    
+    private String buyerEmsCode;
+    
+    private Integer cause;
+    
+    private String applyDesc;
+
+    private Short status;
+
+    private String checkResult;
+
+    private String createTime;
+
+    private String updateTime;
+
+    public String getSellerEmsCode() {
+		return sellerEmsCode;
+	}
+
+	public void setSellerEmsCode(String sellerEmsCode) {
+		this.sellerEmsCode = sellerEmsCode;
+	}
+
+	public String getBuyerEmsCode() {
+		return buyerEmsCode;
+	}
+
+	public void setBuyerEmsCode(String buyerEmsCode) {
+		this.buyerEmsCode = buyerEmsCode;
+	}
+
+	public String getApplyDesc() {
+		return applyDesc;
+	}
+
+	public void setApplyDesc(String applyDesc) {
+		this.applyDesc = applyDesc;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public B_Order_Detail getDetail() {
+		return detail;
+	}
+
+	public void setDetail(B_Order_Detail detail) {
+		this.detail = detail;
+	}
+
+	public Integer getBuyUserId() {
+        return buyUserId;
+    }
+
+    public void setBuyUserId(Integer buyUserId) {
+        this.buyUserId = buyUserId;
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public String getCheckResult() {
+        return checkResult;
+    }
+
+    public void setCheckResult(String checkResult) {
+        this.checkResult = checkResult == null ? null : checkResult.trim();
+    }
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getSellerEms() {
+		return sellerEms;
+	}
+
+	public void setSellerEms(String sellerEms) {
+		this.sellerEms = sellerEms;
+	}
+
+	public String getBuyerEms() {
+		return buyerEms;
+	}
+
+	public void setBuyerEms(String buyerEms) {
+		this.buyerEms = buyerEms;
+	}
+
+	public Integer getSellerUserId() {
+		return sellerUserId;
+	}
+
+	public void setSellerUserId(Integer sellerUserId) {
+		this.sellerUserId = sellerUserId;
+	}
+
+	public Double getRePrice() {
+		return rePrice;
+	}
+
+	public void setRePrice(Double rePrice) {
+		this.rePrice = rePrice;
+	}
+
+	public Integer getCause() {
+		return cause;
+	}
+
+	public void setCause(Integer cause) {
+		this.cause = cause;
+	}
+
+	public String getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public Integer getDetailId() {
+		return detailId;
+	}
+
+	public void setDetailId(Integer detailId) {
+		this.detailId = detailId;
+	}
+
+}

@@ -1,0 +1,174 @@
+package com.tyh.model;
+
+public class B_Goods_Reply {
+    private Integer id;
+
+    private Integer goodsId;
+    
+    private Integer detailId;
+
+    private Integer userId;
+    
+    private B_User user;
+
+    private String reply;
+
+    private String imgUrl1;
+
+    private String imgUrl2;
+
+    private String imgUrl3;
+    
+    private int specId;
+
+    private String star;
+
+    private Short nickFlag;
+    
+    private String buyTime;
+
+    private String createTime;
+
+    private String updateTime;
+    
+    private Short type;
+    
+    private B_Spec spec;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply == null ? null : reply.trim();
+    }
+
+    public String getImgUrl1() {
+        return imgUrl1;
+    }
+
+    public void setImgUrl1(String imgUrl1) {
+        this.imgUrl1 = imgUrl1 == null ? null : imgUrl1.trim();
+    }
+
+    public String getImgUrl2() {
+        return imgUrl2;
+    }
+
+    public void setImgUrl2(String imgUrl2) {
+        this.imgUrl2 = imgUrl2 == null ? null : imgUrl2.trim();
+    }
+
+    public String getImgUrl3() {
+        return imgUrl3;
+    }
+
+    public void setImgUrl3(String imgUrl3) {
+        this.imgUrl3 = imgUrl3 == null ? null : imgUrl3.trim();
+    }
+
+
+    public Short getNickFlag() {
+        return nickFlag;
+    }
+
+    public void setNickFlag(Short nickFlag) {
+        this.nickFlag = nickFlag;
+    }
+
+	public String getStar() {
+		return star;
+	}
+
+	public void setStar(String star) {
+		this.star = star;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public int getSpecId() {
+		return specId;
+	}
+
+	public void setSpecId(int specId) {
+		this.specId = specId;
+	}
+
+	public B_Spec getSpec() {
+		return spec;
+	}
+
+	public void setSpec(B_Spec spec) {
+		this.spec = spec;
+	}
+
+	public B_User getUser() {
+		return user;
+	}
+
+	public void setUser(B_User user) {
+		this.user = user;
+	}
+
+	public String getBuyTime() {
+		return buyTime;
+	}
+
+	public void setBuyTime(String buyTime) {
+		this.buyTime = buyTime;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Integer getDetailId() {
+		return detailId;
+	}
+
+	public void setDetailId(Integer detailId) {
+		this.detailId = detailId;
+	}
+}

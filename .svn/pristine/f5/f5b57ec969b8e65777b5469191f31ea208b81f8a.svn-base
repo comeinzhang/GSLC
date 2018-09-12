@@ -1,0 +1,38 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_PosterMapper;
+import com.tyh.model.B_Poster;
+
+
+
+@Service
+public class B_PosterService {
+	
+	@Resource
+	private B_PosterMapper mapper;
+	public int insert(B_Poster record){
+		return mapper.insert(record);
+	}
+	public int insertSelective(B_Poster record){
+		return mapper.insertSelective(record);
+	}
+	public int updateByPrimaryKeySelective(B_Poster record){
+		return mapper.updateByPrimaryKeySelective(record);
+	}
+	public int updateByPrimaryKey(B_Poster record){
+		return mapper.updateByPrimaryKey(record);
+	}
+	public List<B_Poster> selectPostByGardenId(Integer gardenId,Integer limit,Short status){
+		return mapper.selectPostByGardenId(gardenId, limit,status);
+	}
+	public B_Poster selectPosterByUserId(Integer userId,Short status){
+		return mapper.selectPosterByUserId(userId, status);
+	}
+}
+

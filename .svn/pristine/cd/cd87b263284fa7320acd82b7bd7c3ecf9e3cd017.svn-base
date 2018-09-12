@@ -1,0 +1,58 @@
+package com.tyh.service;
+
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.GslcMapper;
+import com.tyh.model.Gslc;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class GslcService {
+	
+	@Resource
+	private GslcMapper mapper;
+	@Resource
+	SqlSessionTemplate sqlSessionTemplate;
+	
+	public Integer updateGslc(Gslc gslc) {
+		return mapper.updateByPrimaryKeySelective(gslc);
+	}
+	
+	public Integer insertGslc(Gslc gslc) {
+		return mapper.insertSelective(gslc);
+	}
+	
+	public List<Gslc> selectGslcListPage(PageInfo page,Integer userId,String statusSign,String orderBy) {
+		return mapper.selectGslcListPage(page,userId,statusSign,orderBy);
+	}
+	
+	public Gslc selectByPrimaryKey(Integer id) {
+		return mapper.selectByPrimaryKey(id);
+	}
+	
+	public Long selectMyGslcCount(Integer userId,Short status) {
+		return mapper.selectMyGslcCount(userId,status);
+	}
+	
+	public List<Gslc> selectAllGslc(Integer userId,String statusSign,String orderby,Integer limit) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("statusSign", statusSign);
+		map.put("orderby", orderby);
+		map.put("limit", limit);
+		return sqlSessionTemplate.selectList("com.tyh.mapper.GslcMapper.selectAllGslc", map);
+	}
+	
+	
+}

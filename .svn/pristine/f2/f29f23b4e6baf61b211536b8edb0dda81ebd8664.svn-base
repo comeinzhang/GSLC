@@ -1,0 +1,47 @@
+package com.tyh.model;
+
+public class ImgSet {
+	private String id;
+	private String yPrice;
+	private String xPrice;
+	private String type;
+	private String img;
+	private String name;
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getyPrice() {
+		return yPrice;
+	}
+	public void setyPrice(String yPrice) {
+		this.yPrice = yPrice;
+	}
+	public String getxPrice() {
+		return xPrice;
+	}
+	public void setxPrice(String xPrice) {
+		this.xPrice = xPrice;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+}

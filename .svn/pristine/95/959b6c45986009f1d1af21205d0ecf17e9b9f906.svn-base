@@ -1,0 +1,435 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class School {
+    private Integer id;
+
+    private String schoolId;
+
+    private String headImgUrl;
+
+    private String logoImgUrl;
+
+    private String name;
+
+    private String nameEng;
+
+    private String dlImgUrl;
+
+    private String city;
+
+    private String cityEng;
+
+    private String province;
+
+    private String provinceEng;
+
+    private String country;
+
+    private String countryEng;
+
+    private String address;
+
+    private String addressEng;
+
+    private String website;
+
+    private String intype;
+
+    private String intypeEng;
+
+    private String registerNum;
+
+    private String foundedin;
+
+    private String establishment;
+
+    private String establishmentEng;
+
+    private String livingcost;
+
+    private String applicationfee;
+
+    private String currencycode;
+
+    private String totalstudents;
+
+    private String internationalstudents;
+
+    private String accommodationtype;
+
+    private String schoolmotto;
+
+    private String schoolmottoEng;
+
+    private String schoolfrieng;
+
+    private String mascot;
+
+    private String mascotEng;
+
+    private String areanum;
+
+    private String undergraduatenum;
+
+    private String postgraduatenum;
+
+    private String undergraduatep;
+
+    private String yuannum;
+
+    private String xFix;
+
+    private String yFix;
+
+    private Date updateTime;
+    
+    private String content;
+
+    private String contentEng;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId == null ? null : schoolId.trim();
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl == null ? null : headImgUrl.trim();
+    }
+
+    public String getLogoImgUrl() {
+        return logoImgUrl;
+    }
+
+    public void setLogoImgUrl(String logoImgUrl) {
+        this.logoImgUrl = logoImgUrl == null ? null : logoImgUrl.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getNameEng() {
+        return nameEng;
+    }
+
+    public void setNameEng(String nameEng) {
+        this.nameEng = nameEng == null ? null : nameEng.trim();
+    }
+
+    public String getDlImgUrl() {
+        return dlImgUrl;
+    }
+
+    public void setDlImgUrl(String dlImgUrl) {
+        this.dlImgUrl = dlImgUrl == null ? null : dlImgUrl.trim();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
+
+    public String getCityEng() {
+        return cityEng;
+    }
+
+    public void setCityEng(String cityEng) {
+        this.cityEng = cityEng == null ? null : cityEng.trim();
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
+    public String getProvinceEng() {
+        return provinceEng;
+    }
+
+    public void setProvinceEng(String provinceEng) {
+        this.provinceEng = provinceEng == null ? null : provinceEng.trim();
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country == null ? null : country.trim();
+    }
+
+    public String getCountryEng() {
+        return countryEng;
+    }
+
+    public void setCountryEng(String countryEng) {
+        this.countryEng = countryEng == null ? null : countryEng.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    public String getAddressEng() {
+        return addressEng;
+    }
+
+    public void setAddressEng(String addressEng) {
+        this.addressEng = addressEng == null ? null : addressEng.trim();
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website == null ? null : website.trim();
+    }
+
+    public String getIntype() {
+        return intype;
+    }
+
+    public void setIntype(String intype) {
+        this.intype = intype == null ? null : intype.trim();
+    }
+
+    public String getIntypeEng() {
+        return intypeEng;
+    }
+
+    public void setIntypeEng(String intypeEng) {
+        this.intypeEng = intypeEng == null ? null : intypeEng.trim();
+    }
+
+    public String getRegisterNum() {
+        return registerNum;
+    }
+
+    public void setRegisterNum(String registerNum) {
+        this.registerNum = registerNum == null ? null : registerNum.trim();
+    }
+
+    public String getFoundedin() {
+        return foundedin;
+    }
+
+    public void setFoundedin(String foundedin) {
+        this.foundedin = foundedin == null ? null : foundedin.trim();
+    }
+
+    public String getEstablishment() {
+        return establishment;
+    }
+
+    public void setEstablishment(String establishment) {
+        this.establishment = establishment == null ? null : establishment.trim();
+    }
+
+    public String getEstablishmentEng() {
+        return establishmentEng;
+    }
+
+    public void setEstablishmentEng(String establishmentEng) {
+        this.establishmentEng = establishmentEng == null ? null : establishmentEng.trim();
+    }
+
+    public String getLivingcost() {
+        return livingcost;
+    }
+
+    public void setLivingcost(String livingcost) {
+        this.livingcost = livingcost == null ? null : livingcost.trim();
+    }
+
+    public String getApplicationfee() {
+        return applicationfee;
+    }
+
+    public void setApplicationfee(String applicationfee) {
+        this.applicationfee = applicationfee == null ? null : applicationfee.trim();
+    }
+
+    public String getCurrencycode() {
+        return currencycode;
+    }
+
+    public void setCurrencycode(String currencycode) {
+        this.currencycode = currencycode == null ? null : currencycode.trim();
+    }
+
+    public String getTotalstudents() {
+        return totalstudents;
+    }
+
+    public void setTotalstudents(String totalstudents) {
+        this.totalstudents = totalstudents == null ? null : totalstudents.trim();
+    }
+
+    public String getInternationalstudents() {
+        return internationalstudents;
+    }
+
+    public void setInternationalstudents(String internationalstudents) {
+        this.internationalstudents = internationalstudents == null ? null : internationalstudents.trim();
+    }
+
+    public String getAccommodationtype() {
+        return accommodationtype;
+    }
+
+    public void setAccommodationtype(String accommodationtype) {
+        this.accommodationtype = accommodationtype == null ? null : accommodationtype.trim();
+    }
+
+    public String getSchoolmotto() {
+        return schoolmotto;
+    }
+
+    public void setSchoolmotto(String schoolmotto) {
+        this.schoolmotto = schoolmotto == null ? null : schoolmotto.trim();
+    }
+
+    public String getSchoolmottoEng() {
+        return schoolmottoEng;
+    }
+
+    public void setSchoolmottoEng(String schoolmottoEng) {
+        this.schoolmottoEng = schoolmottoEng == null ? null : schoolmottoEng.trim();
+    }
+
+    public String getSchoolfrieng() {
+        return schoolfrieng;
+    }
+
+    public void setSchoolfrieng(String schoolfrieng) {
+        this.schoolfrieng = schoolfrieng == null ? null : schoolfrieng.trim();
+    }
+
+    public String getMascot() {
+        return mascot;
+    }
+
+    public void setMascot(String mascot) {
+        this.mascot = mascot == null ? null : mascot.trim();
+    }
+
+    public String getMascotEng() {
+        return mascotEng;
+    }
+
+    public void setMascotEng(String mascotEng) {
+        this.mascotEng = mascotEng == null ? null : mascotEng.trim();
+    }
+
+    public String getAreanum() {
+        return areanum;
+    }
+
+    public void setAreanum(String areanum) {
+        this.areanum = areanum == null ? null : areanum.trim();
+    }
+
+    public String getUndergraduatenum() {
+        return undergraduatenum;
+    }
+
+    public void setUndergraduatenum(String undergraduatenum) {
+        this.undergraduatenum = undergraduatenum == null ? null : undergraduatenum.trim();
+    }
+
+    public String getPostgraduatenum() {
+        return postgraduatenum;
+    }
+
+    public void setPostgraduatenum(String postgraduatenum) {
+        this.postgraduatenum = postgraduatenum == null ? null : postgraduatenum.trim();
+    }
+
+    public String getUndergraduatep() {
+        return undergraduatep;
+    }
+
+    public void setUndergraduatep(String undergraduatep) {
+        this.undergraduatep = undergraduatep == null ? null : undergraduatep.trim();
+    }
+
+    public String getYuannum() {
+        return yuannum;
+    }
+
+    public void setYuannum(String yuannum) {
+        this.yuannum = yuannum == null ? null : yuannum.trim();
+    }
+
+    public String getxFix() {
+        return xFix;
+    }
+
+    public void setxFix(String xFix) {
+        this.xFix = xFix == null ? null : xFix.trim();
+    }
+
+    public String getyFix() {
+        return yFix;
+    }
+
+    public void setyFix(String yFix) {
+        this.yFix = yFix == null ? null : yFix.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getContentEng() {
+		return contentEng;
+	}
+
+	public void setContentEng(String contentEng) {
+		this.contentEng = contentEng;
+	}
+}

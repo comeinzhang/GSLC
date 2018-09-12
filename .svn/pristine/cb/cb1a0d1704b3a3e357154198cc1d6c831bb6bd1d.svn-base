@@ -1,0 +1,18 @@
+package com.tyh.model;
+
+public class GslcCount {
+	private String phone;
+	private String count;
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getCount() {
+		return count;
+	}
+	public void setCount(String count) {
+		this.count = count;
+	}
+}

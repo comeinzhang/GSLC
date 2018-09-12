@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_ShopMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Shop" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="GARDEN_ID" property="gardenId" jdbcType="INTEGER" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="REFER_ID" property="referId" jdbcType="INTEGER" />
+    <result column="SHOP_TYPE" property="shopType" jdbcType="SMALLINT" />
+    <result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="ADDR" property="userAddr" jdbcType="VARCHAR" />
+    <result column="ADDR_DETAIL" property="addrDetail" jdbcType="VARCHAR" />
+    <result column="BANK" property="bank" jdbcType="VARCHAR" />
+    <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="CARD" property="card" jdbcType="VARCHAR" />
+    <result column="CARD_URL1" property="cardUrl1" jdbcType="VARCHAR" />
+    <result column="CARD_URL2" property="cardUrl2" jdbcType="VARCHAR" />
+    <result column="CHART_URL" property="chartUrl" jdbcType="VARCHAR" />
+    <result column="CHART_URL1" property="chartUrl1" jdbcType="VARCHAR" />
+    <result column="SHOP_LEV_ID" property="shopLevId" jdbcType="INTEGER" />
+    <result column="CATALOG_ID" property="catalogId" jdbcType="INTEGER" />
+    <result column="MAIN_GOODS" property="mainGoods" jdbcType="VARCHAR" />
+    <result column="LOGO_URL" property="logoUrl" jdbcType="VARCHAR" />
+    <result column="SHOP_DES" property="shopDes" jdbcType="VARCHAR" />
+    <result column="SHOP_DETAIL" property="shopDetail" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="EXPIRY_TIME" property="expiryTime" jdbcType="DATE" />
+    <result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="TOTAL_MONEY" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="MONTH_MONEY" property="monthMoney" jdbcType="DECIMAL" />
+    <result column="ONLINE_MONEY" property="onlineMoney" jdbcType="DECIMAL" />
+    <result column="LINE_MONEY" property="lineMoney" jdbcType="DECIMAL" />
+    <result column="MAX_MONEY" property="maxMoney" jdbcType="DECIMAL" />
+    <result column="LATELY_MONEY" property="latelyMoney" jdbcType="DECIMAL" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="LON" property="lon" jdbcType="VARCHAR" />
+    <result column="LAT" property="lat" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, USER_ID, GARDEN_ID,ADDR_DETAIL,CATALOG_ID, REAL_NAME,SHOP_LEV_ID, SHOP_TYPE, MAIN_GOODS, CHART_URL, CHART_URL1,ADDR,
+    LOGO_URL, REFER_ID, SHOP_DES, SHOP_DETAIL, PHONE, BANK, BANK_NAME, ACCOUNT, CARD, ONLINE_MONEY,LINE_MONEY,LON,LAT,
+    CARD_URL1, CARD_URL2, CREATE_TIME, EXPIRY_TIME, CHECK_RESULT, STATUS, TOTAL_MONEY, MONTH_MONEY,
+    MAX_MONEY, LATELY_MONEY, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where ID = #{id,jdbcType=INTEGER} and status=1
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where USER_ID = #{userId,jdbcType=INTEGER} 
+    <if test="status!=null">
+    	and status=#{status,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="selectByAddr" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where LOCATE(#{addr,jdbcType=VARCHAR},ADDR)>0 and STATUS=1
+  </select>
+  <select id="selectShopListPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where 1=1
+    <if test="status!=null">
+    	and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="name!=null and name!=''">
+    	and LOCATE(#{name,jdbcType=VARCHAR},NAME)>0
+    </if>
+    <if test="shopType!=null">
+    	and SHOP_TYPE = #{shopType,jdbcType=SMALLINT}
+    </if>
+    <if test="addr!=null and addr!=''">
+    	and LOCATE(#{addr,jdbcType=VARCHAR},ADDR)>0
+    </if>
+    <if test="catalogIdList!=null and catalogIdList.size()>0">
+     		and 
+	     	<foreach collection="catalogIdList" item="catalogId" open="(" close=")" separator="or">
+	     		CATALOG_ID = #{catalogId,jdbcType=INTEGER}
+	     	</foreach>
+    </if>
+    order by CREATE_TIME DESC
+  </select>
+  <select id="selectBldShopList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where 1=1
+    <if test="status!=null">
+    	and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="shopType!=null">
+    	and SHOP_TYPE = #{shopType,jdbcType=SMALLINT}
+    </if>
+    <if test="catalogIdList!=null and catalogIdList.size()>0">
+     		and 
+	     	<foreach collection="catalogIdList" item="catalogId" open="(" close=")" separator="or">
+	     		CATALOG_ID = #{catalogId,jdbcType=INTEGER}
+	     	</foreach>
+    </if>
+  </select>
+  <select id="selectByGardenId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where GARDEN_ID = #{gardenId,jdbcType=INTEGER} and status=1
+  </select>
+  <select id="selectByReferId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_shop
+    where REFER_ID = #{referId,jdbcType=INTEGER} and status=1 order by CREATE_TIME DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_shop
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.B_Shop" >
+    insert into b_shop (ID, NAME, USER_ID, 
+      GARDEN_ID, SHOP_LEV_ID, REAL_NAME,
+      SHOP_TYPE, MAIN_GOODS, CHART_URL, CHART_URL,
+      LOGO_URL, REFER_ID, SHOP_DES, 
+      SHOP_DETAIL, PHONE, BANK, 
+      BANK_NAME, ACCOUNT, CARD, 
+      CARD_URL1, CARD_URL2, CREATE_TIME, 
+      EXPIRY_TIME, CHECK_RESULT, STATUS, 
+      TOTAL_MONEY, MAX_MONEY, LATELY_MONEY, 
+      UPDATE_TIME,ADDR,ADDR_DETAIL)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{gardenId,jdbcType=INTEGER}, #{shopLevId,jdbcType=INTEGER}, #{realName,jdbcType=VARCHAR},
+      #{shopType,jdbcType=SMALLINT}, #{mainGoods,jdbcType=VARCHAR}, #{chartUrl,jdbcType=VARCHAR},#{chartUrl1,jdbcType=VARCHAR}, 
+      #{logoUrl,jdbcType=VARCHAR}, #{referId,jdbcType=INTEGER}, #{shopDes,jdbcType=VARCHAR}, 
+      #{shopDetail,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, 
+      #{bankName,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{card,jdbcType=VARCHAR}, 
+      #{cardUrl1,jdbcType=VARCHAR}, #{cardUrl2,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{expiryTime,jdbcType=DATE}, #{checkResult,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{totalMoney,jdbcType=DECIMAL}, #{maxMoney,jdbcType=DECIMAL}, #{latelyMoney,jdbcType=DECIMAL}, 
+      #{updateTime,jdbcType=TIMESTAMP},#{userAddr,jdbcType=VARCHAR},#{addrDetail,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.B_Shop" >
+    insert into b_shop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="lon != null" >
+        LON,
+      </if>
+      <if test="lat != null" >
+        LAT,
+      </if>
+      <if test="catalogId != null" >
+        CATALOG_ID ,
+      </if>
+      <if test="userAddr != null" >
+        ADDR,
+      </if>
+      <if test="addrDetail != null" >
+        ADDR_DETAIL,
+      </if>
+      <if test="realName != null" >
+        REAL_NAME,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="gardenId != null" >
+        GARDEN_ID,
+      </if>
+      <if test="shopLevId != null" >
+        SHOP_LEV_ID,
+      </if>
+      <if test="shopType != null" >
+        SHOP_TYPE,
+      </if>
+      <if test="mainGoods != null" >
+        MAIN_GOODS,
+      </if>
+      <if test="chartUrl != null" >
+        CHART_URL,
+      </if>
+      <if test="chartUrl1 != null" >
+        CHART_URL1,
+      </if>
+      <if test="logoUrl != null" >
+        LOGO_URL,
+      </if>
+      <if test="referId != null" >
+        REFER_ID,
+      </if>
+      <if test="shopDes != null" >
+        SHOP_DES,
+      </if>
+      <if test="shopDetail != null" >
+        SHOP_DETAIL,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="bank != null" >
+        BANK,
+      </if>
+      <if test="bankName != null" >
+        BANK_NAME,
+      </if>
+      <if test="account != null" >
+        ACCOUNT,
+      </if>
+      <if test="card != null" >
+        CARD,
+      </if>
+      <if test="cardUrl1 != null" >
+        CARD_URL1,
+      </if>
+      <if test="cardUrl2 != null" >
+        CARD_URL2,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="expiryTime != null" >
+        EXPIRY_TIME,
+      </if>
+      <if test="checkResult != null" >
+        CHECK_RESULT,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="totalMoney != null" >
+        TOTAL_MONEY,
+      </if>
+      <if test="monthMoney != null" >
+        MONTH_MONEY,
+      </if>
+      <if test="maxMoney != null" >
+        MAX_MONEY,
+      </if>
+      <if test="latelyMoney != null" >
+        LATELY_MONEY,
+      </if>
+      <if test="onlineMoney != null" >
+        ONLINE_MONEY,
+      </if>
+      <if test="lineMoney != null" >
+        LINE_MONEY,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lon != null" >
+        #{lon,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="catalogId != null" >
+        #{catalogId,jdbcType=INTEGER},
+      </if>
+      <if test="userAddr != null" >
+        #{userAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="addrDetail != null" >
+        #{addrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="gardenId != null" >
+        #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="shopLevId != null" >
+        #{shopLevId,jdbcType=INTEGER},
+      </if>
+      <if test="shopType != null" >
+        #{shopType,jdbcType=SMALLINT},
+      </if>
+      <if test="mainGoods != null" >
+        #{mainGoods,jdbcType=VARCHAR},
+      </if>
+      <if test="chartUrl != null" >
+        #{chartUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="chartUrl1 != null" >
+        #{chartUrl1,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null" >
+        #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="referId != null" >
+        #{referId,jdbcType=INTEGER},
+      </if>
+      <if test="shopDes != null" >
+        #{shopDes,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDetail != null" >
+        #{shopDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="card != null" >
+        #{card,jdbcType=VARCHAR},
+      </if>
+      <if test="cardUrl1 != null" >
+        #{cardUrl1,jdbcType=VARCHAR},
+      </if>
+      <if test="cardUrl2 != null" >
+        #{cardUrl2,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="expiryTime != null" >
+        #{expiryTime,jdbcType=DATE},
+      </if>
+      <if test="checkResult != null" >
+        #{checkResult,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="monthMoney != null" >
+        #{monthMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="maxMoney != null" >
+        #{maxMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="latelyMoney != null" >
+        #{latelyMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="onlineMoney != null" >
+        #{onlineMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="lineMoney != null" >
+        #{lineMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Shop" >
+    update b_shop
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="lon != null" >
+        LON = #{lon,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        LAT = #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddr != null" >
+        ADDR = #{userAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="addrDetail != null" >
+        ADDR_DETAIL = #{addrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        REAL_NAME = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="catalogId != null" >
+        CATALOG_ID = #{catalogId,jdbcType=INTEGER},
+      </if>
+      <if test="gardenId != null" >
+        GARDEN_ID = #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="shopLevId != null" >
+        SHOP_LEV_ID = #{shopLevId,jdbcType=INTEGER},
+      </if>
+      <if test="shopType != null" >
+        SHOP_TYPE = #{shopType,jdbcType=SMALLINT},
+      </if>
+      <if test="mainGoods != null" >
+        MAIN_GOODS = #{mainGoods,jdbcType=VARCHAR},
+      </if>
+      <if test="chartUrl != null" >
+        CHART_URL = #{chartUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="chartUrl1 != null" >
+        CHART_URL1 = #{chartUrl1,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null" >
+        LOGO_URL = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="referId != null" >
+        REFER_ID = #{referId,jdbcType=INTEGER},
+      </if>
+      <if test="shopDes != null" >
+        SHOP_DES = #{shopDes,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDetail != null" >
+        SHOP_DETAIL = #{shopDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        BANK = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        BANK_NAME = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        ACCOUNT = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="card != null" >
+        CARD = #{card,jdbcType=VARCHAR},
+      </if>
+      <if test="cardUrl1 != null" >
+        CARD_URL1 = #{cardUrl1,jdbcType=VARCHAR},
+      </if>
+      <if test="cardUrl2 != null" >
+        CARD_URL2 = #{cardUrl2,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="expiryTime != null" >
+        EXPIRY_TIME = #{expiryTime,jdbcType=DATE},
+      </if>
+      <if test="checkResult != null" >
+        CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="totalMoney != null" >
+        TOTAL_MONEY = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="maxMoney != null" >
+        MAX_MONEY = #{maxMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="latelyMoney != null" >
+        LATELY_MONEY = #{latelyMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="onlineMoney != null" >
+        ONLINE_MONEY = #{onlineMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="lineMoney != null" >
+        LINE_MONEY = #{lineMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.B_Shop" >
+    update b_shop
+    set NAME = #{name,jdbcType=VARCHAR},
+      REAL_NAME = #{realName,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=INTEGER},
+      ADDR = #{userAddr,jdbcType=VARCHAR},
+      ADDR_DETAIL = #{addrDetail,jdbcType=VARCHAR},
+      GARDEN_ID = #{gardenId,jdbcType=INTEGER},
+      CATALOG_ID = #{catalogId,jdbcType=INTEGER},
+      SHOP_LEV_ID = #{shopLevId,jdbcType=INTEGER},
+      SHOP_TYPE = #{shopType,jdbcType=SMALLINT},
+      MAIN_GOODS = #{mainGoods,jdbcType=VARCHAR},
+      CHART_URL = #{chartUrl,jdbcType=VARCHAR},
+      CHART_URL1 = #{chartUrl1,jdbcType=VARCHAR},
+      LOGO_URL = #{logoUrl,jdbcType=VARCHAR},
+      REFER_ID = #{referId,jdbcType=INTEGER},
+      SHOP_DES = #{shopDes,jdbcType=VARCHAR},
+      SHOP_DETAIL = #{shopDetail,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      BANK = #{bank,jdbcType=VARCHAR},
+      BANK_NAME = #{bankName,jdbcType=VARCHAR},
+      ACCOUNT = #{account,jdbcType=VARCHAR},
+      CARD = #{card,jdbcType=VARCHAR},
+      CARD_URL1 = #{cardUrl1,jdbcType=VARCHAR},
+      CARD_URL2 = #{cardUrl2,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      EXPIRY_TIME = #{expiryTime,jdbcType=DATE},
+      CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      TOTAL_MONEY = #{totalMoney,jdbcType=DECIMAL},
+      MAX_MONEY = #{maxMoney,jdbcType=DECIMAL},
+      LATELY_MONEY = #{latelyMoney,jdbcType=DECIMAL},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getCountComsReferId" resultType="java.util.Map">
+    select 
+    IFNULL(sum(TOTAL_MONEY),0) totalMoney,IFNULL(sum(ONLINE_MONEY),0) onlineMoney,IFNULL(sum(LINE_MONEY),0) lineMoney
+    from b_shop
+    where 1=1
+    <if test="referId!=null">
+    	and REFER_ID = #{referId,jdbcType=INTEGER}
+    </if>
+    <if test="addr!=null and addr!=''">
+    	and LOCATE(#{addr,jdbcType=VARCHAR},ADDR)>0
+    </if>
+  </select>
+</mapper>

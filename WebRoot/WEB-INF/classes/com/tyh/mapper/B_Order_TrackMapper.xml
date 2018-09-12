@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Order_TrackMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Order_Track" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ORDER_NUM" property="orderNum" jdbcType="VARCHAR" />
+    <result column="DETAIL_ID" property="detailId" jdbcType="INTEGER" />
+    <result column="EMS_TYPE" property="emsType" jdbcType="VARCHAR" />
+    <result column="EMS_CODE" property="emsCode" jdbcType="VARCHAR" />
+    <result column="OPERATE_BY" property="operateBy" jdbcType="INTEGER" />
+    <result column="OPERATE_TIME" property="operateTime" jdbcType="TIMESTAMP" />
+    <result column="SALE_CODE" property="saleCode" jdbcType="VARCHAR" />
+    <result column="INVOICE_CODE" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_NUM, DETAIL_ID, EMS_TYPE, EMS_CODE, OPERATE_BY, OPERATE_TIME, SALE_CODE, 
+    INVOICE_CODE, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_order_track
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOrderNum" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_order_track
+    where ORDER_NUM = #{orderNum,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByDetailId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_order_track
+    where DETAIL_ID = #{detailId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_order_track
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.B_Order_Track" >
+    insert into b_order_track (ID, ORDER_NUM, DETAIL_ID, 
+      EMS_TYPE, EMS_CODE, OPERATE_BY, 
+      OPERATE_TIME, SALE_CODE, INVOICE_CODE, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=INTEGER}, #{orderNum,jdbcType=VARCHAR}, #{detailId,jdbcType=INTEGER}, 
+      #{emsType,jdbcType=VARCHAR}, #{emsCode,jdbcType=VARCHAR}, #{operateBy,jdbcType=INTEGER}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{saleCode,jdbcType=VARCHAR}, #{invoiceCode,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.B_Order_Track" >
+    insert into b_order_track
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderNum != null" >
+        ORDER_NUM,
+      </if>
+      <if test="detailId != null" >
+        DETAIL_ID,
+      </if>
+      <if test="emsType != null" >
+        EMS_TYPE,
+      </if>
+      <if test="emsCode != null" >
+        EMS_CODE,
+      </if>
+      <if test="operateBy != null" >
+        OPERATE_BY,
+      </if>
+      <if test="operateTime != null" >
+        OPERATE_TIME,
+      </if>
+      <if test="saleCode != null" >
+        SALE_CODE,
+      </if>
+      <if test="invoiceCode != null" >
+        INVOICE_CODE,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="detailId != null" >
+        #{detailId,jdbcType=INTEGER},
+      </if>
+      <if test="emsType != null" >
+        #{emsType,jdbcType=VARCHAR},
+      </if>
+      <if test="emsCode != null" >
+        #{emsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateBy != null" >
+        #{operateBy,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="saleCode != null" >
+        #{saleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceCode != null" >
+        #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Order_Track" >
+    update b_order_track
+    <set >
+      <if test="orderNum != null" >
+        ORDER_NUM = #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="detailId != null" >
+        DETAIL_ID = #{detailId,jdbcType=INTEGER},
+      </if>
+      <if test="emsType != null" >
+        EMS_TYPE = #{emsType,jdbcType=VARCHAR},
+      </if>
+      <if test="emsCode != null" >
+        EMS_CODE = #{emsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateBy != null" >
+        OPERATE_BY = #{operateBy,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        OPERATE_TIME = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="saleCode != null" >
+        SALE_CODE = #{saleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceCode != null" >
+        INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.B_Order_Track" >
+    update b_order_track
+    set ORDER_NUM = #{orderNum,jdbcType=VARCHAR},
+      DETAIL_ID = #{detailId,jdbcType=INTEGER},
+      EMS_TYPE = #{emsType,jdbcType=VARCHAR},
+      EMS_CODE = #{emsCode,jdbcType=VARCHAR},
+      OPERATE_BY = #{operateBy,jdbcType=INTEGER},
+      OPERATE_TIME = #{operateTime,jdbcType=TIMESTAMP},
+      SALE_CODE = #{saleCode,jdbcType=VARCHAR},
+      INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,53 @@
+package com.tyh.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.RedPacketMapper;
+import com.tyh.mapper.RedPacketRecordMapper;
+import com.tyh.model.RedPacket;
+import com.tyh.model.RedPacketRecord;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class RedPacketService {
+	
+	@Resource
+	private RedPacketMapper redPacketMapper;
+	@Resource
+	private RedPacketRecordMapper redRecordMapper;
+	public int insertSelective(RedPacket record){
+		return redPacketMapper.insertSelective(record);
+	}
+	public int updateByPrimaryKeySelective(RedPacket record){
+		return redPacketMapper.updateByPrimaryKeySelective(record);
+	}
+	public RedPacket selectByUserId(Integer userId){
+		return redPacketMapper.selectByUserId(userId);
+	}
+	public List<RedPacketRecord> selectByUserIdListPage(PageInfo page,Integer userId,String type,String beginTime,String endTime,String flag){
+		return redRecordMapper.selectByUserIdListPage(page,userId,type,beginTime,endTime,flag);
+	}
+	public int insertSelective(RedPacketRecord record){
+		return redRecordMapper.insertSelective(record);
+	}
+	public int getCountLookedByType(Integer userId,Short type){
+		return redRecordMapper.getCountLookedByType(userId,type);
+	}
+	public int updateLooked(Integer userId,Short type){
+		return redRecordMapper.updateLooked(userId,type);
+	}
+	public Map<String, Object> selectRedRecordByUserId(Integer userId){
+		return redRecordMapper.selectByUserId(userId);
+	}
+	public int getCountRedPacketRecord(Integer userId,Short type,Integer detailId,String flag){
+		return redRecordMapper.getCountRedPacketRecord(userId,type,detailId,flag);
+	}
+}
+

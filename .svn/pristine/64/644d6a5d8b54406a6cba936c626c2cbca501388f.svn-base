@@ -1,0 +1,93 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_User;
+
+
+
+public interface B_UserMapper {
+    int deleteByPrimaryKey(@Param("id")Integer id);
+
+    int insert(B_User record);
+
+    B_User selectByPrimaryKey(@Param("id")Integer id);
+
+    int updateByPrimaryKeySelective(B_User record);
+    
+    int updatePhoneAndAddr(B_User record);
+    
+    int updateComs(B_User record);
+    
+    int updateComsYes(B_User record);
+    
+    int updateComsNo(B_User record);
+    
+    int updateBalance(B_User record);
+    
+    int updateAlonepay(B_User record);
+    
+    int updateOweNum(B_User record);
+    
+    int updateHeadImg(B_User record);
+    
+    int updateNickName(B_User record);
+    
+    int updateSex(B_User record);
+    
+    int updateRechargeNum(B_User record);
+    
+    int updateRechargeBlock(B_User record);
+    
+    int updateTotalpay(B_User record);
+    
+    int updateUserRoleId(B_User record);
+    
+    int updateOfferNum(B_User record);
+    
+    int updateBonusNum(B_User record);
+    
+    int updateJifenYes(B_User record);
+    int updateMonthpay(B_User record);
+    int updateSurpluspay(B_User record);
+    int updateReferNum(B_User record);
+    int updatePayment(B_User record);
+    int updateBonus(B_User record);
+    int updateRefer(B_User record);
+    int updateTPayment(B_User record);
+    int updateWeekpay(B_User record);
+    int updatePbcUser(B_User record);
+    int updatePbcSeller(B_User record);
+    int updatePbcBlock(B_User record);
+    int updateReferPath(@Param("topReferId")Integer topReferId, @Param("topReferPath")String topReferPath);
+    
+    B_User selectByNamePwd(@Param("login_name")String login_name,@Param("pwd")String pwd);
+    
+    B_User selectByName(@Param("login_name")String login_name);
+    
+    B_User selectByPhone(@Param("phone")String phone);
+    
+    B_User selectByOpenId(@Param("openId")String openId);
+    
+    List<B_User> selectByRoleId(@Param("roleId")String roleId);
+    
+    B_User selectByUnionId(@Param("unionId")String unionId);
+    
+    //查找商家上级代理
+    List<B_User> selectAgentByShopAddr(@Param("roleId")String roleId,@Param("addr")String addr);
+    
+    //查找用户下级代理
+    List<B_User> selectByroleIdandAddr(@Param("roleId")String roleId,@Param("addr")String addr);
+    
+    List<B_User> selectUserByReferId(@Param("referId")Integer referId);
+    
+    List<B_User> selectUserByOwerId(@Param("owerId")Integer owerId);
+    
+    int getCountComsByroleIdandAddr(@Param("roleId")String roleId,@Param("addr")String addr);
+    
+    int getCountComsUserByReferId(@Param("referId")Integer referId);
+    
+    int getCountComsUserByOwerId(@Param("owerId")Integer owerId);
+}

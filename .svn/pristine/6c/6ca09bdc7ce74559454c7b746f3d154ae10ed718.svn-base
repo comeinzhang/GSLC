@@ -1,0 +1,306 @@
+package com.tyh.model;
+
+import java.util.Date;
+import java.util.List;
+
+public class B_Order {
+    private Integer id;
+
+    private String orderNum;
+    
+    private String mergeNum;
+    
+    private String wxOrderNum;
+
+    private Integer buyUserId;
+    
+    private Integer posterId;
+    
+    private Integer shopId;
+    
+    private B_Shop shop;
+    
+    private String postTime;
+    
+    private String receiveTime;
+    
+    private Double prePayment;
+    
+    private B_Goods goods;
+    
+    private Short cId;
+
+    private Integer sellUserId;
+    
+    private Integer addrId;
+    
+    private B_User_Addr addr;
+
+    private double totalPrice;
+    
+    private Integer totalStock;
+
+    private String comments;
+
+    private Short status;
+    
+    private Short sign;
+    
+    private Short assessed;
+
+    private String createTime;
+
+    private Date updateTime;
+
+    private String change_time;
+    
+    private Short payWay;
+    
+    private String codeUrl;
+    
+    private String emsType;
+
+    private String emsCode;
+    
+    private List<B_Order_Detail> detailList;
+    
+    public Integer getSellUserId() {
+		return sellUserId;
+	}
+
+	public void setSellUserId(Integer sellUserId) {
+		this.sellUserId = sellUserId;
+	}
+
+	public Integer getAddrId() {
+		return addrId;
+	}
+
+	public void setAddrId(Integer addrId) {
+		this.addrId = addrId;
+	}
+
+	public String getChange_time() {
+		return change_time;
+	}
+
+	public void setChange_time(String change_time) {
+		this.change_time = change_time;
+	}
+
+	public Integer getTotalStock() {
+		return totalStock;
+	}
+
+	public void setTotalStock(Integer totalStock) {
+		this.totalStock = totalStock;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum == null ? null : orderNum.trim();
+    }
+
+    public Integer getBuyUserId() {
+        return buyUserId;
+    }
+
+    public void setBuyUserId(Integer buyUserId) {
+        this.buyUserId = buyUserId;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments == null ? null : comments.trim();
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public B_Goods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(B_Goods goods) {
+		this.goods = goods;
+	}
+
+	public Short getAssessed() {
+		return assessed;
+	}
+
+	public void setAssessed(Short assessed) {
+		this.assessed = assessed;
+	}
+
+	public List<B_Order_Detail> getDetailList() {
+		return detailList;
+	}
+
+	public void setDetailList(List<B_Order_Detail> detailList) {
+		this.detailList = detailList;
+	}
+
+	public Integer getPosterId() {
+		return posterId;
+	}
+
+	public void setPosterId(Integer posterId) {
+		this.posterId = posterId;
+	}
+
+	public String getPostTime() {
+		return postTime;
+	}
+
+	public void setPostTime(String postTime) {
+		this.postTime = postTime;
+	}
+
+	public Short getSign() {
+		return sign;
+	}
+
+	public void setSign(Short sign) {
+		this.sign = sign;
+	}
+
+	public String getWxOrderNum() {
+		return wxOrderNum;
+	}
+
+	public void setWxOrderNum(String wxOrderNum) {
+		this.wxOrderNum = wxOrderNum;
+	}
+
+	public Short getPayWay() {
+		return payWay;
+	}
+
+	public void setPayWay(Short payWay) {
+		this.payWay = payWay;
+	}
+
+	public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+
+	public B_Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(B_Shop shop) {
+		this.shop = shop;
+	}
+
+	public B_User_Addr getAddr() {
+		return addr;
+	}
+
+	public void setAddr(B_User_Addr addr) {
+		this.addr = addr;
+	}
+
+	public String getReceiveTime() {
+		return receiveTime;
+	}
+
+	public void setReceiveTime(String receiveTime) {
+		this.receiveTime = receiveTime;
+	}
+
+	public Short getcId() {
+		return cId;
+	}
+
+	public void setcId(Short cId) {
+		this.cId = cId;
+	}
+
+	public Double getPrePayment() {
+		return prePayment;
+	}
+
+	public void setPrePayment(Double prePayment) {
+		this.prePayment = prePayment;
+	}
+
+	public String getCodeUrl() {
+		return codeUrl;
+	}
+
+	public void setCodeUrl(String codeUrl) {
+		this.codeUrl = codeUrl;
+	}
+
+	public String getMergeNum() {
+		return mergeNum;
+	}
+
+	public void setMergeNum(String mergeNum) {
+		this.mergeNum = mergeNum;
+	}
+
+	public String getEmsType() {
+		return emsType;
+	}
+
+	public void setEmsType(String emsType) {
+		this.emsType = emsType;
+	}
+
+	public String getEmsCode() {
+		return emsCode;
+	}
+
+	public void setEmsCode(String emsCode) {
+		this.emsCode = emsCode;
+	}
+}

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.ClassTrainMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.ClassTrain" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CLASS_CATALOG_ID" property="classCatalogId" jdbcType="INTEGER" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="PUBLISHER" property="publisher" jdbcType="VARCHAR" />
+    <result column="PUBLISHER_IMG" property="publisherImg" jdbcType="VARCHAR" />
+    <result column="PUBLISHER_ID" property="publisherId" jdbcType="VARCHAR" />
+    <result column="PUBLISHER_DESC" property="publisherDesc" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="TIME" property="time" jdbcType="TIMESTAMP" />
+    <result column="ADDR" property="addr" jdbcType="VARCHAR" />
+    <result column="PEOPLE_NUM" property="peopleNum" jdbcType="INTEGER" />
+    <result column="CLICK_COUNT" property="clickCount" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tyh.model.ClassTrain" extends="BaseResultMap" >
+    <result column="INFO" property="info" typeHandler="com.tyh.unitl.MyBlobTypeHandler" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CLASS_CATALOG_ID, TITLE, HEAD_IMG_URL, PUBLISH_TIME, PUBLISHER, PUBLISHER_IMG, 
+    PUBLISHER_ID, PUBLISHER_DESC, STATUS, UPDATE_TIME, PRICE, TIME, ADDR, PEOPLE_NUM, 
+    CLICK_COUNT
+  </sql>
+  <sql id="Blob_Column_List" >
+    INFO
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from b_class_train
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStatusAndCatalogPageList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_class_train
+    where 1=1
+    <if test="classCatalogId != null" >
+        and CLASS_CATALOG_ID = #{classCatalogId,jdbcType=INTEGER}
+      </if>
+    <if test="status != null" >
+        and STATUS = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="publisherId != null" >
+        and PUBLISHER_ID = #{publisherId,jdbcType=INTEGER}
+    </if>
+    order by PUBLISH_TIME DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_class_train
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.ClassTrain" >
+    insert into b_class_train (ID, CLASS_CATALOG_ID, TITLE, 
+      HEAD_IMG_URL, PUBLISH_TIME, PUBLISHER, 
+      PUBLISHER_IMG, PUBLISHER_ID, PUBLISHER_DESC, 
+      STATUS, UPDATE_TIME, PRICE, 
+      TIME, ADDR, PEOPLE_NUM, 
+      CLICK_COUNT, INFO)
+    values (#{id,jdbcType=INTEGER}, #{classCatalogId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{headImgUrl,jdbcType=VARCHAR}, #{publishTime,jdbcType=TIMESTAMP}, #{publisher,jdbcType=VARCHAR}, 
+      #{publisherImg,jdbcType=VARCHAR}, #{publisherId,jdbcType=VARCHAR}, #{publisherDesc,jdbcType=VARCHAR}, 
+      #{status,jdbcType=SMALLINT}, #{updateTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, 
+      #{time,jdbcType=TIMESTAMP}, #{addr,jdbcType=VARCHAR}, #{peopleNum,jdbcType=INTEGER}, 
+      #{clickCount,jdbcType=INTEGER}, #{info,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.ClassTrain" >
+    insert into b_class_train
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="classCatalogId != null" >
+        CLASS_CATALOG_ID,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="headImgUrl != null" >
+        HEAD_IMG_URL,
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME,
+      </if>
+      <if test="publisher != null" >
+        PUBLISHER,
+      </if>
+      <if test="publisherImg != null" >
+        PUBLISHER_IMG,
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID,
+      </if>
+      <if test="publisherDesc != null" >
+        PUBLISHER_DESC,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="time != null" >
+        TIME,
+      </if>
+      <if test="addr != null" >
+        ADDR,
+      </if>
+      <if test="peopleNum != null" >
+        PEOPLE_NUM,
+      </if>
+      <if test="clickCount != null" >
+        CLICK_COUNT,
+      </if>
+      <if test="info != null" >
+        INFO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="classCatalogId != null" >
+        #{classCatalogId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherImg != null" >
+        #{publisherImg,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherDesc != null" >
+        #{publisherDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="peopleNum != null" >
+        #{peopleNum,jdbcType=INTEGER},
+      </if>
+      <if test="clickCount != null" >
+        #{clickCount,jdbcType=INTEGER},
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.ClassTrain" >
+    update b_class_train
+    <set >
+      <if test="classCatalogId != null" >
+        CLASS_CATALOG_ID = #{classCatalogId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        HEAD_IMG_URL = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="publisher != null" >
+        PUBLISHER = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherImg != null" >
+        PUBLISHER_IMG = #{publisherImg,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherDesc != null" >
+        PUBLISHER_DESC = #{publisherDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addr != null" >
+        ADDR = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="peopleNum != null" >
+        PEOPLE_NUM = #{peopleNum,jdbcType=INTEGER},
+      </if>
+      <if test="clickCount != null" >
+        CLICK_COUNT = #{clickCount,jdbcType=INTEGER},
+      </if>
+      <if test="info != null" >
+        INFO = #{info,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tyh.model.ClassTrain" >
+    update b_class_train
+    set CLASS_CATALOG_ID = #{classCatalogId,jdbcType=INTEGER},
+      TITLE = #{title,jdbcType=VARCHAR},
+      HEAD_IMG_URL = #{headImgUrl,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      PUBLISHER = #{publisher,jdbcType=VARCHAR},
+      PUBLISHER_IMG = #{publisherImg,jdbcType=VARCHAR},
+      PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      PUBLISHER_DESC = #{publisherDesc,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=SMALLINT},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      PRICE = #{price,jdbcType=DECIMAL},
+      TIME = #{time,jdbcType=TIMESTAMP},
+      ADDR = #{addr,jdbcType=VARCHAR},
+      PEOPLE_NUM = #{peopleNum,jdbcType=INTEGER},
+      CLICK_COUNT = #{clickCount,jdbcType=INTEGER},
+      INFO = #{info,jdbcType=LONGVARBINARY}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.ClassTrain" >
+    update b_class_train
+    set CLASS_CATALOG_ID = #{classCatalogId,jdbcType=INTEGER},
+      TITLE = #{title,jdbcType=VARCHAR},
+      HEAD_IMG_URL = #{headImgUrl,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      PUBLISHER = #{publisher,jdbcType=VARCHAR},
+      PUBLISHER_IMG = #{publisherImg,jdbcType=VARCHAR},
+      PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      PUBLISHER_DESC = #{publisherDesc,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=SMALLINT},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      PRICE = #{price,jdbcType=DECIMAL},
+      TIME = #{time,jdbcType=TIMESTAMP},
+      ADDR = #{addr,jdbcType=VARCHAR},
+      PEOPLE_NUM = #{peopleNum,jdbcType=INTEGER},
+      CLICK_COUNT = #{clickCount,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

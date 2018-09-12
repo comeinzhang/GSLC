@@ -1,0 +1,70 @@
+package com.tyh.model;
+
+public class SysVersion {
+	
+    private Integer id;
+
+    private Double versionNum;
+
+    private String versionUrl;
+
+    private String content;
+
+    private Integer deviceType;
+
+    private Integer mustUpdate;
+
+    
+    
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Double getVersionNum() {
+		return versionNum;
+	}
+
+	public void setVersionNum(Double versionNum) {
+		this.versionNum = versionNum;
+	}
+
+	public String getVersionUrl() {
+		return versionUrl;
+	}
+
+	public void setVersionUrl(String versionUrl) {
+		this.versionUrl = versionUrl;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Integer getDeviceType() {
+		return deviceType;
+	}
+
+	public void setDeviceType(Integer deviceType) {
+		this.deviceType = deviceType;
+	}
+
+	public Integer getMustUpdate() {
+		return mustUpdate;
+	}
+
+	public void setMustUpdate(Integer mustUpdate) {
+		this.mustUpdate = mustUpdate;
+	}
+    
+    
+
+    
+}

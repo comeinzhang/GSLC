@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.ReplyUserMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.ReplyUser" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="REFER_ID" property="referId" jdbcType="INTEGER" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+    <result column="CARD_IMG1" property="cardImg1" jdbcType="VARCHAR" />
+    <result column="CARD_IMG2" property="cardImg2" jdbcType="VARCHAR" />
+    <result column="CARD_IMG3" property="cardImg3" jdbcType="VARCHAR" />
+    <result column="CARD_IMG4" property="cardImg4" jdbcType="VARCHAR" />
+    <result column="CARD_IMG5" property="cardImg5" jdbcType="VARCHAR" />
+    <result column="CARD_IMG6" property="cardImg6" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="ADDR" property="addr" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="SMALLINT" />
+    <result column="TOTAL_PRICE" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="PAY_WAY" property="payWay" jdbcType="SMALLINT" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="CHECK_MSG" property="checkMsg" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, REFER_ID, USER_ID, NAME, PHONE, ID_CARD, ADDR, TYPE, STATUS,PAY_WAY,CODE,TOTAL_PRICE, CHECK_MSG, UPDATE_TIME, CARD_IMG1,CARD_IMG2,CARD_IMG3,CARD_IMG4,CARD_IMG5,CARD_IMG6,
+    CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_reply_user
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_reply_user
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.ReplyUser" >
+    insert into b_reply_user (ID, REFER_ID, USER_ID, 
+      NAME, PHONE, ID_CARD, PAY_WAY,CODE,TOTAL_PRICE,
+      ADDR, TYPE, STATUS, CARD_IMG1,CARD_IMG2,CARD_IMG3,CARD_IMG4,CARD_IMG5,CARD_IMG6,
+      CHECK_MSG, UPDATE_TIME, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{referId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},#{payWay,jdbcType=SMALLINT},#{code,jdbcType=VARCHAR},#{totalPrice,jdbcType=DECIMAL},  
+      #{addr,jdbcType=VARCHAR}, #{type,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT},#{cardImg1,jdbcType=VARCHAR}, #{cardImg2,jdbcType=VARCHAR}, 
+      #{cardImg3,jdbcType=VARCHAR},#{cardImg4,jdbcType=VARCHAR},#{cardImg5,jdbcType=VARCHAR},#{cardImg6,jdbcType=VARCHAR}, 
+      #{checkMsg,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.ReplyUser" keyProperty="id" useGeneratedKeys="true">
+    insert into b_reply_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="referId != null" >
+        REFER_ID,
+      </if>
+      <if test="payWay != null" >
+        PAY_WAY,
+      </if>
+      <if test="totalPrice != null" >
+        TOTAL_PRICE,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="cardImg1 != null" >
+        CARD_IMG1,
+      </if>
+      <if test="cardImg2 != null" >
+        CARD_IMG2,
+      </if>
+      <if test="cardImg3 != null" >
+        CARD_IMG3,
+      </if>
+      <if test="cardImg4 != null" >
+        CARD_IMG4,
+      </if>
+      <if test="cardImg5 != null" >
+        CARD_IMG5,
+      </if>
+      <if test="cardImg6 != null" >
+        CARD_IMG6,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="idCard != null" >
+        ID_CARD,
+      </if>
+      <if test="addr != null" >
+        ADDR,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="checkMsg != null" >
+        CHECK_MSG,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="referId != null" >
+        #{referId,jdbcType=INTEGER},
+      </if>
+      <if test="payWay != null" >
+       #{payWay,jdbcType=SMALLINT},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg1 != null" >
+        #{cardImg1,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg2 != null" >
+        #{cardImg2,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg3 != null" >
+        #{cardImg3,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg4 != null" >
+        #{cardImg4,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg5 != null" >
+        #{cardImg5,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg6 != null" >
+        #{cardImg6,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="checkMsg != null" >
+        #{checkMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.ReplyUser" >
+    update b_reply_user
+    <set >
+      <if test="referId != null" >
+        REFER_ID = #{referId,jdbcType=INTEGER},
+      </if>
+      <if test="payWay != null" >
+       	PAY_WAY = #{payWay,jdbcType=SMALLINT},
+      </if>
+      <if test="totalPrice != null" >
+        TOTAL_PRICE = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        ID_CARD = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg1 != null" >
+        CARD_IMG1 = #{cardImg1,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg2 != null" >
+        CARD_IMG2 = #{cardImg2,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg3 != null" >
+        CARD_IMG3 = #{cardImg3,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg4 != null" >
+        CARD_IMG4 = #{cardImg4,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg5 != null" >
+        CARD_IMG5 = #{cardImg5,jdbcType=VARCHAR},
+      </if>
+      <if test="cardImg6 != null" >
+        CARD_IMG6 = #{cardImg6,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        ADDR = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="checkMsg != null" >
+        CHECK_MSG = #{checkMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.ReplyUser" >
+    update b_reply_user
+    set REFER_ID = #{referId,jdbcType=INTEGER},
+      PAY_WAY = #{payWay,jdbcType=SMALLINT},
+      CODE = #{code,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=INTEGER},
+      CARD_IMG1 = #{cardImg1,jdbcType=VARCHAR},
+      CARD_IMG2 = #{cardImg2,jdbcType=VARCHAR},
+      CARD_IMG3 = #{cardImg3,jdbcType=VARCHAR},
+      CARD_IMG4 = #{cardImg4,jdbcType=VARCHAR},
+      CARD_IMG5 = #{cardImg5,jdbcType=VARCHAR},
+      CARD_IMG6 = #{cardImg6,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      TOTAL_PRICE = #{totalPrice,jdbcType=DECIMAL},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      ID_CARD = #{idCard,jdbcType=VARCHAR},
+      ADDR = #{addr,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=SMALLINT},
+      STATUS = #{status,jdbcType=SMALLINT},
+      CHECK_MSG = #{checkMsg,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

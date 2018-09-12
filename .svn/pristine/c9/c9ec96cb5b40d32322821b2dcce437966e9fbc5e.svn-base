@@ -1,0 +1,43 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_User_VoucherMapper;
+import com.tyh.mapper.VoucherMapper;
+import com.tyh.model.B_User_Voucher;
+import com.tyh.model.Voucher;
+
+@Service
+public class VoucherService {
+	
+	@Resource
+	private VoucherMapper voucherMapper;
+	@Resource
+	private B_User_VoucherMapper user_VoucherMapper;
+	
+	public List<Voucher> getVoucherOfStatus(Short status,Short autois,Short indexIs,String targ,String rang){
+		return voucherMapper.getVoucherOfStatus(status, autois, indexIs, targ, rang);
+	}
+	public List<B_User_Voucher> selectMyVoucherList(Integer userId,Short status,String orderNum){
+		return user_VoucherMapper.selectMyVoucherList(userId, status, orderNum);
+	}
+	public Voucher selectByPrimaryKey(Integer id){
+		return voucherMapper.selectByPrimaryKey(id);
+	}
+	public int insertSelective(B_User_Voucher record){
+		return user_VoucherMapper.insertSelective(record);
+	}
+	public int updateByPrimaryKeySelective(B_User_Voucher record){
+		return user_VoucherMapper.updateByPrimaryKeySelective(record);
+	}
+	public B_User_Voucher selectMyByPrimaryKey(Integer id){
+		return user_VoucherMapper.selectByPrimaryKey(id);
+	}
+	public B_User_Voucher selectMvByUserOrder(Integer userId,String orderNum,Short status){
+		return user_VoucherMapper.selectMvByUserOrder(userId,orderNum,status);
+	}
+}

@@ -1,0 +1,46 @@
+package com.tyh.model;
+
+public class B_Merge {
+	private int num;
+	private String mergeNum;
+	private String userName;
+	private long remainTime;
+	private long engTime;
+	private String headImg;
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
+	public String getMergeNum() {
+		return mergeNum;
+	}
+	public void setMergeNum(String mergeNum) {
+		this.mergeNum = mergeNum;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getHeadImg() {
+		return headImg;
+	}
+	public void setHeadImg(String headImg) {
+		this.headImg = headImg;
+	}
+	public long getRemainTime() {
+		return remainTime;
+	}
+	public void setRemainTime(long remainTime) {
+		this.remainTime = remainTime;
+	}
+	public long getEngTime() {
+		return engTime;
+	}
+	public void setEngTime(long engTime) {
+		this.engTime = engTime;
+	}
+}

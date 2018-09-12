@@ -1,0 +1,33 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_Goods_ReplyMapper;
+import com.tyh.model.B_Goods_Reply;
+
+
+
+@Service
+public class B_Goods_ReplyService {
+	
+	@Resource
+	private B_Goods_ReplyMapper mapper;
+
+    public int insert(B_Goods_Reply record){
+    	return mapper.insert(record);
+    }
+
+    public int insertSelective(B_Goods_Reply record){
+    	return mapper.insertSelective(record);
+    }
+
+    public List<B_Goods_Reply> selectByGoods_id(Integer goods_id,String star,Short type){
+    	return mapper.selectByGoods_id(goods_id,star,type);
+    }
+}

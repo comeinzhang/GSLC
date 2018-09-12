@@ -1,0 +1,33 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.TaskMapper;
+import com.tyh.model.Task;
+
+
+
+@Service
+public class TaskService {
+	
+	@Resource
+	private TaskMapper mapper;
+	
+	public Task selectLastTask() {
+		List<Task> tasks = mapper.selectTasks();
+		if (tasks.size()>0) {
+			return tasks.get(0);
+		}else {
+			return null;
+		}
+	}
+	public int updateByPrimaryKeySelective(Task record){
+		return mapper.updateByPrimaryKeySelective(record);
+	}
+}

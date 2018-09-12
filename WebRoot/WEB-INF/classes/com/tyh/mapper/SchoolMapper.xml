@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.SchoolMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.School" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
+    <result column="head_img_url" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="logo_img_url" property="logoImgUrl" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="name_eng" property="nameEng" jdbcType="VARCHAR" />
+    <result column="dl_img_url" property="dlImgUrl" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="city_eng" property="cityEng" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="province_eng" property="provinceEng" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="country_eng" property="countryEng" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="address_eng" property="addressEng" jdbcType="VARCHAR" />
+    <result column="Website" property="website" jdbcType="VARCHAR" />
+    <result column="InType" property="intype" jdbcType="VARCHAR" />
+    <result column="InType_eng" property="intypeEng" jdbcType="VARCHAR" />
+    <result column="Register_num" property="registerNum" jdbcType="VARCHAR" />
+    <result column="FoundedIn" property="foundedin" jdbcType="VARCHAR" />
+    <result column="Establishment" property="establishment" jdbcType="VARCHAR" />
+    <result column="Establishment_eng" property="establishmentEng" jdbcType="VARCHAR" />
+    <result column="LivingCost" property="livingcost" jdbcType="VARCHAR" />
+    <result column="ApplicationFee" property="applicationfee" jdbcType="VARCHAR" />
+    <result column="CurrencyCode" property="currencycode" jdbcType="VARCHAR" />
+    <result column="TotalStudents" property="totalstudents" jdbcType="VARCHAR" />
+    <result column="InternationalStudents" property="internationalstudents" jdbcType="VARCHAR" />
+    <result column="AccommodationType" property="accommodationtype" jdbcType="VARCHAR" />
+    <result column="SchoolMotto" property="schoolmotto" jdbcType="VARCHAR" />
+    <result column="SchoolMotto_eng" property="schoolmottoEng" jdbcType="VARCHAR" />
+    <result column="schoolfrieng" property="schoolfrieng" jdbcType="VARCHAR" />
+    <result column="Mascot" property="mascot" jdbcType="VARCHAR" />
+    <result column="Mascot_eng" property="mascotEng" jdbcType="VARCHAR" />
+    <result column="areaNum" property="areanum" jdbcType="VARCHAR" />
+    <result column="undergraduateNum" property="undergraduatenum" jdbcType="VARCHAR" />
+    <result column="postgraduateNum" property="postgraduatenum" jdbcType="VARCHAR" />
+    <result column="undergraduateP" property="undergraduatep" jdbcType="VARCHAR" />
+    <result column="YuanNum" property="yuannum" jdbcType="VARCHAR" />
+    <result column="X_fix" property="xFix" jdbcType="VARCHAR" />
+    <result column="Y_fix" property="yFix" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tyh.model.School" extends="BaseResultMap" >
+    <result column="content" property="content" typeHandler="com.tyh.unitl.MyBlobTypeHandler" />
+    <result column="content_eng" property="contentEng" typeHandler="com.tyh.unitl.MyBlobTypeHandler" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, school_id, head_img_url, logo_img_url, name, name_eng, dl_img_url, city, city_eng, 
+    province, province_eng, country, country_eng, address, address_eng, Website, InType, 
+    InType_eng, Register_num, FoundedIn, Establishment, Establishment_eng, LivingCost, 
+    ApplicationFee, CurrencyCode, TotalStudents, InternationalStudents, AccommodationType, 
+    SchoolMotto, SchoolMotto_eng, schoolfrieng, Mascot, Mascot_eng, areaNum, undergraduateNum, 
+    postgraduateNum, undergraduateP, YuanNum, X_fix, Y_fix, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content, content_eng
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from b_school
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectBySchoolId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from b_school
+    where school_id = #{schoolId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_school
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.School" >
+    insert into b_school (id, school_id, head_img_url, 
+      logo_img_url, name, name_eng, 
+      dl_img_url, city, city_eng, 
+      province, province_eng, country, 
+      country_eng, address, address_eng, 
+      Website, InType, InType_eng, 
+      Register_num, FoundedIn, Establishment, 
+      Establishment_eng, LivingCost, ApplicationFee, 
+      CurrencyCode, TotalStudents, InternationalStudents, 
+      AccommodationType, SchoolMotto, SchoolMotto_eng, 
+      schoolfrieng, Mascot, Mascot_eng, 
+      areaNum, undergraduateNum, postgraduateNum, 
+      undergraduateP, YuanNum, X_fix, 
+      Y_fix, update_time, content, 
+      content_eng)
+    values (#{id,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}, #{headImgUrl,jdbcType=VARCHAR}, 
+      #{logoImgUrl,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nameEng,jdbcType=VARCHAR}, 
+      #{dlImgUrl,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{cityEng,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{provinceEng,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{countryEng,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{addressEng,jdbcType=VARCHAR}, 
+      #{website,jdbcType=VARCHAR}, #{intype,jdbcType=VARCHAR}, #{intypeEng,jdbcType=VARCHAR}, 
+      #{registerNum,jdbcType=VARCHAR}, #{foundedin,jdbcType=VARCHAR}, #{establishment,jdbcType=VARCHAR}, 
+      #{establishmentEng,jdbcType=VARCHAR}, #{livingcost,jdbcType=VARCHAR}, #{applicationfee,jdbcType=VARCHAR}, 
+      #{currencycode,jdbcType=VARCHAR}, #{totalstudents,jdbcType=VARCHAR}, #{internationalstudents,jdbcType=VARCHAR}, 
+      #{accommodationtype,jdbcType=VARCHAR}, #{schoolmotto,jdbcType=VARCHAR}, #{schoolmottoEng,jdbcType=VARCHAR}, 
+      #{schoolfrieng,jdbcType=VARCHAR}, #{mascot,jdbcType=VARCHAR}, #{mascotEng,jdbcType=VARCHAR}, 
+      #{areanum,jdbcType=VARCHAR}, #{undergraduatenum,jdbcType=VARCHAR}, #{postgraduatenum,jdbcType=VARCHAR}, 
+      #{undergraduatep,jdbcType=VARCHAR}, #{yuannum,jdbcType=VARCHAR}, #{xFix,jdbcType=VARCHAR}, 
+      #{yFix,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=BLOB}, 
+      #{contentEng,jdbcType=BLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.School" >
+    insert into b_school
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="schoolId != null" >
+        school_id,
+      </if>
+      <if test="headImgUrl != null" >
+        head_img_url,
+      </if>
+      <if test="logoImgUrl != null" >
+        logo_img_url,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="nameEng != null" >
+        name_eng,
+      </if>
+      <if test="dlImgUrl != null" >
+        dl_img_url,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="cityEng != null" >
+        city_eng,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="provinceEng != null" >
+        province_eng,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="countryEng != null" >
+        country_eng,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="addressEng != null" >
+        address_eng,
+      </if>
+      <if test="website != null" >
+        Website,
+      </if>
+      <if test="intype != null" >
+        InType,
+      </if>
+      <if test="intypeEng != null" >
+        InType_eng,
+      </if>
+      <if test="registerNum != null" >
+        Register_num,
+      </if>
+      <if test="foundedin != null" >
+        FoundedIn,
+      </if>
+      <if test="establishment != null" >
+        Establishment,
+      </if>
+      <if test="establishmentEng != null" >
+        Establishment_eng,
+      </if>
+      <if test="livingcost != null" >
+        LivingCost,
+      </if>
+      <if test="applicationfee != null" >
+        ApplicationFee,
+      </if>
+      <if test="currencycode != null" >
+        CurrencyCode,
+      </if>
+      <if test="totalstudents != null" >
+        TotalStudents,
+      </if>
+      <if test="internationalstudents != null" >
+        InternationalStudents,
+      </if>
+      <if test="accommodationtype != null" >
+        AccommodationType,
+      </if>
+      <if test="schoolmotto != null" >
+        SchoolMotto,
+      </if>
+      <if test="schoolmottoEng != null" >
+        SchoolMotto_eng,
+      </if>
+      <if test="schoolfrieng != null" >
+        schoolfrieng,
+      </if>
+      <if test="mascot != null" >
+        Mascot,
+      </if>
+      <if test="mascotEng != null" >
+        Mascot_eng,
+      </if>
+      <if test="areanum != null" >
+        areaNum,
+      </if>
+      <if test="undergraduatenum != null" >
+        undergraduateNum,
+      </if>
+      <if test="postgraduatenum != null" >
+        postgraduateNum,
+      </if>
+      <if test="undergraduatep != null" >
+        undergraduateP,
+      </if>
+      <if test="yuannum != null" >
+        YuanNum,
+      </if>
+      <if test="xFix != null" >
+        X_fix,
+      </if>
+      <if test="yFix != null" >
+        Y_fix,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="contentEng != null" >
+        content_eng,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="schoolId != null" >
+        #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logoImgUrl != null" >
+        #{logoImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEng != null" >
+        #{nameEng,jdbcType=VARCHAR},
+      </if>
+      <if test="dlImgUrl != null" >
+        #{dlImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="cityEng != null" >
+        #{cityEng,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceEng != null" >
+        #{provinceEng,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="countryEng != null" >
+        #{countryEng,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="addressEng != null" >
+        #{addressEng,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="intype != null" >
+        #{intype,jdbcType=VARCHAR},
+      </if>
+      <if test="intypeEng != null" >
+        #{intypeEng,jdbcType=VARCHAR},
+      </if>
+      <if test="registerNum != null" >
+        #{registerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="foundedin != null" >
+        #{foundedin,jdbcType=VARCHAR},
+      </if>
+      <if test="establishment != null" >
+        #{establishment,jdbcType=VARCHAR},
+      </if>
+      <if test="establishmentEng != null" >
+        #{establishmentEng,jdbcType=VARCHAR},
+      </if>
+      <if test="livingcost != null" >
+        #{livingcost,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationfee != null" >
+        #{applicationfee,jdbcType=VARCHAR},
+      </if>
+      <if test="currencycode != null" >
+        #{currencycode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalstudents != null" >
+        #{totalstudents,jdbcType=VARCHAR},
+      </if>
+      <if test="internationalstudents != null" >
+        #{internationalstudents,jdbcType=VARCHAR},
+      </if>
+      <if test="accommodationtype != null" >
+        #{accommodationtype,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolmotto != null" >
+        #{schoolmotto,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolmottoEng != null" >
+        #{schoolmottoEng,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolfrieng != null" >
+        #{schoolfrieng,jdbcType=VARCHAR},
+      </if>
+      <if test="mascot != null" >
+        #{mascot,jdbcType=VARCHAR},
+      </if>
+      <if test="mascotEng != null" >
+        #{mascotEng,jdbcType=VARCHAR},
+      </if>
+      <if test="areanum != null" >
+        #{areanum,jdbcType=VARCHAR},
+      </if>
+      <if test="undergraduatenum != null" >
+        #{undergraduatenum,jdbcType=VARCHAR},
+      </if>
+      <if test="postgraduatenum != null" >
+        #{postgraduatenum,jdbcType=VARCHAR},
+      </if>
+      <if test="undergraduatep != null" >
+        #{undergraduatep,jdbcType=VARCHAR},
+      </if>
+      <if test="yuannum != null" >
+        #{yuannum,jdbcType=VARCHAR},
+      </if>
+      <if test="xFix != null" >
+        #{xFix,jdbcType=VARCHAR},
+      </if>
+      <if test="yFix != null" >
+        #{yFix,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=BLOB},
+      </if>
+      <if test="contentEng != null" >
+        #{contentEng,jdbcType=BLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.School" >
+    update b_school
+    <set >
+      <if test="schoolId != null" >
+        school_id = #{schoolId,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logoImgUrl != null" >
+        logo_img_url = #{logoImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEng != null" >
+        name_eng = #{nameEng,jdbcType=VARCHAR},
+      </if>
+      <if test="dlImgUrl != null" >
+        dl_img_url = #{dlImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="cityEng != null" >
+        city_eng = #{cityEng,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceEng != null" >
+        province_eng = #{provinceEng,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="countryEng != null" >
+        country_eng = #{countryEng,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="addressEng != null" >
+        address_eng = #{addressEng,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        Website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="intype != null" >
+        InType = #{intype,jdbcType=VARCHAR},
+      </if>
+      <if test="intypeEng != null" >
+        InType_eng = #{intypeEng,jdbcType=VARCHAR},
+      </if>
+      <if test="registerNum != null" >
+        Register_num = #{registerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="foundedin != null" >
+        FoundedIn = #{foundedin,jdbcType=VARCHAR},
+      </if>
+      <if test="establishment != null" >
+        Establishment = #{establishment,jdbcType=VARCHAR},
+      </if>
+      <if test="establishmentEng != null" >
+        Establishment_eng = #{establishmentEng,jdbcType=VARCHAR},
+      </if>
+      <if test="livingcost != null" >
+        LivingCost = #{livingcost,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationfee != null" >
+        ApplicationFee = #{applicationfee,jdbcType=VARCHAR},
+      </if>
+      <if test="currencycode != null" >
+        CurrencyCode = #{currencycode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalstudents != null" >
+        TotalStudents = #{totalstudents,jdbcType=VARCHAR},
+      </if>
+      <if test="internationalstudents != null" >
+        InternationalStudents = #{internationalstudents,jdbcType=VARCHAR},
+      </if>
+      <if test="accommodationtype != null" >
+        AccommodationType = #{accommodationtype,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolmotto != null" >
+        SchoolMotto = #{schoolmotto,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolmottoEng != null" >
+        SchoolMotto_eng = #{schoolmottoEng,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolfrieng != null" >
+        schoolfrieng = #{schoolfrieng,jdbcType=VARCHAR},
+      </if>
+      <if test="mascot != null" >
+        Mascot = #{mascot,jdbcType=VARCHAR},
+      </if>
+      <if test="mascotEng != null" >
+        Mascot_eng = #{mascotEng,jdbcType=VARCHAR},
+      </if>
+      <if test="areanum != null" >
+        areaNum = #{areanum,jdbcType=VARCHAR},
+      </if>
+      <if test="undergraduatenum != null" >
+        undergraduateNum = #{undergraduatenum,jdbcType=VARCHAR},
+      </if>
+      <if test="postgraduatenum != null" >
+        postgraduateNum = #{postgraduatenum,jdbcType=VARCHAR},
+      </if>
+      <if test="undergraduatep != null" >
+        undergraduateP = #{undergraduatep,jdbcType=VARCHAR},
+      </if>
+      <if test="yuannum != null" >
+        YuanNum = #{yuannum,jdbcType=VARCHAR},
+      </if>
+      <if test="xFix != null" >
+        X_fix = #{xFix,jdbcType=VARCHAR},
+      </if>
+      <if test="yFix != null" >
+        Y_fix = #{yFix,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=BLOB},
+      </if>
+      <if test="contentEng != null" >
+        content_eng = #{contentEng,jdbcType=BLOB},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tyh.model.School" >
+    update b_school
+    set school_id = #{schoolId,jdbcType=VARCHAR},
+      head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      logo_img_url = #{logoImgUrl,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      name_eng = #{nameEng,jdbcType=VARCHAR},
+      dl_img_url = #{dlImgUrl,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      city_eng = #{cityEng,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      province_eng = #{provinceEng,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      country_eng = #{countryEng,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      address_eng = #{addressEng,jdbcType=VARCHAR},
+      Website = #{website,jdbcType=VARCHAR},
+      InType = #{intype,jdbcType=VARCHAR},
+      InType_eng = #{intypeEng,jdbcType=VARCHAR},
+      Register_num = #{registerNum,jdbcType=VARCHAR},
+      FoundedIn = #{foundedin,jdbcType=VARCHAR},
+      Establishment = #{establishment,jdbcType=VARCHAR},
+      Establishment_eng = #{establishmentEng,jdbcType=VARCHAR},
+      LivingCost = #{livingcost,jdbcType=VARCHAR},
+      ApplicationFee = #{applicationfee,jdbcType=VARCHAR},
+      CurrencyCode = #{currencycode,jdbcType=VARCHAR},
+      TotalStudents = #{totalstudents,jdbcType=VARCHAR},
+      InternationalStudents = #{internationalstudents,jdbcType=VARCHAR},
+      AccommodationType = #{accommodationtype,jdbcType=VARCHAR},
+      SchoolMotto = #{schoolmotto,jdbcType=VARCHAR},
+      SchoolMotto_eng = #{schoolmottoEng,jdbcType=VARCHAR},
+      schoolfrieng = #{schoolfrieng,jdbcType=VARCHAR},
+      Mascot = #{mascot,jdbcType=VARCHAR},
+      Mascot_eng = #{mascotEng,jdbcType=VARCHAR},
+      areaNum = #{areanum,jdbcType=VARCHAR},
+      undergraduateNum = #{undergraduatenum,jdbcType=VARCHAR},
+      postgraduateNum = #{postgraduatenum,jdbcType=VARCHAR},
+      undergraduateP = #{undergraduatep,jdbcType=VARCHAR},
+      YuanNum = #{yuannum,jdbcType=VARCHAR},
+      X_fix = #{xFix,jdbcType=VARCHAR},
+      Y_fix = #{yFix,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=BLOB},
+      content_eng = #{contentEng,jdbcType=BLOB}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.School" >
+    update b_school
+    set school_id = #{schoolId,jdbcType=VARCHAR},
+      head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      logo_img_url = #{logoImgUrl,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      name_eng = #{nameEng,jdbcType=VARCHAR},
+      dl_img_url = #{dlImgUrl,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      city_eng = #{cityEng,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      province_eng = #{provinceEng,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      country_eng = #{countryEng,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      address_eng = #{addressEng,jdbcType=VARCHAR},
+      Website = #{website,jdbcType=VARCHAR},
+      InType = #{intype,jdbcType=VARCHAR},
+      InType_eng = #{intypeEng,jdbcType=VARCHAR},
+      Register_num = #{registerNum,jdbcType=VARCHAR},
+      FoundedIn = #{foundedin,jdbcType=VARCHAR},
+      Establishment = #{establishment,jdbcType=VARCHAR},
+      Establishment_eng = #{establishmentEng,jdbcType=VARCHAR},
+      LivingCost = #{livingcost,jdbcType=VARCHAR},
+      ApplicationFee = #{applicationfee,jdbcType=VARCHAR},
+      CurrencyCode = #{currencycode,jdbcType=VARCHAR},
+      TotalStudents = #{totalstudents,jdbcType=VARCHAR},
+      InternationalStudents = #{internationalstudents,jdbcType=VARCHAR},
+      AccommodationType = #{accommodationtype,jdbcType=VARCHAR},
+      SchoolMotto = #{schoolmotto,jdbcType=VARCHAR},
+      SchoolMotto_eng = #{schoolmottoEng,jdbcType=VARCHAR},
+      schoolfrieng = #{schoolfrieng,jdbcType=VARCHAR},
+      Mascot = #{mascot,jdbcType=VARCHAR},
+      Mascot_eng = #{mascotEng,jdbcType=VARCHAR},
+      areaNum = #{areanum,jdbcType=VARCHAR},
+      undergraduateNum = #{undergraduatenum,jdbcType=VARCHAR},
+      postgraduateNum = #{postgraduatenum,jdbcType=VARCHAR},
+      undergraduateP = #{undergraduatep,jdbcType=VARCHAR},
+      YuanNum = #{yuannum,jdbcType=VARCHAR},
+      X_fix = #{xFix,jdbcType=VARCHAR},
+      Y_fix = #{yFix,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

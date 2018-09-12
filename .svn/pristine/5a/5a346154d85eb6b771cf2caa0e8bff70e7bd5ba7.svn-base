@@ -1,0 +1,42 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Order;
+import com.tyh.unitl.PageInfo;
+
+public interface B_OrderMapper {
+    int deleteByPrimaryKey(@Param("id")Integer id);
+    
+    int deleteByOrderNum(@Param("orderNum")String orderNum);
+    
+    int deleteByMergeNum(@Param("mergeNum")String mergeNum,@Param("status")Short status);
+
+    int insert(B_Order record);
+    int selectShopOrderCount(@Param("sellerUserId")Integer sellerUserId);
+
+    B_Order selectByPrimaryKey(@Param("id")Integer id);
+    
+    B_Order selectByorderNum(@Param("orderNum")String orderNum);
+    
+    List<B_Order> selectByMergeNum(@Param("mergeNum")String mergeNum,@Param("status")Short status);
+    
+    B_Order getOrderByOrderNum(@Param("orderNum")String orderNum);
+
+    int updateByPrimaryKeySelective(B_Order record);
+    
+    int updateBycId(@Param("cId")Integer cId);
+    
+    List<B_Order> getGardenBreakerOrderList(@Param("limit")Integer limit,@Param("gardenId")Integer gardenId);
+    
+    List<B_Order> selectByStatusOrUser(@Param("buyUserId")Integer buyUserId,@Param("sellerUserId")Integer sellerUserId,@Param("status")Short status,@Param("flag")String flag,@Param("goodsId")Integer goodsId);
+    
+    List<B_Order> selectByStatusOrUserListPage(@Param("page")PageInfo page,@Param("buyUserId")Integer buyUserId,@Param("sellerUserId")Integer sellerUserId,@Param("status")Short status,@Param("payWay")Short payWay,@Param("goodsId")Integer goodsId,@Param("sign")Short sign,@Param("assessed")Short assessed);
+    
+    List selectUserOrderCount(@Param("buyUserId")Integer buyUserId);
+    
+    List<B_Order> selectBreakerOrderByPosterId(@Param("posterId")Integer posterId,@Param("status")Short status);
+    
+}

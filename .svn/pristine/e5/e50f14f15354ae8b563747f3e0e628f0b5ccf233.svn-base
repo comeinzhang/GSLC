@@ -1,0 +1,25 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.DZReply;
+
+public interface DZReplyMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(DZReply record);
+
+    int insertSelective(DZReply record);
+
+    DZReply selectByPrimaryKey(Integer id);
+
+    List<DZReply> selectByUserId(@Param("userId")Integer userId,@Param("dzId")Integer dzId);
+    
+    int updateByPrimaryKeySelective(DZReply record);
+
+    int updateByPrimaryKey(DZReply record);
+    
+    
+}

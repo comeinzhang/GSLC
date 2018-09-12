@@ -1,0 +1,16 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Poster;
+
+public interface B_PosterMapper {
+    int insert(B_Poster record);
+    int insertSelective(B_Poster record);
+    int updateByPrimaryKeySelective(B_Poster record);
+    int updateByPrimaryKey(B_Poster record);
+    B_Poster selectPosterByUserId(@Param("userId")Integer userId,@Param("status")Short status);
+    List<B_Poster> selectPostByGardenId(@Param("gardenId")Integer gardenId,@Param("limit")Integer limit,@Param("status")Short status);
+}

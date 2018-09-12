@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_PosterMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Poster" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="headImgUrl" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="refer_phone" property="referPhone" jdbcType="VARCHAR" />
+    <result column="card" property="card" jdbcType="VARCHAR" />
+    <result column="garden_id" property="gardenId" jdbcType="INTEGER" />
+    <result column="priceOfT" property="priceoft" jdbcType="DECIMAL" />
+    <result column="priceOfW" property="priceofw" jdbcType="DECIMAL" />
+    <result column="priceOfM" property="priceofm" jdbcType="DECIMAL" />
+    <result column="priceOfQ" property="priceofq" jdbcType="DECIMAL" />
+    <result column="priceOfY" property="priceofy" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="selectPostByGardenId" resultMap="BaseResultMap">
+  	select * from b_poster where garden_id = #{gardenId} 
+  	<if test="status != null" >
+        and status = #{status}
+     </if>
+  	<if test="limit != null" >
+        limit #{limit}
+     </if>
+  </select>
+  <select id="selectPosterByUserId" resultMap="BaseResultMap">
+  	select * from b_poster where user_id = #{userId} 
+  	<if test="status!=null">
+  		and status=#{status}
+  	</if>
+  </select>
+  <insert id="insert" parameterType="com.tyh.model.B_Poster" >
+    insert into b_poster (id, user_id, name, headImgUrl,status,
+      age, addr, phone, card, 
+      garden_id, priceOfT, priceOfW, 
+      priceOfM, priceOfQ, priceOfY, createTime,refer_phone,
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{headImgUrl,jdbcType=VARCHAR},
+      #{status,jdbcType=SMALLINT},#{age,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{card,jdbcType=VARCHAR}, 
+      #{gardenId,jdbcType=INTEGER}, #{priceoft,jdbcType=DECIMAL}, #{priceofw,jdbcType=DECIMAL}, 
+      #{priceofm,jdbcType=DECIMAL}, #{priceofq,jdbcType=DECIMAL}, #{priceofy,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+      #{referPhone,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.B_Poster" >
+    insert into b_poster
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="card != null" >
+        card,
+      </if>
+      <if test="gardenId != null" >
+        garden_id,
+      </if>
+      <if test="priceoft != null" >
+        priceOfT,
+      </if>
+      <if test="priceofw != null" >
+        priceOfW,
+      </if>
+      <if test="priceofm != null" >
+        priceOfM,
+      </if>
+      <if test="priceofq != null" >
+        priceOfQ,
+      </if>
+      <if test="priceofy != null" >
+        priceOfY,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="referPhone != null" >
+        refer_phone,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+         #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="card != null" >
+        #{card,jdbcType=VARCHAR},
+      </if>
+      <if test="gardenId != null" >
+        #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="priceoft != null" >
+        #{priceoft,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofw != null" >
+        #{priceofw,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofm != null" >
+        #{priceofm,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofq != null" >
+        #{priceofq,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofy != null" >
+        #{priceofy,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="referPhone != null" >
+        #{referPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Poster" >
+    update b_poster
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="card != null" >
+        card = #{card,jdbcType=VARCHAR},
+      </if>
+      <if test="gardenId != null" >
+        garden_id = #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="referPhone != null" >
+        refer_phone = #{referPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="priceoft != null" >
+        priceOfT = #{priceoft,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofw != null" >
+        priceOfW = #{priceofw,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofm != null" >
+        priceOfM = #{priceofm,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofq != null" >
+        priceOfQ = #{priceofq,jdbcType=DECIMAL},
+      </if>
+      <if test="priceofy != null" >
+        priceOfY = #{priceofy,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.B_Poster" >
+    update b_poster
+    set 
+      status = #{status,jdbcType=SMALLINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      age = #{age,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      refer_phone = #{referPhone,jdbcType=VARCHAR},
+      card = #{card,jdbcType=VARCHAR},
+      garden_id = #{gardenId,jdbcType=INTEGER},
+      priceOfT = #{priceoft,jdbcType=DECIMAL},
+      priceOfW = #{priceofw,jdbcType=DECIMAL},
+      priceOfM = #{priceofm,jdbcType=DECIMAL},
+      priceOfQ = #{priceofq,jdbcType=DECIMAL},
+      priceOfY = #{priceofy,jdbcType=DECIMAL},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

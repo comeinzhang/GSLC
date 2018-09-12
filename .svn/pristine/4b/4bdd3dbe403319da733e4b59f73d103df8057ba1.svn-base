@@ -1,0 +1,76 @@
+package com.tyh.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class CrowdPresell {
+    private Integer id;
+
+    private Integer cId;
+
+    private Integer presell;
+
+    private Double price;
+
+    private String numWord;
+
+    private Integer seq;
+
+    private Date updateTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getcId() {
+        return cId;
+    }
+
+    public void setcId(Integer cId) {
+        this.cId = cId;
+    }
+
+    public Integer getPresell() {
+        return presell;
+    }
+
+    public void setPresell(Integer presell) {
+        this.presell = presell;
+    }
+
+    public String getNumWord() {
+        return numWord;
+    }
+
+    public void setNumWord(String numWord) {
+        this.numWord = numWord == null ? null : numWord.trim();
+    }
+
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+}

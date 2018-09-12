@@ -1,0 +1,37 @@
+package com.tyh.mapper;
+
+import com.tyh.model.ComsDetail;
+import com.tyh.model.ComsDetailExample;
+import com.tyh.model.JifenDetail;
+import com.tyh.unitl.PageInfo;
+
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface ComsDetailMapper {
+    int countByExample(ComsDetailExample example);
+
+    int deleteByExample(ComsDetailExample example);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ComsDetail record);
+
+    int insertSelective(ComsDetail record);
+
+    List<ComsDetail> selectComsDetailListPage(@Param("userId")Integer userId, @Param("page")PageInfo page);
+    
+    List<ComsDetail> selectByExample(ComsDetailExample example);
+    
+    ComsDetail selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") ComsDetail record, @Param("example") ComsDetailExample example);
+
+    int updateByExample(@Param("record") ComsDetail record, @Param("example") ComsDetailExample example);
+
+    int updateByPrimaryKeySelective(ComsDetail record);
+
+    int updateByPrimaryKey(ComsDetail record);
+    
+    
+}

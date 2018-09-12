@@ -1,0 +1,94 @@
+package com.tyh.model;
+
+
+public class TextMessage {
+    private Integer id;
+
+    private String msgtype;
+
+    private String fromusername;
+
+    private String tousername;
+
+    private String createTime;
+
+    private String event;
+
+    private String eventkey;
+
+    private String ticket;
+
+    private String updateTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getMsgtype() {
+        return msgtype;
+    }
+
+    public void setMsgtype(String msgtype) {
+        this.msgtype = msgtype == null ? null : msgtype.trim();
+    }
+
+    public String getFromusername() {
+        return fromusername;
+    }
+
+    public void setFromusername(String fromusername) {
+        this.fromusername = fromusername == null ? null : fromusername.trim();
+    }
+
+    public String getTousername() {
+        return tousername;
+    }
+
+    public void setTousername(String tousername) {
+        this.tousername = tousername == null ? null : tousername.trim();
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event == null ? null : event.trim();
+    }
+
+    public String getEventkey() {
+        return eventkey;
+    }
+
+    public void setEventkey(String eventkey) {
+        this.eventkey = eventkey == null ? null : eventkey.trim();
+    }
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket == null ? null : ticket.trim();
+    }
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+}

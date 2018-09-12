@@ -1,0 +1,83 @@
+package com.tyh.controller;
+
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.alibaba.fastjson.JSON;
+import com.tyh.service.RyService;
+import com.tyh.unitl.RyHttpUtil;
+
+
+
+@Controller
+@RequestMapping("/ry")
+public class RyController {
+	
+	Logger logger = Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private RyService ryService;
+	
+	@RequestMapping("/getRyToken")
+	public void getRyToken(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
+		String headPhotoUrl = request.getParameter("headPhotoUrl");
+		
+		logger.info("-->getRyToken.html?userId="+userId+"&userName="+userName+"&headPhotoUrl="+headPhotoUrl);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		
+		int state = 200;
+		String msg = "";
+		
+		if(StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userName)){
+			map.put("token", ryService.getUserToken(userId, userName, headPhotoUrl));
+		}else{
+			state = 400;
+			msg = "参数为空";
+		}
+		
+		map.put("state", state);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		logger.info("获取用户融云token信息jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	@RequestMapping("/getUserInfo")
+	public void getUserInfo(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String userId = request.getParameter("userId");
+		
+		logger.info("-->getUserInfo.html?userId="+userId);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		String jsonResult = null;
+		if(StringUtils.isNotBlank(userId)){
+			jsonResult = RyHttpUtil.sendToRy(RyHttpUtil.GET_USER_INFO, "userId="+userId);
+			if(StringUtils.isNotBlank(jsonResult)){
+				jsonResult = jsonResult.replaceFirst("code", "state");
+			}
+//			jsonResult = new String(jsonResult.getBytes("GBK"),"UTF-8");
+		}else{
+			jsonResult = "{'state':400, 'msg':'参数为空'}";
+		}
+		
+		logger.info("获取融云用户信息jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+}

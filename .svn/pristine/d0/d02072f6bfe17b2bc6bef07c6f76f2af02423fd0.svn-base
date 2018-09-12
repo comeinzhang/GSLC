@@ -1,0 +1,33 @@
+package com.tyh.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.RedPacketRecord;
+import com.tyh.unitl.PageInfo;
+
+public interface RedPacketRecordMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(RedPacketRecord record);
+
+    int insertSelective(RedPacketRecord record);
+
+    RedPacketRecord selectByPrimaryKey(Integer id);
+    
+    Map<String, Object> selectByUserId(@Param("userId")Integer userId);
+
+    List<RedPacketRecord> selectByUserIdListPage(@Param("page")PageInfo page,@Param("userId")Integer userId,@Param("type")String type,@Param("beginTime")String beginTime,@Param("endTime")String endTime,@Param("flag")String flag);
+    
+    int updateByPrimaryKeySelective(RedPacketRecord record);
+
+    int updateByPrimaryKey(RedPacketRecord record);
+    
+    int getCountLookedByType(@Param("userId")Integer userId,@Param("type")Short type);
+    
+    int getCountRedPacketRecord(@Param("userId")Integer userId,@Param("type")Short type,@Param("detailId")Integer detailId,@Param("flag")String flag);
+    
+	int updateLooked(@Param("userId")Integer userId,@Param("type")Short type);
+}

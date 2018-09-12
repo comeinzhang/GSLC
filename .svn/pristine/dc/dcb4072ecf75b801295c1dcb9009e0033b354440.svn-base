@@ -1,0 +1,76 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Goods_Store {
+    private Integer id;
+
+    private B_Goods goods;
+
+    private Integer userId;
+    
+    private String catalogId;
+    
+    private Short flag;
+    
+    private Date updateTime;
+    
+    private B_User storer;
+
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public B_Goods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(B_Goods goods) {
+		this.goods = goods;
+	}
+
+	public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public B_User getStorer() {
+		return storer;
+	}
+
+	public void setStorer(B_User storer) {
+		this.storer = storer;
+	}
+
+	public String getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+
+	public Short getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Short flag) {
+		this.flag = flag;
+	}
+}

@@ -1,0 +1,22 @@
+package com.tyh.unitl;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author ShineU
+ * @date 2016年9月14日 上午11:15:15
+ * @version 1.0
+ */
+
+public class JobFactory {
+    
+    private static ScheduledExecutorService schedule = Executors.newSingleThreadScheduledExecutor();
+    
+    public static void startClassSellJob() {
+        schedule.scheduleAtFixedRate(new ClassSellJob(), 0, 1, TimeUnit.MINUTES);
+    }
+    
+}

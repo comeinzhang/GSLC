@@ -1,0 +1,43 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_User_AddrMapper;
+import com.tyh.model.B_User_Addr;
+
+
+@Service
+public class B_User_AddrService {
+	
+	@Resource
+	private B_User_AddrMapper mapper;
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	public int insert(B_User_Addr addr){
+    	return mapper.insert(addr);
+    }
+
+	public B_User_Addr selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+
+	public int updateFlagByUserId(Integer userId){
+    	return mapper.updateFlagByUserId(userId);
+    }
+	
+	public int updateByPrimaryKeySelective(B_User_Addr addr){
+    	return mapper.updateByPrimaryKeySelective(addr);
+    }
+
+	public List<B_User_Addr> selectByUser_Id(Integer user_id,Short flag){
+    	return mapper.selectByUser_Id(user_id,flag);
+    }
+}

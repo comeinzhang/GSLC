@@ -1,0 +1,35 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_Goods_ImgMapper;
+import com.tyh.model.B_Goods_Img;
+
+
+
+
+@Service
+public class B_Goods_ImgService {
+	
+	@Resource
+	private B_Goods_ImgMapper mapper;
+
+	public List<B_Goods_Img> selectByGoods_id(Integer goods_id,Short type){
+    	return mapper.selectByGoods_id(goods_id,type);
+    }
+	public int saveGoodsImg(B_Goods_Img goods_Img) {
+		return mapper.saveGoodsImg(goods_Img);
+	}
+	public int updateByPrimaryKeySelective(B_Goods_Img goods_Img) {
+		return mapper.updateByPrimaryKeySelective(goods_Img);
+	}
+	public int delGoodsImg(Integer goodsId,Short type){
+		return mapper.delGoodsImg(goodsId, type);
+	}
+}

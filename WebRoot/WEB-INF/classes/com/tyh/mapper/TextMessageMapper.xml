@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.TextMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.TextMessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="msgType" property="msgtype" jdbcType="VARCHAR" />
+    <result column="fromUserName" property="fromusername" jdbcType="VARCHAR" />
+    <result column="toUserName" property="tousername" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="event" property="event" jdbcType="VARCHAR" />
+    <result column="eventKey" property="eventkey" jdbcType="VARCHAR" />
+    <result column="ticket" property="ticket" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, msgType, fromUserName, toUserName, create_time, event, eventKey, ticket, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_textmessage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_textmessage
+    where fromUserName = #{fromusername,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_textmessage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.TextMessage" >
+    insert into b_textmessage (id, msgType, fromUserName, 
+      toUserName, create_time, event, 
+      eventKey, ticket, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{msgtype,jdbcType=VARCHAR}, #{fromusername,jdbcType=VARCHAR}, 
+      #{tousername,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{event,jdbcType=VARCHAR}, 
+      #{eventkey,jdbcType=VARCHAR}, #{ticket,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.TextMessage" >
+    insert into b_textmessage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="msgtype != null" >
+        msgType,
+      </if>
+      <if test="fromusername != null" >
+        fromUserName,
+      </if>
+      <if test="tousername != null" >
+        toUserName,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="event != null" >
+        event,
+      </if>
+      <if test="eventkey != null" >
+        eventKey,
+      </if>
+      <if test="ticket != null" >
+        ticket,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="msgtype != null" >
+        #{msgtype,jdbcType=VARCHAR},
+      </if>
+      <if test="fromusername != null" >
+        #{fromusername,jdbcType=VARCHAR},
+      </if>
+      <if test="tousername != null" >
+        #{tousername,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="event != null" >
+        #{event,jdbcType=VARCHAR},
+      </if>
+      <if test="eventkey != null" >
+        #{eventkey,jdbcType=VARCHAR},
+      </if>
+      <if test="ticket != null" >
+        #{ticket,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.TextMessage" >
+    update b_textmessage
+    <set >
+      <if test="msgtype != null" >
+        msgType = #{msgtype,jdbcType=VARCHAR},
+      </if>
+      <if test="fromusername != null" >
+        fromUserName = #{fromusername,jdbcType=VARCHAR},
+      </if>
+      <if test="tousername != null" >
+        toUserName = #{tousername,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="event != null" >
+        event = #{event,jdbcType=VARCHAR},
+      </if>
+      <if test="eventkey != null" >
+        eventKey = #{eventkey,jdbcType=VARCHAR},
+      </if>
+      <if test="ticket != null" >
+        ticket = #{ticket,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.TextMessage" >
+    update b_textmessage
+    set msgType = #{msgtype,jdbcType=VARCHAR},
+      fromUserName = #{fromusername,jdbcType=VARCHAR},
+      toUserName = #{tousername,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      event = #{event,jdbcType=VARCHAR},
+      eventKey = #{eventkey,jdbcType=VARCHAR},
+      ticket = #{ticket,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

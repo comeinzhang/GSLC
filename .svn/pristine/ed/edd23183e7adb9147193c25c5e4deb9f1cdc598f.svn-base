@@ -1,0 +1,45 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Deal_Money {
+    private Integer id;
+
+    private double shop;
+
+    private double goods;
+
+    private Date updatetime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+	public double getShop() {
+		return shop;
+	}
+
+	public void setShop(double shop) {
+		this.shop = shop;
+	}
+
+	public double getGoods() {
+		return goods;
+	}
+
+	public void setGoods(double goods) {
+		this.goods = goods;
+	}
+}

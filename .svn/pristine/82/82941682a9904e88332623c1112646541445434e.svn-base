@@ -1,0 +1,115 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class Trade {
+    private Integer id;
+
+    private Double startPrice;
+
+    private Double endPrice;
+
+    private Double minPrice;
+
+    private Double maxPrice;
+
+    private Double curPrice;
+
+    private Double totalPrice;
+
+    private Long volumes;
+
+    private Date enableTime;
+
+    private Date updateTime;
+
+    private Date createTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Double getStartPrice() {
+        return startPrice;
+    }
+
+    public void setStartPrice(Double startPrice) {
+        this.startPrice = startPrice;
+    }
+
+    public Double getEndPrice() {
+        return endPrice;
+    }
+
+    public void setEndPrice(Double endPrice) {
+        this.endPrice = endPrice;
+    }
+
+    public Double getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(Double minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public Double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(Double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+
+    public Double getCurPrice() {
+        return curPrice;
+    }
+
+    public void setCurPrice(Double curPrice) {
+        this.curPrice = curPrice;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Long getVolumes() {
+        return volumes;
+    }
+
+    public void setVolumes(Long volumes) {
+        this.volumes = volumes;
+    }
+
+    public Date getEnableTime() {
+        return enableTime;
+    }
+
+    public void setEnableTime(Date enableTime) {
+        this.enableTime = enableTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+}

@@ -1,0 +1,36 @@
+package com.tyh.controller;
+
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletResponse;
+
+public class BaseController {
+	
+	/**
+	 * 通过PrintWriter将响应数据写入response，ajax可以接受到这个数
+	 */
+	public static void ajaxResultData(HttpServletResponse response, String data){
+		PrintWriter printWriter = null;
+		try {
+			printWriter = response.getWriter();
+			printWriter.print(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			if(null != printWriter){
+				printWriter.flush();
+				printWriter.close();
+			}
+		}
+	}
+	
+	/**
+	 * 读者注册时，为其生成注册证号
+	 * @return
+	 */
+	public static String generateUserCode(){
+		
+		
+		return null;
+	}
+}

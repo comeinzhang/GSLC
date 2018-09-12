@@ -1,0 +1,37 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_CatalogMapper;
+import com.tyh.model.B_Catalog;
+
+
+
+@Service
+public class B_CatalogService {
+	
+	@Resource
+	private B_CatalogMapper mapper;
+
+    public B_Catalog selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+    public List<B_Catalog> selectByParentId(Integer parent_id,Integer flag){
+    	return mapper.selectByParentId(parent_id,flag);
+    }
+    public List<B_Catalog> selectAllParent(Integer flag){
+    	return mapper.selectAllParent(flag);
+    }
+    public List<B_Catalog> selectStoreCatagory(Integer user_id){
+    	return mapper.selectStoreCatagory(user_id);
+    }
+    public  List<B_Catalog> selectAllSon(Integer flag) {
+		return mapper.selectAllSon(flag);
+	}
+}

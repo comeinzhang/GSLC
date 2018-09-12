@@ -1,0 +1,196 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Poster {
+    private Integer id;
+
+    private Integer userId;
+
+    private String name;
+
+    private String age;
+
+    private String addr;
+
+    private String phone;
+    
+    private String referPhone;
+
+    private String card;
+    
+    private String headImgUrl;
+
+    private Integer gardenId;
+
+    private double priceoft;
+
+    private double priceofw;
+
+    private double priceofm;
+
+    private double priceofq;
+
+    private double priceofy;
+
+    private String createTime;
+    
+    private Short status;
+    
+    private Date updateTime;
+    
+    private String checkCode;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age == null ? null : age.trim();
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr == null ? null : addr.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card == null ? null : card.trim();
+    }
+
+    public Integer getGardenId() {
+        return gardenId;
+    }
+
+    public void setGardenId(Integer gardenId) {
+        this.gardenId = gardenId;
+    }
+
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getHeadImgUrl() {
+		return headImgUrl;
+	}
+
+	public void setHeadImgUrl(String headImgUrl) {
+		this.headImgUrl = headImgUrl;
+	}
+
+	public double getPriceoft() {
+		return priceoft;
+	}
+
+	public void setPriceoft(double priceoft) {
+		this.priceoft = priceoft;
+	}
+
+	public double getPriceofw() {
+		return priceofw;
+	}
+
+	public void setPriceofw(double priceofw) {
+		this.priceofw = priceofw;
+	}
+
+	public double getPriceofm() {
+		return priceofm;
+	}
+
+	public void setPriceofm(double priceofm) {
+		this.priceofm = priceofm;
+	}
+
+	public double getPriceofq() {
+		return priceofq;
+	}
+
+	public void setPriceofq(double priceofq) {
+		this.priceofq = priceofq;
+	}
+
+	public double getPriceofy() {
+		return priceofy;
+	}
+
+	public void setPriceofy(double priceofy) {
+		this.priceofy = priceofy;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public String getCheckCode() {
+		return checkCode;
+	}
+
+	public void setCheckCode(String checkCode) {
+		this.checkCode = checkCode;
+	}
+
+	public String getReferPhone() {
+		return referPhone;
+	}
+
+	public void setReferPhone(String referPhone) {
+		this.referPhone = referPhone;
+	}
+}

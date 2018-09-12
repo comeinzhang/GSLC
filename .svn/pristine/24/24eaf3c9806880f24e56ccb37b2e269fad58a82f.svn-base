@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_ReturnMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Return" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="BUY_USER_ID" property="buyUserId" jdbcType="INTEGER" />
+    <result column="SELLER_USER_ID" property="sellerUserId" jdbcType="INTEGER" />
+    <result column="ORDER_NUM" property="orderNum" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="SMALLINT" />
+    <result column="REPRICE" property="rePrice" jdbcType="DECIMAL" />
+    <result column="SELLER_EMS" property="sellerEms" jdbcType="VARCHAR" />
+    <result column="SELLER_EMSCODE" property="sellerEmsCode" jdbcType="VARCHAR" />
+    <result column="BUYER_EMS" property="buyerEms" jdbcType="VARCHAR" />
+    <result column="BUYER_EMSCODE" property="buyerEmsCode" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="APPLY_DESC" property="applyDesc" jdbcType="VARCHAR" />
+    <result column="CAUSE" property="cause" jdbcType="VARCHAR" />
+    <result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BaseResultMapList" type="com.tyh.model.B_Return" extends="BaseResultMap">
+    	<association property="detail" javaType="com.tyh.model.B_Order_Detail" column="ORDER_DETAIL_ID">
+            <id column="ID_D" property="id" jdbcType="INTEGER" />
+    		<result column="ORDER_NUM" property="orderNum" jdbcType="VARCHAR" />
+    		<result column="PRICE_D" property="price" jdbcType="DECIMAL" />
+    		<result column="STOCK_D" property="stock" jdbcType="INTEGER" />
+		    <association property="goods" javaType="com.tyh.model.B_Goods">
+			    <id column="ID_G" property="id" jdbcType="INTEGER" />
+			    <result column="CATALOG_ID" property="catalogId" jdbcType="INTEGER" />
+			    <result column="NAME" property="name" jdbcType="VARCHAR" />
+			    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+			    <result column="PRICE_G" property="price" jdbcType="DECIMAL" />
+			    <result column="PUBLISHER_ID" property="publisherId" jdbcType="INTEGER" />
+		    	<result column="PUBLISHER_NAME" property="publisherName" jdbcType="VARCHAR" />
+		    	<result column="STATUS" property="status" jdbcType="SMALLINT" />
+			    <result column="PRICE_BEFORE" property="priceBefore" jdbcType="DECIMAL" />
+		    </association>
+		</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID,ORDER_NUM, ORDER_DETAIL_ID, BUY_USER_ID, SELLER_USER_ID,TYPE,SELLER_EMS, SELLER_EMSCODE,BUYER_EMS,BUYER_EMSCODE, STATUS,APPLY_DESC, CHECK_RESULT, CREATE_TIME, REPRICE,
+    UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_return
+    where ID = #{id,jdbcType=INTEGER} and STATUS !=6
+  </select>
+  <select id="selectByOrderNum" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_return
+    where ORDER_NUM = #{orderNum,jdbcType=VARCHAR} and STATUS !=6
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_return
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.B_Return" >
+    insert into b_return (ORDER_NUM,ORDER_DETAIL_ID, BUY_USER_ID, SELLER_USER_ID,REPRICE,
+      TYPE,SELLER_EMS, SELLER_EMSCODE,BUYER_EMS,BUYER_EMSCODE, STATUS, APPLY_DESC,CAUSE,
+      CHECK_RESULT, CREATE_TIME
+      )
+    values (#{orderNum,jdbcType=VARCHAR},#{detailId,jdbcType=INTEGER}, #{buyUserId,jdbcType=INTEGER}, #{sellerUserId,jdbcType=INTEGER}, #{rePrice,jdbcType=DECIMAL},
+      #{type,jdbcType=SMALLINT}, #{sellerEms,jdbcType=VARCHAR},#{sellerEmsCode,jdbcType=VARCHAR},#{buyerEms,jdbcType=VARCHAR}, #{buyerEmsCode,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, 
+      #{applyDesc,jdbcType=VARCHAR},#{cause,jdbcType=INTEGER},#{checkResult,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Return" >
+    update b_return
+    <set >
+      <if test="buyUserId != null" >
+        BUY_USER_ID = #{buyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sellerUserId != null" >
+        SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER},
+      </if>
+      <if test="rePrice != null" >
+        REPRICE = #{rePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="sellerEms != null" >
+        SELLER_EMS = #{sellerEms,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerEmsCode != null" >
+        SELLER_EMSCODE = #{sellerEmsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerEms!= null" >
+        BUYER_EMS = #{buyerEms,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerEmsCode != null" >
+        BUYER_EMSCODE = #{buyerEmsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDesc != null" >
+        APPLY_DESC = #{applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="checkResult != null" >
+        CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

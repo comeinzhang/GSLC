@@ -1,0 +1,558 @@
+package com.tyh.unitl;
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONObject;
+
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.tyh.model.ProConfigMap;
+import com.tyh.model.TextMessage;
+import com.tyh.model.TicketJson;
+import com.tyh.model.TokenJson;
+import com.tyh.model.WxParams;
+
+
+
+public class WxHttpUtil {
+	public final static String get_token_new = "https://api.weixin.qq.com/cgi-bin/token";
+	public final static String get_web_info = "https://api.weixin.qq.com/cgi-bin/user/info";
+	public final static String get_web_access_token = "https://api.weixin.qq.com/sns/oauth2/access_token";
+	public final static String get_web_userinfo = "https://api.weixin.qq.com/sns/userinfo";
+	public final static String get_web_code = "https://open.weixin.qq.com/connect/oauth2/authorize";
+	public final static String get_token = "https://api.weixin.qq.com/cgi-bin/token";
+	public final static String get_ticket = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
+	public final static String get_qrcode = "https://api.weixin.qq.com/cgi-bin/qrcode/create";
+	public final static String menu_create_url="https://api.weixin.qq.com/cgi-bin/menu/create";
+	public static String readContentFromPost(String url, String param, String method) throws Exception {
+    	System.out.println(method+":"+url+"?"+param);
+    	
+    	PrintWriter out = null;
+    	BufferedReader in = null;
+    	
+    	String result = "";
+    	try {
+    		URL postUrl = new URL(url);
+        	
+            HttpURLConnection connection = (HttpURLConnection) postUrl.openConnection();
+            
+            connection.setDoOutput(true);
+
+            connection.setDoInput(true);
+
+            connection.setRequestMethod(method);
+
+            connection.setUseCaches(false);
+
+            connection.setInstanceFollowRedirects(true);
+            
+            connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+            connection.setRequestProperty("Accept-Encoding", "UTF-8");
+            
+            out = new PrintWriter(new OutputStreamWriter(connection.getOutputStream(), "utf-8"));
+
+//            String headPhoto = FtpUtil.test_imgStr2.replaceAll("\\+", "%2B");
+            out.print(param);
+            
+            out.flush();
+
+            out.close();
+
+            in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream()));
+            
+            String line;
+            while ((line = in.readLine()) != null) {
+            	 result += line;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+            try{
+                if(out!=null){
+                    out.close();
+                }
+                if(in!=null){
+                    in.close();
+                }
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }
+    /**
+          * post请求
+          * @param url
+          * @param json
+          * @return
+          */
+	
+         public static JSONObject doPost(String url,JSONObject json){
+             DefaultHttpClient client = new DefaultHttpClient();
+             HttpPost post = new HttpPost(url);
+             JSONObject response = null;
+             try {
+                 StringEntity s = new StringEntity(json.toString());
+                 s.setContentEncoding("UTF-8");
+                 s.setContentType("application/json");//发送json数据需要设置contentType
+                 post.setEntity(s);
+                 HttpResponse res = client.execute(post);
+                 if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+                     HttpEntity entity = res.getEntity();
+                     String result = EntityUtils.toString(res.getEntity());// 返回json格式：
+                     response = JSONObject.fromObject(result);
+                }
+             } catch (Exception e) {
+                 throw new RuntimeException(e);
+             }
+             return response;
+         }
+         public static int postParam(String url1,String user_define_menu) throws IOException {
+//             String user_define_menu = "{\"button\":[{\"type\":\"view\",\"name\":\"人人惠享\",\"url\":\"www.rrhxzg.com/goods/index\"},{\"type\":\"view\",\"name\":\"分类\",\"url\":\"www.rrhxzg.com/goods/catagoryList\"},{\"name\":\"日常工作\",\"sub_button\":[{\"type\":\"click\",\"name\":\"待办工单\",\"key\":\"01_WAITING\"},{\"type\":\"click\",\"name\":\"已办工单\",\"key\":\"02_FINISH\"},{\"type\":\"click\",\"name\":\"我的工单\",\"key\":\"03_MYJOB\"},{\"type\":\"click\",\"name\":\"公告消息箱\",\"key\":\"04_MESSAGEBOX\"},{\"type\":\"click\",\"name\":\"签到\",\"key\":\"05_SIGN\"}]}]}";
+             //此处改为自己想要的结构体，替换即可
+             try {
+                URL url = new URL(url1);
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();    
+                 
+                http.setRequestMethod("POST");        
+                http.setRequestProperty("Content-Type","application/x-www-form-urlencoded");    
+                http.setDoOutput(true);        
+                http.setDoInput(true);
+                System.setProperty("sun.net.client.defaultConnectTimeout", "30000");//连接超时30秒
+                System.setProperty("sun.net.client.defaultReadTimeout", "30000"); //读取超时30秒
+                http.connect();
+                OutputStream os= http.getOutputStream();    
+                os.write(user_define_menu.getBytes("UTF-8"));//传入参数    
+                os.flush();
+                os.close();
+             
+                InputStream is =http.getInputStream();
+                int size =is.available();
+                byte[] jsonBytes =new byte[size];
+                is.read(jsonBytes);
+                String message=new String(jsonBytes,"UTF-8");
+                System.out.println(message);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }    
+            return 0;
+        }     
+    public static Map<String, String> getAccessToken(String code){
+    	Map<String, String> map = new HashMap<String, String>();
+    	String openid = null;
+    	String access_token = null;
+    	 try {
+    		 String url = get_web_access_token+"?appid="+ProConfigMap.configMap.get("APPID")+"&secret="+ProConfigMap.configMap.get("APPSECRET")+"&code="+code+"&grant_type=authorization_code";
+         	 String result = readContentFromPost(url, null, "GET");
+         	 if(StringUtils.isNotBlank(result)){
+	   		 	 JSONObject resultJson = JSONObject.fromObject(result);
+	   		 	 boolean errcode = resultJson.has("errcode");
+	   		 	 String errmsg = null;
+	   		 	 if(!errcode){
+	   		 		openid = (String) resultJson.get("openid");
+	   		 		access_token = (String) resultJson.get("access_token");
+	   		 		map.put("openid", openid);
+	   		 		map.put("access_token", access_token);
+	   		 	 }else{
+	   		 		errmsg = (String) resultJson.get("errmsg");
+	   		 		System.out.println("wx返回errcode："+errcode+" errmsg:"+errmsg);
+	   		 	 }
+	   		 }
+         } catch (Exception e) {
+        	 System.out.println("获取微信用户access_token发生异常！");
+             e.printStackTrace();
+         }
+    	 System.out.println("获取微信用户openid:"+openid);
+    	 System.out.println("获取微信用户access_token:"+access_token);
+    	 return map;
+    }
+    public static boolean accessTokenIsExpires() {
+    	//处理token失效的问题  
+        try {
+        	long tokenTimeLong=0;
+        	if (StringUtils.isNotBlank(WxParams.tokenTime)) {
+        		tokenTimeLong = Long.parseLong(WxParams.tokenTime); 
+			}
+        	long tokenExpiresLong=0;
+        	if (StringUtils.isNotBlank(WxParams.tokenExpires)) {
+        		tokenExpiresLong = Long.parseLong(WxParams.tokenExpires); 
+			}
+            //时间差  
+            long differ = (System.currentTimeMillis() - tokenTimeLong) /1000;  
+            if (WxParams.token == null ||  differ > (tokenExpiresLong - 1800)) {
+                return true;
+            }  
+        } catch (Exception e) {  
+            // TODO: handle exception  
+            e.printStackTrace();  
+        }
+        return false;
+	}
+    public static String getAccessTokenNew() throws Exception{
+        if (accessTokenIsExpires()) {
+        	TokenJson tokenJson = null;
+        	   try {
+          		 String url = get_token+"?grant_type=client_credential&appid="+ProConfigMap.configMap.get("APPID")+"&secret="+ProConfigMap.configMap.get("APPSECRET");
+          		 String result = readContentFromPost(url, null, "GET");
+          		 JSONObject rqJsonObject = JSONObject.fromObject(result);  
+                 tokenJson = (TokenJson) JSONObject.toBean(rqJsonObject,TokenJson.class); 
+                 if (tokenJson != null) {  
+                     WxParams.token = tokenJson.getAccess_token();  
+                     WxParams.tokenTime = System.currentTimeMillis()+"";  
+                     WxParams.tokenExpires = tokenJson.getExpires_in()+"";  
+                 }
+               } catch (Exception e) {
+                   e.printStackTrace();
+                   String url = get_token+"?grant_type=client_credential&appid="+ProConfigMap.configMap.get("APPID")+"&secret="+ProConfigMap.configMap.get("APPSECRET");
+            	   String result = readContentFromPost(url, null, "GET");
+            	   JSONObject rqJsonObject = JSONObject.fromObject(result);
+                   tokenJson = (TokenJson) JSONObject.toBean(rqJsonObject,TokenJson.class); 
+                   if (tokenJson != null) {  
+                       WxParams.token = tokenJson.getAccess_token();  
+                       WxParams.tokenTime = System.currentTimeMillis()+"";  
+                       WxParams.tokenExpires = tokenJson.getExpires_in()+"";  
+                   }
+               }
+	       	 System.out.println("获取微信用户access_token:"+tokenJson.getAccess_token());
+	       	 return tokenJson.getAccess_token();
+		}
+    	return WxParams.token;
+    }
+    /** 
+     * 创建永久二维码(字符串) 
+     *  
+     * @param accessToken 
+     * @param sceneStr 场景str 
+     * @return 
+     * @throws Exception 
+     */  
+    public static String createForeverStrTicket(String userId) throws Exception {
+    	String token = getAccessTokenNew();
+    	String url = get_qrcode+"?access_token="+token;
+    	JSONObject params = new JSONObject();
+    	params.put("action_name", "QR_LIMIT_STR_SCENE");
+    	params.put("action_info", "{'scene': {'scene_str':'"+userId+"'}}");
+    	JSONObject jsonObject = doPost(url,params);
+//    	String qrcodeUrl = jsonObject.getString("url");
+    	String ticket = jsonObject.getString("ticket");
+//    	System.out.println("get_qrcode::::::::"+qrcodeUrl);
+    	System.out.println("ticket::::::::"+ticket);
+    	return ticket;
+    }  
+    public static boolean checkSignature(String signature, String timestamp, String nonce) {
+    	String token="rrhxzgyhlmyph";
+        String[] arr = new String[] { token, timestamp, nonce };    
+        // 将token、timestamp、nonce三个参数进行字典序排序    
+        Arrays.sort(arr);    
+        StringBuilder content = new StringBuilder();    
+        for (int i = 0; i < arr.length; i++) {    
+            content.append(arr[i]);    
+        }    
+        MessageDigest md = null;    
+        String tmpStr = null;  
+        try {    
+            md = MessageDigest.getInstance("SHA-1");    
+            // 将三个参数字符串拼接成一个字符串进行sha1加密    
+            byte[] digest = md.digest(content.toString().getBytes());    
+            tmpStr = byteToHex(digest);            
+        } catch (NoSuchAlgorithmException e) {    
+            e.printStackTrace();  
+        }  
+        content = null;  
+        System.out.println("tmpStr::::"+tmpStr);
+        System.out.println("signature::::"+signature);
+        // 将sha1加密后的字符串可与signature对比，标识该请求来源于微信    
+        return tmpStr != null ? tmpStr.equals(signature) : false;  
+    }
+    public static TextMessage processRequest(HttpServletRequest request) {
+        Map<String, String> map = WechatMessageUtil.xmlToMap(request);
+        // 发送方帐号（一个OpenID）
+        String fromUserName = map.get("FromUserName");
+        // 开发者微信号
+        String toUserName = map.get("ToUserName");
+        // 消息类型
+        String msgType = map.get("MsgType");
+        // 事件类型
+        String event = map.get("Event");
+        
+        System.out.println("event::::::::"+event);
+        // 事件KEY值
+        String EventKey = map.get("EventKey");
+        System.out.println("EventKey:::::"+map.get("EventKey"));
+        // 对消息进行处理
+        if (StringUtils.isNotBlank(EventKey)) {
+            if (WechatMessageUtil.MESSAGE_EVENT_SUBSCRIBE.equals(event)||WechatMessageUtil.MESSAGE_EVENT_QRCODE.equals(event)) {
+            	TextMessage textMessage = new TextMessage();
+            	textMessage.setMsgtype(msgType);
+                textMessage.setTousername(toUserName);
+                textMessage.setFromusername(fromUserName);
+                textMessage.setCreateTime(DateUtils.currtime());
+                textMessage.setEventkey(EventKey);
+                textMessage.setTicket(map.get("Ticket"));
+                textMessage.setEvent(event);
+                textMessage.setUpdateTime(DateUtils.currtime());
+                return textMessage;
+//                responseMessage = WechatMessageUtil.textMessageToXml(textMessage);
+            }
+		}
+        return null;
+
+    }
+    public static Map<String, String> getUserInfo(Map<String, String> map){
+    	Map<String, String> userMap = new HashMap<String, String>();
+    	String openid = map.get("openid");
+    	String access_token = map.get("access_token");
+    	String nickName = "";
+    	String headImgUrl = "";
+    	String unionid = "";
+    	 try {
+    		 String url = get_web_userinfo+"?access_token="+access_token+"&openid="+openid+"&lang=zh_CN";
+         	 String result = readContentFromPost(url, null, "GET");
+         	 if(StringUtils.isNotBlank(result)){
+	   		 	 JSONObject resultJson = JSONObject.fromObject(result);
+	   		 	 boolean errcode = resultJson.has("errcode");
+	   		 	 String errmsg = null;
+	   		 	 if(!errcode){
+	   		 		nickName = (String) resultJson.get("nickname");
+	   		 		headImgUrl = (String) resultJson.get("headimgurl");
+	   		 		unionid = (String) resultJson.get("unionid");
+	   		 		userMap.put("openid", (String) resultJson.get("openid"));
+	   		 		userMap.put("nickname", (String) resultJson.get("nickname"));
+	   		 		userMap.put("headimgurl", (String) resultJson.get("headimgurl"));
+	   		 		userMap.put("subscribe", (String) resultJson.get("subscribe"));
+	   		 		userMap.put("unionid", (String) resultJson.get("unionid"));
+	   		 	 }else{
+	   		 		errmsg = (String) resultJson.get("errmsg");
+	   		 		System.out.println("wx返回errcode："+errcode+" errmsg:"+errmsg);
+	   		 	 }
+	   		 }
+         } catch (Exception e) {
+        	 System.out.println("获取微信用户信息发生异常！");
+             e.printStackTrace();
+         }
+    	 System.out.println("获取微信用户nickname:"+nickName);
+    	 System.out.println("获取微信用户headimgurl:"+headImgUrl);
+    	 System.out.println("获取微信用户unionid:"+unionid);
+    	 return userMap;
+    }
+    
+    public static Map<String, String> getUserInfoByUnId(String openid,String access_token){
+    	Map<String, String> userMap = new HashMap<String, String>();
+//    	String openid = map.get("openid");
+//    	String access_token = map.get("access_token");
+    	 try {
+    		 String url = get_web_info+"?access_token="+access_token+"&openid="+openid+"&lang=zh_CN";
+         	 String result = readContentFromPost(url, null, "GET");
+         	 if(StringUtils.isNotBlank(result)){
+	   		 	 JSONObject resultJson = JSONObject.fromObject(result);
+	   		 	 boolean errcode = resultJson.has("errcode");
+	   		 	 String errmsg = null;
+	   		 	 if(!errcode){
+	   		 		userMap.put("openid", (String) resultJson.get("openid"));
+	   		 		userMap.put("nickname", (String) resultJson.get("nickname"));
+	   		 		userMap.put("headimgurl", (String) resultJson.get("headimgurl"));
+	   		 		userMap.put("subscribe", String.valueOf(resultJson.get("subscribe")));
+	   		 	 }else{
+	   		 		errmsg = (String) resultJson.get("errmsg");
+	   		 		System.out.println("wx返回errcode："+errcode+" errmsg:"+errmsg);
+	   		 	 }
+	   		 }
+         } catch (Exception e) {
+        	 System.out.println("获取微信用户信息发生异常！");
+             e.printStackTrace();
+         }
+    	 return userMap;
+    }
+    
+    public static void getCode(){
+    	String redirect_uri = URLEncoder.encode(ProConfigMap.configMap.get("REDIRECT_URI"));
+    	 try {
+    		 String url = get_web_code+"?appid="+ProConfigMap.configMap.get("APPID")+"&redirect_uri="+redirect_uri+"&response_type="+PropertiesUtil.RESPONSE_TYPE+"&scope="+PropertiesUtil.SCOPE+"&state="+PropertiesUtil.STATE+"#wechat_redirect";
+         	 readContentFromPost(url, null, "GET");
+         } catch (Exception e) {
+        	 System.out.println("获取微信用户code发生异常！");
+             e.printStackTrace();
+         }
+    }
+    
+    public static String updatePrice(String url){
+      	 try {
+      		 String yphresult = readContentFromPost(url, null, "GET");
+           } catch (Exception e) {
+          	 	System.out.println("更新价格出错！");
+               e.printStackTrace();
+           }
+      	 return "1";
+      }
+  
+    public static TicketJson getTicket(String token){
+        try {
+        	String url = get_ticket+"?access_token="+token+"&type=jsapi";
+            String result = readContentFromPost(url, null, "GET");  
+            System.out.println("微信服务器获取Ticket:"+result);
+            JSONObject rqJsonObject = JSONObject.fromObject(result);
+            TicketJson ticket = (TicketJson) JSONObject.toBean(rqJsonObject,TicketJson.class);
+            return ticket;  
+        } catch (Exception e) {
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+            return null;  
+        }  
+    }
+    public static Map<String, String> sign(String jsapi_ticket, String url) {  
+        Map<String, String> ret = new HashMap<String, String>();  
+        String nonce_str = create_nonce_str();  
+        String timestamp = create_timestamp();  
+        String string1;  
+        String signature = "";  
+  
+        //注意这里参数名必须全部小写，且必须有序  
+        string1 = "jsapi_ticket=" + jsapi_ticket +  
+                  "&noncestr=" + nonce_str +  
+                  "&timestamp=" + timestamp +  
+                  "&url=" + url;  
+//        System.out.println(string1);  
+        try  
+        {  
+            MessageDigest crypt = MessageDigest.getInstance("SHA-1");  
+            crypt.reset();  
+            crypt.update(string1.getBytes("UTF-8"));  
+            signature = byteToHex(crypt.digest());  
+        }  
+        catch (NoSuchAlgorithmException e)  
+        {  
+            e.printStackTrace();  
+        }  
+        catch (UnsupportedEncodingException e)  
+        {  
+            e.printStackTrace();  
+        }  
+  
+        ret.put("url", url);  
+        ret.put("jsapi_ticket", jsapi_ticket);  
+        ret.put("nonceStr", nonce_str);  
+        ret.put("timestamp", timestamp);  
+        ret.put("signature", signature);  
+  
+        return ret;  
+    }  
+    
+    private static String byteToHex(final byte[] hash) {
+        Formatter formatter = new Formatter();  
+        for (byte b : hash)  
+        {  
+            formatter.format("%02x", b);  
+        }  
+        String result = formatter.toString();  
+        formatter.close();  
+        return result;  
+    }  
+  
+    private static String create_nonce_str() {  
+        return UUID.randomUUID().toString();  
+    }  
+  
+    private static String create_timestamp() {  
+        return Long.toString(System.currentTimeMillis() / 1000);  
+    }
+    private static Menu getMenu() throws IOException {
+        CommonButton btn11 = new CommonButton();
+        btn11.setName("人人惠享");
+        btn11.setType("view");
+        btn11.setKey("11");
+        btn11.setUrl("http://www.rrhxzg.com/goods/index");
+
+
+        CommonButton btn21 = new CommonButton();
+        btn21.setName("人人惠享简介");
+        btn21.setType("view");
+        btn21.setKey("21");
+        btn21.setUrl("http://www.rrhxzg.com/user/aboutRRHX");
+       
+        CommonButton btn31 = new CommonButton();
+        btn31.setName("如何推广会议");
+        btn31.setType("view");
+        btn31.setKey("31");
+        btn31.setUrl("http://www.rrhxzg.com/user/howToSpread");
+        
+        CommonButton btn41 = new CommonButton();
+        btn41.setName("会员注册");
+        btn41.setType("view");
+        btn41.setKey("41");
+        btn41.setUrl("http://www.rrhxzg.com/user/mycenter");
+//        btn41.setUrl("http://www.rrhxzg.com/user/toRegister");
+        
+        /**
+         * 封装整个菜单
+         */
+        Menu menu = new Menu();
+        menu.setButton(new Button[] { btn11, btn21,btn41});
+        return menu;
+    }
+    public static int createMenu(Menu menu) throws Exception {
+    	String accessToken=getAccessTokenNew();
+        int result = 0;
+        // 拼装创建菜单的url
+        String url = menu_create_url+"?access_token="+accessToken;
+        // 将菜单对象转换成json字符串
+        String jsonMenu = JSONObject.fromObject(menu).toString();
+        // 调用接口创建菜单
+        postParam(url,jsonMenu);
+//        JSONObject jsonObject = doPost(url, JSONObject.fromObject(menu));
+//        if (null != jsonObject) {
+//            if (0 != jsonObject.getInt("errcode")) {
+//                result = jsonObject.getInt("errcode");
+//            }
+//        }
+
+        return result;
+    }
+    public static void main(String[] args) {
+        try {
+//        	postParam("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQGg8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyaU90RUVKSExlR2oxMDAwMDAwN3IAAgT85atZAwQAAAAA", null);
+        	createMenu(getMenu());
+//        	String result = getAccessToken();
+//        	String ticketString = URLEncoder.encode("gQGg8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyaU90RUVKSExlR2oxMDAwMDAwN3IAAgT85atZAwQAAAAA", "utf-8");
+//        	System.out.println(ticketString);
+//        	String result = createQrcode("pB7MiwIteoMEe8qCbzBiw7KEoexk", "19911127feifei");
+//        	String result = getOpenid("0319LJaz0wKAbl1Lx78z0EaDaz09LJan");
+        	//oB7MiwNdafGqRe0abljDcV6vSobA
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+}

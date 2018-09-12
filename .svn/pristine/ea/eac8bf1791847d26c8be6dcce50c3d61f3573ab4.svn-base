@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.VoucherMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.Voucher" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summart" property="summart" jdbcType="VARCHAR" />
+    <result column="publisher_id" property="publisherId" jdbcType="INTEGER" />
+    <result column="buyer_num" property="buyerNum" jdbcType="INTEGER" />
+    <result column="selled_money" property="selledMoney" jdbcType="DECIMAL" />
+    <result column="target_money" property="targetMoney" jdbcType="DECIMAL" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="over_time" property="overTime" jdbcType="DATE" />
+    <result column="head_img_url" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="rang" property="rang" jdbcType="VARCHAR" />
+    <result column="autois" property="autois" jdbcType="SMALLINT" />
+    <result column="indexIs" property="indexis" jdbcType="SMALLINT" />
+    <result column="targ" property="targ" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="SMALLINT" />
+    <result column="ext0" property="ext0" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext4" property="ext4" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tyh.model.Voucher" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, summart, publisher_id, buyer_num, selled_money, target_money, start_time, 
+    end_time, over_time, head_img_url, create_time, status, rang, autois, indexIs, targ, 
+    type, ext0, ext1, ext2, ext3, ext4, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from b_voucher
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getVoucherOfStatus" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_voucher
+    where 1=1
+    and end_time>=now()
+    and now()>=start_time
+    <if test="autois!=null">
+    	and autois=#{autois,jdbcType=SMALLINT}
+    </if>
+    <if test="targ!=null">
+    	and targ=#{targ,jdbcType=SMALLINT}
+    </if>
+    <if test="rang!=null">
+    	and LOCATE(#{rang,jdbcType=VARCHAR}, rang)>0
+    </if>
+    <if test="indexIs!=null">
+    	and indexIs=#{indexIs,jdbcType=SMALLINT}
+    </if>
+    <if test="status!=null">
+    	and status=#{status,jdbcType=SMALLINT}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_voucher
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.Voucher" >
+    insert into b_voucher (id, title, summart, 
+      publisher_id, buyer_num, selled_money, 
+      target_money, start_time, end_time, 
+      over_time, head_img_url, create_time, 
+      status, rang, autois, 
+      indexIs, targ, type, 
+      ext0, ext1, ext2, ext3, 
+      ext4, update_time, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{summart,jdbcType=VARCHAR}, 
+      #{publisherId,jdbcType=INTEGER}, #{buyerNum,jdbcType=INTEGER}, #{selledMoney,jdbcType=DECIMAL}, 
+      #{targetMoney,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{overTime,jdbcType=DATE}, #{headImgUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=SMALLINT}, #{rang,jdbcType=VARCHAR}, #{autois,jdbcType=SMALLINT}, 
+      #{indexis,jdbcType=SMALLINT}, #{targ,jdbcType=VARCHAR}, #{type,jdbcType=SMALLINT}, 
+      #{ext0,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, 
+      #{ext4,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.Voucher" >
+    insert into b_voucher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summart != null" >
+        summart,
+      </if>
+      <if test="publisherId != null" >
+        publisher_id,
+      </if>
+      <if test="buyerNum != null" >
+        buyer_num,
+      </if>
+      <if test="selledMoney != null" >
+        selled_money,
+      </if>
+      <if test="targetMoney != null" >
+        target_money,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="overTime != null" >
+        over_time,
+      </if>
+      <if test="headImgUrl != null" >
+        head_img_url,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="rang != null" >
+        rang,
+      </if>
+      <if test="autois != null" >
+        autois,
+      </if>
+      <if test="indexis != null" >
+        indexIs,
+      </if>
+      <if test="targ != null" >
+        targ,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="ext0 != null" >
+        ext0,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="ext4 != null" >
+        ext4,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summart != null" >
+        #{summart,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="buyerNum != null" >
+        #{buyerNum,jdbcType=INTEGER},
+      </if>
+      <if test="selledMoney != null" >
+        #{selledMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="targetMoney != null" >
+        #{targetMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="overTime != null" >
+        #{overTime,jdbcType=DATE},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="rang != null" >
+        #{rang,jdbcType=VARCHAR},
+      </if>
+      <if test="autois != null" >
+        #{autois,jdbcType=SMALLINT},
+      </if>
+      <if test="indexis != null" >
+        #{indexis,jdbcType=SMALLINT},
+      </if>
+      <if test="targ != null" >
+        #{targ,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="ext0 != null" >
+        #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        #{ext4,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.Voucher" >
+    update b_voucher
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summart != null" >
+        summart = #{summart,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        publisher_id = #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="buyerNum != null" >
+        buyer_num = #{buyerNum,jdbcType=INTEGER},
+      </if>
+      <if test="selledMoney != null" >
+        selled_money = #{selledMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="targetMoney != null" >
+        target_money = #{targetMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="overTime != null" >
+        over_time = #{overTime,jdbcType=DATE},
+      </if>
+      <if test="headImgUrl != null" >
+        head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="rang != null" >
+        rang = #{rang,jdbcType=VARCHAR},
+      </if>
+      <if test="autois != null" >
+        autois = #{autois,jdbcType=SMALLINT},
+      </if>
+      <if test="indexis != null" >
+        indexIs = #{indexis,jdbcType=SMALLINT},
+      </if>
+      <if test="targ != null" >
+        targ = #{targ,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="ext0 != null" >
+        ext0 = #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        ext4 = #{ext4,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tyh.model.Voucher" >
+    update b_voucher
+    set title = #{title,jdbcType=VARCHAR},
+      summart = #{summart,jdbcType=VARCHAR},
+      publisher_id = #{publisherId,jdbcType=INTEGER},
+      buyer_num = #{buyerNum,jdbcType=INTEGER},
+      selled_money = #{selledMoney,jdbcType=DECIMAL},
+      target_money = #{targetMoney,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      over_time = #{overTime,jdbcType=DATE},
+      head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=SMALLINT},
+      rang = #{rang,jdbcType=VARCHAR},
+      autois = #{autois,jdbcType=SMALLINT},
+      indexIs = #{indexis,jdbcType=SMALLINT},
+      targ = #{targ,jdbcType=VARCHAR},
+      type = #{type,jdbcType=SMALLINT},
+      ext0 = #{ext0,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      ext4 = #{ext4,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.Voucher" >
+    update b_voucher
+    set title = #{title,jdbcType=VARCHAR},
+      summart = #{summart,jdbcType=VARCHAR},
+      publisher_id = #{publisherId,jdbcType=INTEGER},
+      buyer_num = #{buyerNum,jdbcType=INTEGER},
+      selled_money = #{selledMoney,jdbcType=DECIMAL},
+      target_money = #{targetMoney,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      over_time = #{overTime,jdbcType=DATE},
+      head_img_url = #{headImgUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=SMALLINT},
+      rang = #{rang,jdbcType=VARCHAR},
+      autois = #{autois,jdbcType=SMALLINT},
+      indexIs = #{indexis,jdbcType=SMALLINT},
+      targ = #{targ,jdbcType=VARCHAR},
+      type = #{type,jdbcType=SMALLINT},
+      ext0 = #{ext0,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      ext4 = #{ext4,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

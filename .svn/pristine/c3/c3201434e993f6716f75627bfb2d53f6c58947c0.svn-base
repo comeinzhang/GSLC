@@ -1,0 +1,145 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Bank {
+    private Integer id;
+
+    private String sid;
+    
+    private String cardCode;
+
+    private String bank;
+
+    private Integer userId;
+
+    private String flag;
+
+    private String bankNam;
+
+    private Date updateTime;
+    
+    private String prov;
+    
+    private String city;
+    
+    private String branch;
+    
+    private String idCard;
+    
+    private String phone;
+    
+    private Short delFlag;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCardCode() {
+        return cardCode;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode == null ? null : cardCode.trim();
+    }
+
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank == null ? null : bank.trim();
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag == null ? null : flag.trim();
+    }
+
+    public String getBankNam() {
+        return bankNam;
+    }
+
+    public void setBankNam(String bankNam) {
+        this.bankNam = bankNam == null ? null : bankNam.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getSid() {
+		return sid;
+	}
+
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
+
+	public String getProv() {
+		return prov;
+	}
+
+	public void setProv(String prov) {
+		this.prov = prov;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Short getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Short delFlag) {
+		this.delFlag = delFlag;
+	}
+}

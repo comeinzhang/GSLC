@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.zanCount;
+
+public interface zanCountMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(zanCount record);
+
+    int insertSelective(zanCount record);
+
+    zanCount selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(zanCount record);
+
+    int updateByPrimaryKey(zanCount record);
+    
+    List<zanCount> selectAllZanCount();
+}

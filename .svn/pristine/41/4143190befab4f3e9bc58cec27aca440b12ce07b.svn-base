@@ -1,0 +1,32 @@
+package com.tyh.mapper;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Order_Detail;
+import com.tyh.unitl.PageInfo;
+
+public interface B_Order_DetailMapper {
+    int deleteByPrimaryKey(@Param("id")Integer id);
+    
+    int deleteByOrderNum(@Param("orderNum")String orderNum);
+
+    int insert(B_Order_Detail record);
+
+    B_Order_Detail selectByPrimaryKey(@Param("id")Integer id);
+    B_Order_Detail selectById(@Param("id")Integer id);
+    
+    List<B_Order_Detail> selectLineDetailListPage(@Param("page")PageInfo page,@Param("sign")String sign,@Param("sellerUserId")Integer sellerUserId);
+    List<B_Order_Detail> selectBonusListPage(Map<String, Object> map);
+    List<B_Order_Detail> selectByorderNum(@Param("orderNum")String orderNum);
+    
+    int updateByPrimaryKey(B_Order_Detail record);
+    
+    List<B_Order_Detail> getByorderNum(@Param("orderNum")String orderNum);
+    BigDecimal selectLineDetailCount(@Param("sellerUserId")Integer sellerUserId,@Param("monFlag")String monFlag);
+    
+    List selectMergeCount(@Param("goodsId")Integer goodsId,@Param("status")Short status);
+}

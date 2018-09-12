@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_GoodsMapper" >
+  <resultMap id="BaseResultMap" type="B_Goods" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CATALOG_ID" property="catalogId" jdbcType="VARCHAR" />
+    <result column="BATCH_NUM" property="batchNum" jdbcType="VARCHAR" />
+    <result column="BAR_CODE" property="barCode" jdbcType="VARCHAR" />
+    <result column="C_ID" property="cId" jdbcType="INTEGER" />
+    <result column="USER_ID" property="shopId" jdbcType="INTEGER" />
+    <result column="GARDEN_ID" property="gardenId" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="VARCHAR" />
+    <result column="PRICE_BEFORE" property="priceBefore" jdbcType="DECIMAL" />
+    <result column="STOCK" property="stock" jdbcType="INTEGER" />
+    <result column="MERGE_NUM" property="mergeNum" jdbcType="INTEGER" />
+    <result column="SUMMARIZE" property="summarize" jdbcType="VARCHAR" />
+    <result column="VIDEO_URL" property="videoUrl" jdbcType="VARCHAR" />
+    <result column="VIDEO_URL1" property="videoUrl1" jdbcType="VARCHAR" />
+    <result column="SELL_TIME" property="sellTime" jdbcType="VARCHAR" />
+    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+    <result column="TOP_IMG_URL" property="topImgUrl" jdbcType="VARCHAR" />
+    <result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="PUBLISHER_ID" property="publisherId" jdbcType="INTEGER" />
+    <result column="PUBLISHER_NAME" property="publisherName" jdbcType="VARCHAR" />
+    <result column="SELL_TYPE" property="sellType" jdbcType="SMALLINT" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+    <result column="GOODS_TYPE" property="goodsType" jdbcType="SMALLINT" />
+    <result column="CLICK_COUNT" property="clickCount" jdbcType="INTEGER" />
+    <result column="SELL_COUNT" property="sellCount" jdbcType="INTEGER" />
+    <result column="XG_BEGIN_TIME" property="xgBeginTime" jdbcType="DATE" />
+    <result column="XG_END_TIME" property="xgEndTime" jdbcType="DATE" />
+    <result column="STAR" property="star" jdbcType="REAL" />
+    <result column="DETAIL_SPEC" property="detailSpec" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="START_PRICE" property="startPrice" jdbcType="DECIMAL" />
+    <result column="INCREATE_PRICE" property="increatePrice" jdbcType="DECIMAL" />
+    <result column="FREE_POST" property="freePost" jdbcType="SMALLINT" />
+    <result column="FREE_RETURN" property="freeReturn" jdbcType="SMALLINT" />
+    <result column="CASH_PRICE" property="cashPrice" jdbcType="DECIMAL" />
+    <result column="BUYOUT_PRICE" property="buyoutPrice" jdbcType="DECIMAL" />
+    <result column="REFER_PRICE" property="referPrice" jdbcType="DECIMAL" />
+    <result column="POST_PRICE" property="postPrice" jdbcType="DECIMAL" />
+    <result column="END_IS" property="endIs" jdbcType="SMALLINT" />
+    <result column="COMS_TYPE" property="comsType" jdbcType="SMALLINT" />
+    <result column="COMS_GOODS" property="comsGoods" jdbcType="DECIMAL" />
+    <result column="COMS_GOODS_PT" property="comsGoodsPt" jdbcType="DECIMAL" />
+    <result column="COMS_GOODS_TY" property="comsGoodsTy" jdbcType="DECIMAL" />
+    <result column="COMS_GOODS_XF" property="comsGoodsXf" jdbcType="DECIMAL" />
+    <result column="JIFEN_GOODS" property="jifenGoods" jdbcType="DECIMAL" />
+    <result column="DISCOUNT" property="discount" jdbcType="DECIMAL" />
+    <result column="DISCOUNT_PRICE" property="discountPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="B_Goods" extends="BaseResultMap" >
+    <result column="CONTENT" property="content" typeHandler="com.tyh.unitl.MyBlobTypeHandler" />
+    <result column="SERVICE" property="service" typeHandler="com.tyh.unitl.MyBlobTypeHandler" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CATALOG_ID,C_ID,USER_ID,BATCH_NUM,BAR_CODE,GARDEN_ID, NAME,MERGE_NUM, PRICE,XG_BEGIN_TIME,XG_END_TIME, PRICE_BEFORE, STOCK, SUMMARIZE, HEAD_IMG_URL, PUBLISH_TIME, TOP_IMG_URL,GOODS_TYPE,
+    VIDEO_URL, VIDEO_URL1,PUBLISHER_ID, PUBLISHER_NAME, SELL_TYPE, STATUS, CLICK_COUNT, SELL_COUNT, STAR, DETAIL_SPEC, FLAG,END_IS,SELL_TIME,
+    UPDATE_TIME,END_TIME,START_PRICE,INCREATE_PRICE,FREE_POST,FREE_RETURN,CASH_PRICE,BUYOUT_PRICE,REFER_PRICE,POST_PRICE,
+    COMS_TYPE, COMS_GOODS, COMS_GOODS_PT, COMS_GOODS_TY, COMS_GOODS_XF, JIFEN_GOODS, DISCOUNT,DISCOUNT_PRICE
+  </sql>
+  <sql id="Blob_Column_List" >
+    CONTENT,SERVICE
+  </sql>
+  <insert id="insertSelective" parameterType="com.tyh.model.B_Goods" keyProperty="id" useGeneratedKeys="true">
+    insert into b_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="batchNum != null" >
+        BATCH_NUM,
+      </if>
+      <if test="barCode != null" >
+        BAR_CODE,
+      </if>
+      <if test="postPrice != null" >
+        POST_PRICE,
+      </if>
+      <if test="catalogId != null" >
+        CATALOG_ID,
+      </if>
+      <if test="gardenId != null" >
+        GARDEN_ID,
+      </if>
+      <if test="shopId != null" >
+        USER_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="priceBefore != null" >
+        PRICE_BEFORE,
+      </if>
+      <if test="stock != null" >
+        STOCK,
+      </if>
+      <if test="summarize != null" >
+        SUMMARIZE,
+      </if>
+      <if test="headImgUrl != null" >
+        HEAD_IMG_URL,
+      </if>
+      <if test="topImgUrl != null" >
+        TOP_IMG_URL,
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME,
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID,
+      </if>
+      <if test="publisherName != null" >
+        PUBLISHER_NAME,
+      </if>
+      <if test="sellType != null" >
+        SELL_TYPE,
+      </if>
+      <if test="clickCount != null" >
+        CLICK_COUNT,
+      </if>
+      <if test="sellCount != null" >
+        SELL_COUNT,
+      </if>
+      <if test="star != null" >
+        STAR,
+      </if>
+      <if test="detailSpec != null" >
+        DETAIL_SPEC,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="flag != null" >
+        FLAG,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="startPrice != null" >
+        START_PRICE,
+      </if>
+      <if test="increatePrice != null" >
+        INCREATE_PRICE,
+      </if>
+      <if test="freePost != null" >
+        FREE_POST,
+      </if>
+      <if test="freeReturn != null" >
+        FREE_RETURN,
+      </if>
+      <if test="cashPrice != null" >
+        CASH_PRICE,
+      </if>
+      <if test="buyoutPrice != null" >
+        BUYOUT_PRICE,
+      </if>
+      <if test="referPrice != null" >
+        REFER_PRICE,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="service != null" >
+        SERVICE,
+      </if>
+      <if test="endIs != null" >
+        END_IS,
+      </if>
+      <if test="goodsType != null" >
+        GOODS_TYPE,
+      </if>
+      <if test="sellTime != null" >
+        SELL_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="batchNum != null" >
+        #{batchNum,jdbcType=VARCHAR},
+      </if>
+      <if test="barCode != null" >
+        #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="postPrice != null" >
+        #{postPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="catalogId != null" >
+        #{catalogId,jdbcType=VARCHAR},
+      </if>
+      <if test="gardenId != null" >
+        #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+      	#{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="priceBefore != null" >
+        #{priceBefore,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="summarize != null" >
+        #{summarize,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="topImgUrl != null" >
+        #{topImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="publisherName != null" >
+        #{publisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="sellType != null" >
+        #{sellType,jdbcType=SMALLINT},
+      </if>
+      <if test="clickCount != null" >
+        #{clickCount,jdbcType=INTEGER},
+      </if>
+      <if test="sellCount != null" >
+        #{sellCount,jdbcType=INTEGER},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=REAL},
+      </if>
+      <if test="detailSpec != null" >
+        #{detailSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startPrice != null" >
+        #{startPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="increatePrice != null" >
+        #{increatePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="freePost != null" >
+        #{freePost,jdbcType=SMALLINT},
+      </if>
+      <if test="freeReturn != null" >
+        #{freeReturn,jdbcType=SMALLINT},
+      </if>
+      <if test="cashPrice != null" >
+        #{cashPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyoutPrice != null" >
+        #{buyoutPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="referPrice != null" >
+        #{referPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=BLOB},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=BLOB},
+      </if>
+      <if test="endIs != null" >
+        #{endIs,jdbcType=SMALLINT},
+      </if>
+      <if test="goodsType != null" >
+        #{goodsType,jdbcType=SMALLINT},
+      </if>
+      <if test="sellTime != null" >
+      	#{sellTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 商品详情 -->
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from b_goods
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByBarCode" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods
+    where BAR_CODE = #{barCode,jdbcType=INTEGER} and PUBLISHER_ID=#{publisherId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询各类首页商品 -->
+  <select id="selectByFlag" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods
+    where  STATUS = #{status,jdbcType=SMALLINT} and goods_type=#{goodsType,jdbcType=SMALLINT}
+    <if test="catalog_id!=null">
+    	and catalog_id LIKE concat(concat('%',#{catalog_id,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="flag!=null">
+    	and FLAG LIKE concat(concat('%',#{flag,jdbcType=VARCHAR}),'%')
+    	<if test="flag=='6'">
+    		and XG_END_TIME>=now() and now()>=XG_BEGIN_TIME
+    	</if>
+    </if>
+    order by PUBLISH_TIME DESC limit #{limit}
+  </select>
+  <!-- 分类查询商品（分页） -->
+  <select id="selectByCataLog_IdListPage" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from b_goods
+    where STATUS = #{status,jdbcType=SMALLINT} and GOODS_TYPE=#{goodsType,jdbcType=SMALLINT}
+    <if test="gardenId!=null">
+    	and GARDEN_ID = #{gardenId}
+    </if>
+    <if test="catalog_id!=null">
+    	and CATALOG_ID LIKE concat(concat('%',#{catalog_id,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="sign!=null">
+    	and Flag LIKE concat(concat('%',#{sign,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="flag=='sell'">
+    	order by SELL_COUNT DESC
+    </if>
+    <if test="flag=='price_up'">
+    	order by ABS(PRICE) DESC
+    </if>
+    <if test="flag=='price_down'">
+    	order by ABS(PRICE)
+    </if>
+    <if test="flag=='click'">
+    	order by CLICK_COUNT DESC
+    </if>
+    <if test="flag=='no'">
+    	order by CLICK_COUNT DESC
+    </if>
+    <if test="flag=='time'">
+    	order by PUBLISH_TIME DESC
+    </if>	
+    <if test="flag=='all'">
+    	and END_TIME>=now()
+    	order by CLICK_COUNT DESC
+    </if>
+    <if test="flag=='laster'">
+    	and 2>=TIMESTAMPDIFF(HOUR,PUBLISH_TIME,NOW())
+    	and END_TIME>=now()
+    	order by CLICK_COUNT DESC
+    </if>
+    <if test="flag=='ending'">
+    	and 2>=TIMESTAMPDIFF(HOUR,NOW(),END_TIME) 
+    	and END_TIME>=now()
+    	order by CLICK_COUNT DESC
+    </if>
+     
+  </select>
+  <!-- 搜索（分页） -->
+  <select id="getGoodsByKeywordListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods
+    where  STATUS = #{status,jdbcType=SMALLINT}  
+    <if test="goodsType!=null">
+    		and GOODS_TYPE=#{goodsType,jdbcType=SMALLINT}
+    </if>
+    <if test="shopId!=null">
+     	and (USER_ID = #{shopId,jdbcType=INTEGER}
+     	<if test="shopGoods!=null and shopGoods.size()>0">
+     		or id in
+	     	<foreach collection="shopGoods" item="shopGoods" open="(" close=")" separator=",">
+	     		#{shopGoods.goodsId,jdbcType=INTEGER}
+	     	</foreach>
+     	</if>
+     	)
+    </if>
+    <if test="catalogIdList!=null and catalogIdList.size()>0">
+     		and 
+	     	<foreach collection="catalogIdList" item="catalog" open="(" close=")" separator="or">
+	     		CATALOG_ID LIKE concat(concat('%',#{catalog,jdbcType=INTEGER}),'%')
+	     	</foreach>
+    </if>
+    <if test="flag!=null and flag!=''">
+    	and FLAG LIKE concat(concat('%',#{flag,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="keyword!=null and keyword!=''">
+    	and name like  concat(concat('%',#{keyword,jdbcType=INTEGER}),'%')
+    </if>
+    <if test="orderBy=='sell'">
+    	order by SELL_COUNT DESC
+    </if>
+    <if test="orderBy=='price_up'">
+    	order by ABS(PRICE) DESC
+    </if>
+    <if test="orderBy=='price_down'">
+    	order by ABS(PRICE)
+    </if>
+    <if test="orderBy=='click'">
+    	order by CLICK_COUNT DESC
+    </if>
+    <if test="orderBy=='no'">
+    	order by PUBLISH_TIME DESC
+    </if>
+  </select>
+  <update id="appReleaseGoods" parameterType="B_Goods" >
+    update b_goods
+    set SERVICE=#{service,jdbcType=BLOB},CONTENT=#{content,jdbcType=BLOB},HEAD_IMG_URL=#{headImgUrl,jdbcType=VARCHAR},STATUS=#{status,jdbcType=SMALLINT},
+      PRICE = #{price,jdbcType=VARCHAR},MERGE_NUM=#{mergeNum,jdbcType=INTEGER},DISCOUNT=#{discount,jdbcType=DECIMAL},GOODS_TYPE=#{goodsType,jdbcType=SMALLINT}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="B_Goods" >
+    update b_goods
+    set CLICK_COUNT = #{clickCount,jdbcType=INTEGER},
+      SELL_COUNT = #{sellCount,jdbcType=INTEGER},
+      END_IS = #{endIs},
+      STATUS = #{status}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="delGoodsByPrimaryKey" parameterType="java.lang.Integer" >
+    update b_goods
+    set STATUS = 6
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 统计我的各状态商品 -->
+  <select id="myGoodsCountByStatus" resultType="java.lang.Integer">
+    select 
+    count(1)
+    from b_goods
+    where PUBLISHER_ID=#{publisherId,jdbcType=INTEGER}
+    <if test="endIs!=null">
+    	and END_IS = #{endIs,jdbcType=SMALLINT}
+    </if>
+    <if test="status!=null">
+    	and STATUS = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="goodsType!=null">
+    	and GOODS_TYPE = #{goodsType,jdbcType=SMALLINT}
+    </if>
+  </select>
+  <!-- 查询我的各状态商品 -->
+  <select id="myGoodsByStatusListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods
+    where 1=1 
+    <if test="flag=='sys'">
+    	and id in (select goods_id from b_shop_goods where shop_id =#{shopId,jdbcType=INTEGER})
+    </if>
+    <if test="flag=='self'">
+    	and USER_ID=#{shopId,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+    	and STATUS = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="goodsType!=null">
+    	and GOODS_TYPE = #{goodsType,jdbcType=SMALLINT}
+    </if>
+  </select>
+  <!-- 查询早餐首页推荐商品 -->
+  <select id="selectBreakerIndex" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods
+    where FLAG = #{flag,jdbcType=VARCHAR} and STATUS = #{status,jdbcType=SMALLINT}  and GOODS_TYPE = #{goodsType} and GARDEN_ID=#{gardenId}
+    order by CLICK_COUNT DESC limit #{limit}
+  </select>
+  <!-- APP商铺管理接口 -->
+  <select id="getSellerGoodsListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods
+    where  STATUS != 6  and GOODS_TYPE=#{goodsType,jdbcType=SMALLINT}
+    <if test="publisherId!=null">
+    	and PUBLISHER_ID=#{publisherId,jdbcType=INTEGER}
+    </if>
+    <if test="publisherId==null">
+    	and PUBLISHER_ID!=#{publisherId,jdbcType=INTEGER}
+    </if>
+    <if test="keyword!=null and keyword!=''">
+    	and name like  concat(concat('%',#{keyword,jdbcType=INTEGER}),'%')
+    </if>
+    <if test="status!=null">
+    	and STATUS = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="flag=='ending'">
+    	and 2>=TIMESTAMPDIFF(NOW(),END_TIME) 
+    	and END_TIME>=now()
+    </if>
+    <if test="flag=='end'">
+    	and now()>END_TIME
+    </if>
+    <if test="orderBy=='no'">
+    	order by PUBLISH_TIME DESC
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="B_Goods" >
+    update b_goods
+    <set >
+      <if test="batchNum != null" >
+       BATCH_NUM = #{batchNum,jdbcType=VARCHAR},
+      </if>
+      <if test="barCode != null" >
+        BAR_CODE = #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="catalogId != null" >
+        CATALOG_ID = #{catalogId,jdbcType=VARCHAR},
+      </if>
+      <if test="cId != null" >
+        C_ID = #{cId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        USER_ID = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="videoUrl != null" >
+        VIDEO_URL = #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl1 != null" >
+        VIDEO_URL1 = #{videoUrl1,jdbcType=VARCHAR},
+      </if>
+      <if test="gardenId != null" >
+        GARDEN_ID = #{gardenId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="priceBefore != null" >
+        PRICE_BEFORE = #{priceBefore,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null" >
+        STOCK = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="summarize != null" >
+        SUMMARIZE = #{summarize,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        HEAD_IMG_URL = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="topImgUrl != null" >
+        TOP_IMG_URL = #{topImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID = #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="publisherName != null" >
+        PUBLISHER_NAME = #{publisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="sellType != null" >
+        SELL_TYPE = #{sellType,jdbcType=SMALLINT},
+      </if>
+      <if test="clickCount != null" >
+        CLICK_COUNT = #{clickCount,jdbcType=INTEGER},
+      </if>
+      <if test="sellCount != null" >
+        SELL_COUNT = #{sellCount,jdbcType=INTEGER},
+      </if>
+      <if test="sellTime != null" >
+        SELL_TIME = #{sellTime,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        STAR = #{star,jdbcType=REAL},
+      </if>
+      <if test="detailSpec != null" >
+        DETAIL_SPEC = #{detailSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startPrice != null" >
+        START_PRICE = #{startPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="increatePrice != null" >
+        INCREATE_PRICE = #{increatePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="freePost != null" >
+        FREE_POST = #{freePost,jdbcType=SMALLINT},
+      </if>
+      <if test="freeReturn != null" >
+        FREE_RETURN = #{freeReturn,jdbcType=SMALLINT},
+      </if>
+      <if test="cashPrice != null" >
+        CASH_PRICE = #{cashPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyoutPrice != null" >
+        BUYOUT_PRICE = #{buyoutPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="referPrice != null" >
+        REFER_PRICE = #{referPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endIs != null" >
+        END_IS = #{endIs,jdbcType=SMALLINT},
+      </if>
+      <if test="goodsType != null" >
+        GOODS_TYPE = #{goodsType,jdbcType=SMALLINT},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="service != null" >
+        SERVICE = #{service,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.SysVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.SysVersion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="VERSION_NUM" property="versionNum" jdbcType="DOUBLE" />
+    <result column="VERSION_URL" property="versionUrl" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="DEVICE_TYPE" property="deviceType" jdbcType="INTEGER" />
+    <result column="MUST_UPDATE" property="mustUpdate" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, VERSION_NUM, VERSION_URL, CONTENT, DEVICE_TYPE, MUST_UPDATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from Sys_Version
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getSysVersionList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select 
+    <include refid="Base_Column_List" />
+    from Sys_Version
+    where DEVICE_TYPE = #{deviceType,jdbcType=INTEGER}
+  </select>
+  
+</mapper>

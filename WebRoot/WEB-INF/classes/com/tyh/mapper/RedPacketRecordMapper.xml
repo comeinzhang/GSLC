@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.RedPacketRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.RedPacketRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="giveMoney" property="givemoney" jdbcType="DECIMAL" />
+    <result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+    <result column="red_num" property="redNum" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="detail_id" property="detailId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="SMALLINT" />
+    <result column="looked" property="looked" jdbcType="SMALLINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, giveMoney,order_num, red_num, user_id,detail_id, type, looked,create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_redpacket_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserIdListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_redpacket_record a
+    where a.user_id = #{userId,jdbcType=INTEGER} 
+    <if test="type=='' or type==null">
+    	and (a.type = 3 or a.type=4 or a.type = 4 or a.type=5 or a.type =6 or a.type=7 or a.type=8 or a.type=9 or a.type=10 or a.type=11 or a.type=12 or a.type=13 or a.type=14 or a.type=15)
+    </if>
+    <if test="type=='xfq'">
+    	and (a.type = 1 or a.type=2 or a.type = 4 or a.type=5 or a.type =6 or a.type=7 or a.type=16 or a.type=22 or a.type=23 or a.type=24 or a.type=25 or a.type=28 or a.type=30)
+    </if>
+    <if test="type=='hk'">
+    	and (a.type = 3 or a.type=10 or a.type =19)
+    </if>
+    <if test="type=='ye'">
+    	and (a.type = 15 or a.type=17 or a.type =18 or a.type =20 or a.type =21 or a.type=29 or a.type=31 or a.type=34 or a.type=35)
+    </if>
+    <if test="type=='pbc'">
+    	and (a.type = 8 or a.type=9 or a.type =11 or a.type =12 or a.type =13 or a.type =14 or a.type =26 or a.type =27 or a.type =30 or a.type =32 or a.type =37 or a.type =38)
+    </if>
+    <if test="beginTime!=null and beginTime!=''">
+    	and to_days(create_time)>=to_days(#{beginTime,jdbcType=VARCHAR})
+    </if>
+    <if test="endTime!=null and endTime!=''">
+    	and to_days(#{endTime,jdbcType=VARCHAR})>=to_days(create_time)
+    </if>
+    order by a.create_time DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_redpacket_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.RedPacketRecord" >
+    insert into b_redpacket_record (id, giveMoney, red_num, 
+      user_id, type, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{givemoney,jdbcType=DECIMAL}, #{redNum,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{type,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.RedPacketRecord" >
+    insert into b_redpacket_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="givemoney != null" >
+        giveMoney,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="redNum != null" >
+        red_num,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="detailId != null" >
+        detail_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="looked != null" >
+        looked,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="givemoney != null" >
+        #{givemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="redNum != null" >
+        #{redNum,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="detailId != null" >
+        #{detailId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="looked != null" >
+        #{looked,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.RedPacketRecord" >
+    update b_redpacket_record
+    <set >
+      <if test="givemoney != null" >
+        giveMoney = #{givemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="redNum != null" >
+        red_num = #{redNum,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.RedPacketRecord" >
+    update b_redpacket_record
+    set giveMoney = #{givemoney,jdbcType=DECIMAL},
+      red_num = #{redNum,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      type = #{type,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByUserId" resultType="java.util.Map">
+    select 
+    IFNULL(sum(giveMoney),0)totalMoney 
+    from b_redpacket_record a
+    where a.user_id = #{userId,jdbcType=INTEGER} 
+    	and (a.type = 2 or a.type = 3 or a.type = 12 or a.type=13 or a.type =14 or a.type =15 or a.type =16 or a.type =17)
+  </select>
+  <select id="getCountLookedByType" resultType="int">
+  	select IFNULL(count(1),0) from b_redpacket_record where user_id = #{userId,jdbcType=INTEGER} and looked!=1
+  	<if test="type!=null">
+  		<if test="type==12">
+  			and (type = 10 or type=12)
+  		</if>
+  		<if test="type!=12">
+  			and type = #{type,jdbcType=SMALLINT}
+  		</if>
+  	</if>
+  </select>
+  <select id="getCountRedPacketRecord" resultType="int">
+  	select IFNULL(count(1),0) from b_redpacket_record where 1=1
+  	<if test="detailId!=null">
+        and detail_id = #{detailId,jdbcType=INTEGER}
+  	</if>
+  	<if test="userId!=null">
+  		and user_id = #{userId,jdbcType=INTEGER}
+  	</if>
+  	<if test="type!=null">
+  		and type = #{type,jdbcType=SMALLINT}
+  	</if>
+  	<if test="flag!=null and flag!='' and flag='now'">
+  		and to_days(create_time) = to_days(now())
+  	</if>
+  </select>
+  <update id="updateLooked">
+  	update b_redpacket_record set looked=1 where user_id = #{userId,jdbcType=INTEGER} 
+  	<if test="type!=null">
+  		<if test="type==12">
+  			and (type = 10 or type=12)
+  		</if>
+  		<if test="type!=12">
+  			and type = #{type,jdbcType=SMALLINT}
+  		</if>
+  	</if>
+  </update>
+</mapper>

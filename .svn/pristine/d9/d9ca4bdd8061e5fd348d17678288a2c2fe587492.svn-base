@@ -1,0 +1,33 @@
+package com.tyh.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.RechargeMapper;
+import com.tyh.model.Recharge;
+
+
+
+@Service
+public class RechargeService {
+	
+	@Resource
+	private RechargeMapper rechargeMapper;
+	public int insertSelective(Recharge record){
+		return rechargeMapper.insertSelective(record);
+	}
+
+	public Recharge selectByPrimaryKey(Integer id){
+		return rechargeMapper.selectByPrimaryKey(id);
+	}
+
+	public int updateByPrimaryKeySelective(Recharge record){
+		return rechargeMapper.updateByPrimaryKeySelective(record);
+	}
+	
+	public Recharge selectByOrderNum(String orderNum){
+		return rechargeMapper.selectByOrderNum(orderNum);
+	}
+}
+

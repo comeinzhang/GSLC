@@ -1,0 +1,25 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Bank;
+
+public interface B_BankMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_Bank record);
+
+    int insertSelective(B_Bank record);
+
+    B_Bank selectByPrimaryKey(Integer id);
+    
+    List<B_Bank> selectByUserId(@Param("userId")Integer userId);
+    
+    int updateByPrimaryKeySelective(B_Bank record);
+
+    int updateByPrimaryKey(B_Bank record);
+    
+    int delBank(Integer id);
+}

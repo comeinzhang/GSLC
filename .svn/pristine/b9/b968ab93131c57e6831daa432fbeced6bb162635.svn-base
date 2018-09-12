@@ -1,0 +1,16 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Catalog;
+
+public interface B_CatalogMapper {
+
+    B_Catalog selectByPrimaryKey(@Param("id")Integer id);
+    List<B_Catalog> selectByParentId(@Param("parent_id")Integer parent_id,@Param("flag")Integer flag);
+    List<B_Catalog> selectAllParent(@Param("flag")Integer flag);
+    List<B_Catalog> selectAllSon(@Param("flag")Integer flag);
+    List<B_Catalog> selectStoreCatagory(@Param("user_id")Integer user_id);
+}

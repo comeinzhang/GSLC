@@ -1,0 +1,25 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_Goods_ExtMapper;
+import com.tyh.model.B_Goods_Ext;
+
+
+
+@Service
+public class B_Goods_ExtService {
+	
+	@Resource
+	private B_Goods_ExtMapper mapper;
+	public List<B_Goods_Ext> selectByGoods_id(Integer goods_id){
+		return mapper.selectByGoods_id(goods_id);
+	}
+	public int updateByPrimaryKeySelective(B_Goods_Ext record){
+		return mapper.updateByPrimaryKeySelective(record);
+	}
+}

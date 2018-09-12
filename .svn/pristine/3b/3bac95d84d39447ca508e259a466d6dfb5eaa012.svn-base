@@ -1,0 +1,15 @@
+package com.tyh.model;
+
+import java.util.List;
+
+public class SpecList {
+    private List<B_Spec> specList;
+
+	public List<B_Spec> getSpecList() {
+		return specList;
+	}
+
+	public void setSpecList(List<B_Spec> specList) {
+		this.specList = specList;
+	}
+}

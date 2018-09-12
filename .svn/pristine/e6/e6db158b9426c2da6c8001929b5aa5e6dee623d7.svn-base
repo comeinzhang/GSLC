@@ -1,0 +1,160 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class ComsDetail {
+    private Integer id;
+
+    private Integer userId;
+
+    private Integer orderId;
+
+    private String orderNum;
+
+    private Integer orderDetailId;
+
+    private Integer goodsId;
+
+    private String goodsName;
+
+    private Double goodsPrice;
+
+    private Double coms;
+
+    private Short comsType;
+
+    private Short status;
+
+    private Short sign;
+
+    private String remark;
+
+    private Date createTime;
+
+    
+    //view
+    private String comsTypeName;
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Integer getOrderDetailId() {
+        return orderDetailId;
+    }
+
+    public void setOrderDetailId(Integer orderDetailId) {
+        this.orderDetailId = orderDetailId;
+    }
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+    public Double getGoodsPrice() {
+		return goodsPrice;
+	}
+
+	public void setGoodsPrice(Double goodsPrice) {
+		this.goodsPrice = goodsPrice;
+	}
+
+	public Double getComs() {
+		return coms;
+	}
+
+	public void setComs(Double coms) {
+		this.coms = coms;
+	}
+
+	public Short getComsType() {
+        return comsType;
+    }
+
+    public void setComsType(Short comsType) {
+        this.comsType = comsType;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Short getSign() {
+        return sign;
+    }
+
+    public void setSign(Short sign) {
+        this.sign = sign;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+	public String getComsTypeName() {
+		return comsTypeName;
+	}
+
+	public void setComsTypeName(String comsTypeName) {
+		this.comsTypeName = comsTypeName;
+	}
+    
+    
+    
+}

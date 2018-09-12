@@ -1,0 +1,26 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.ClubUser;
+import com.tyh.unitl.PageInfo;
+
+public interface ClubUserMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ClubUser record);
+
+    int insertSelective(ClubUser record);
+
+    ClubUser selectByPrimaryKey(Integer id);
+    
+    List<ClubUser> selectByUserIdStatus(@Param("userId")Integer userId,@Param("status")Short status,@Param("clubId")Integer clubId);
+    
+    List<ClubUser> selectClubUserListPage(@Param("page")PageInfo page,@Param("status")Short status,@Param("clubId")Integer clubId,@Param("orderBy")String orderBy);
+    
+    int updateByPrimaryKeySelective(ClubUser record);
+
+    int updateByPrimaryKey(ClubUser record);
+}

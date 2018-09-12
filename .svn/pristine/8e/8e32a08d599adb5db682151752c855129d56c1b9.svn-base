@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.CustomerTask;
+
+public interface CustomerTaskMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CustomerTask record);
+
+    int insertSelective(CustomerTask record);
+
+    CustomerTask selectByPrimaryKey(Integer id);
+    
+    CustomerTask selectByUserIdTaskId(@Param("customerId")Integer customerId,@Param("taskId")Integer taskId);
+
+    int updateByPrimaryKeySelective(CustomerTask record);
+
+    int updateByPrimaryKey(CustomerTask record);
+}

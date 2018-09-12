@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Order" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ORDER_NUM" property="orderNum" jdbcType="VARCHAR" />
+    <result column="MERGE_NUM" property="mergeNum" jdbcType="VARCHAR" />
+    <result column="WX_ORDERNUM" property="wxOrderNum" jdbcType="VARCHAR" />
+    <result column="BUY_USER_ID" property="buyUserId" jdbcType="INTEGER" />
+    <result column="POSTER_ID" property="posterId" jdbcType="INTEGER" />
+    <result column="POST_TIME" property="postTime" jdbcType="VARCHAR" />
+    <result column="RECEIVE_TIME" property="receiveTime" jdbcType="VARCHAR" />
+    <result column="SELLER_USER_ID" property="sellUserId" jdbcType="INTEGER" />
+    <result column="ADDR_ID" property="addrId" jdbcType="INTEGER" />
+    <result column="SHOP_ID" property="shopId" jdbcType="INTEGER" />
+    <result column="C_ID" property="cId" jdbcType="INTEGER" />
+    <result column="TOTAL_PRICE" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRE_PAYMENT" property="prePayment" jdbcType="INTEGER" />
+    <result column="TOTAL_STOCK" property="totalStock" jdbcType="INTEGER" />
+    <result column="COMMENTS" property="comments" jdbcType="VARCHAR" />
+    <result column="CODE_URL" property="codeUrl" jdbcType="VARCHAR" />
+    <result column="USER_PHONE" property="userPhone" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="SIGN" property="sign" jdbcType="SMALLINT" />
+    <result column="CERT_WAY" property="certWay" jdbcType="SMALLINT" />
+    <result column="PAY_WAY" property="payWay" jdbcType="SMALLINT" />
+    <result column="ASSESSED" property="assessed" jdbcType="SMALLINT" />
+    <result column="STATUS_CHANGE_TIME" property="change_time" jdbcType="DATE" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap type="com.tyh.model.B_Order" id="BasePTResultMapList" extends="BaseResultMap">
+  	<collection property="detailList" ofType="com.tyh.model.B_Order_Detail">  
+            <id column="ID_D" property="id" jdbcType="INTEGER" />
+		    <result column="ORDER_NUM_D" property="orderNum" jdbcType="VARCHAR" />
+		    <result column="PRICE_D" property="price" jdbcType="DECIMAL" />
+		    <result column="STOCK_D" property="stock" jdbcType="INTEGER" />
+		    <result column="SPEC_ID" property="specId" jdbcType="INTEGER" />
+		    <result column="GOODS_IDG" property="goodsId" jdbcType="INTEGER" />
+		    <result column="STATUS_D" property="status" jdbcType="INTEGER" />
+		    <result column="ASSESSED" property="assessed" jdbcType="SMALLINT" />
+		    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		    <result column="SIGN_D" property="sign" jdbcType="SMALLINT" />
+		    <association property="goods" javaType="com.tyh.model.B_Goods">
+			    <id column="ID_G" property="id" jdbcType="INTEGER" />
+			    <result column="CATALOG_ID" property="catalogId" jdbcType="INTEGER" />
+			    <result column="NAME" property="name" jdbcType="VARCHAR" />
+			    <result column="PRICE_G" property="price" jdbcType="DECIMAL" />
+			    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+			    <result column="Flag" property="flag" jdbcType="VARCHAR" />
+			    <result column="PUBLISHER_ID" property="publisherId" jdbcType="INTEGER" />
+		    	<result column="PUBLISHER_NAME" property="publisherName" jdbcType="VARCHAR" />
+		    	<result column="CASH_PRICE" property="cashPrice" jdbcType="DECIMAL" />
+		    	<result column="STATUS" property="status" jdbcType="SMALLINT" />
+			    <result column="PRICE_BEFORE" property="priceBefore" jdbcType="DECIMAL" />
+			    <result column="POST_PRICE" property="postPrice" jdbcType="DECIMAL" />
+			    <result column="COMS_TYPE" property="comsType" jdbcType="SMALLINT" />
+		    </association>
+    </collection> 
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_NUM,WX_ORDERNUM, BUY_USER_ID,CODE_URL,POSTER_ID,C_ID,MERGE_NUM,PAY_WAY,CERT_WAY,USER_PHONE,PRE_PAYMENT,SELLER_USER_ID,ADDR_ID,ASSESSED, POST_TIME,RECEIVE_TIME,GOODS_ID,SHOP_ID,TOTAL_PRICE,PRICE,TOTAL_STOCK, COMMENTS, STATUS,SIGN, CREATE_TIME, STATUS_CHANGE_TIME,
+    UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_order
+    where ID = #{id,jdbcType=INTEGER} and STATUS!=7
+  </select>
+  <select id="selectByorderNum" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_order
+    where ORDER_NUM = #{orderNum,jdbcType=INTEGER} and STATUS!=7
+  </select>
+  <select id="selectByMergeNum" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_order
+    where MERGE_NUM = #{mergeNum,jdbcType=VARCHAR} and STATUS!=7
+    	<if test="status!=null">
+    		and STATUS=#{status,jdbcType=SMALLINT}
+    	</if>
+  </select>
+  <select id="selectUserOrderCount" resultType="java.util.Map">
+    select o.STATUS, COUNT(o.STATUS) as STATUS_COUNT from b_order o 
+    where o.BUY_USER_ID = #{buyUserId,jdbcType=INTEGER}
+	GROUP BY o.STATUS
+  </select>
+  
+  <select id="selectShopOrderCount" resultType="int">
+    select IFNULL(count(1),0) newOrder from b_order 
+    where SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER} and (STATUS=1 or STATUS=2 or STATUS=5)
+  </select>
+  
+  <select id="selectByStatusOrUser" resultMap="BasePTResultMapList" >
+    select 
+    a.* ,b.id id_d,b.price price_d,b.stock stock_d,b.order_num order_num_d,b.assessed,b.sign sign_d,b.status status_d,c.id id_g,c.CASH_PRICE,c.catalog_id,c.name,c.price price_g,c.price_before,c.head_img_url,c.publisher_id,c.publisher_name,c.flag,c.POST_PRICE,c.status,c.COMS_TYPE
+    from b_order a,b_order_detail b,b_goods c
+    where a.order_num=b.order_num and b.goods_id=c.id  and a.STATUS!=7
+    <if test="buyUserId != null" >
+       and a.BUY_USER_ID = #{buyUserId,jdbcType=INTEGER}
+    </if>
+    <if test="sellerUserId != null" >
+       and a.SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER} and b.SIGN!=4 and b.SIGN!=5
+    </if>
+    <if test="status != null" >
+    	<if test="status==0">and (a.STATUS = 0 or a.STATUS = 8) </if>
+    	<if test="status==5">and (a.STATUS = 4 or a.STATUS = 5) </if>
+    	<if test="status!=0 and status!=5">and a.STATUS = #{status,jdbcType=SMALLINT}</if>
+    </if>
+    <if test="flag!=null">
+    	and c.flag=#{flag,jdbcType=VARCHAR}
+    </if>
+    <if test="goodsId!=null">
+    	and b.goods_id=#{goodsId,jdbcType=INTEGER}
+    </if>
+    order by a.CREATE_TIME DESC
+  </select>
+  <select id="getOrderByOrderNum" resultMap="BasePTResultMapList" >
+    select 
+    a.* ,b.id id_d,b.price price_d,b.stock stock_d,b.order_num order_num_d,b.assessed,b.sign sign_d,b.status status_d, c.id id_g,c.CASH_PRICE,c.catalog_id,c.name,c.price price_g,c.price_before,c.head_img_url,c.publisher_id,c.publisher_name,c.POST_PRICE,c.flag,c.status,c.COMS_TYPE
+    from b_order a,b_order_detail b,b_goods c
+    where a.ORDER_NUM = #{orderNum,jdbcType=INTEGER} and a.order_num=b.order_num and b.goods_id=c.id  and a.STATUS!=7
+  </select>
+  
+  <select id="getGardenBreakerOrderList" resultMap="BasePTResultMapList" >
+    select 
+    a.* ,b.id id_d,b.price price_d,b.stock stock_d,b.order_num order_num_d,b.assessed,c.id id_g,c.catalog_id,c.name,c.price price_g,c.price_before,c.head_img_url,c.publisher_id,c.publisher_name,c.flag,c.status
+    from b_order a,b_order_detail b,b_goods c
+    where a.poster_id is not null and a.post_time is not null and a.order_num=b.order_num and b.goods_id=c.id and c.garden_id=#{gardenId} 
+    <if test="limit!=null">
+    	limit #{limit}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_order
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByOrderNum">
+    delete from b_order
+    where order_num = #{orderNum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.B_Order" keyProperty="id" useGeneratedKeys="true">
+    insert into b_order (ORDER_NUM,MERGE_NUM, WX_ORDERNUM,POST_TIME,SHOP_ID,BUY_USER_ID,GOODS_ID,POSTER_ID,SELLER_USER_ID, TOTAL_PRICE,PRICE,TOTAL_STOCK, COMMENTS, ASSESSED,
+      STATUS,SIGN,PAY_WAY,C_ID, PRE_PAYMENT,CREATE_TIME,STATUS_CHANGE_TIME,ADDR_ID,USER_PHONE,CODE_URL,CERT_WAY
+      )
+    values (#{orderNum,jdbcType=VARCHAR},#{mergeNum,jdbcType=VARCHAR},#{wxOrderNum,jdbcType=VARCHAR},#{postTime,jdbcType=VARCHAR},#{shopId,jdbcType=INTEGER}, #{buyUserId,jdbcType=INTEGER},#{goods.id,jdbcType=INTEGER},#{posterId,jdbcType=INTEGER}, #{sellUserId,jdbcType=INTEGER},
+      #{totalPrice,jdbcType=DECIMAL},#{price,jdbcType=DECIMAL},#{totalStock,jdbcType=INTEGER}, #{comments,jdbcType=VARCHAR}, #{assessed,jdbcType=SMALLINT},
+      #{status,jdbcType=SMALLINT},#{sign,jdbcType=SMALLINT},#{payWay,jdbcType=SMALLINT}, #{cId,jdbcType=INTEGER}, #{prePayment,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP}, #{change_time,jdbcType=TIMESTAMP}, #{addrId,jdbcType=INTEGER},#{userPhone,jdbcType=VARCHAR},#{codeUrl,jdbcType=VARCHAR},#{certWay,jdbcType=SMALLINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Order" >
+    update b_order
+    <set >
+      <if test="orderNum != null" >
+        ORDER_NUM = #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mergeNum != null" >
+        MERGE_NUM = #{mergeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOrderNum != null" >
+        WX_ORDERNUM = #{wxOrderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="certWay != null" >
+        CERT_WAY = #{certWay,jdbcType=SMALLINT},
+      </if>
+      <if test="postTime != null" >
+        POST_TIME = #{postTime,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null" >
+        CODE_URL = #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveTime != null and receiveTime!=''" >
+        RECEIVE_TIME = #{receiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="buyUserId != null" >
+        BUY_USER_ID = #{buyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="cId != null" >
+        C_ID = #{cId,jdbcType=INTEGER},
+      </if>
+      <if test="posterId != null" >
+        POSTER_ID = #{posterId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        SHOP_ID = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="sellUserId != null" >
+        SELLER_USER_ID = #{sellUserId,jdbcType=INTEGER},
+      </if>
+      <if test="addrId != null" >
+        ADDR_ID = #{addrId,jdbcType=INTEGER},
+      </if>
+      <if test="totalPrice != null" >
+        TOTAL_PRICE = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="prePayment != null" >
+        PRE_PAYMENT = #{prePayment,jdbcType=DECIMAL},
+      </if>
+      <if test="totalStock != null" >
+        TOTAL_STOCK = #{totalStock,jdbcType=INTEGER},
+      </if>
+      <if test="comments != null" >
+        COMMENTS = #{comments,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        USER_PHONE = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="payWay != null" >
+        PAY_WAY = #{payWay,jdbcType=SMALLINT},
+      </if>
+      <if test="assessed != null" >
+        ASSESSED = #{assessed,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="change_time != null" >
+        STATUS_CHANGE_TIME = #{change_time,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectShopOrderListPage" resultMap="BasePTResultMapList" >
+    select 
+    a.* ,b.id id_d,b.price price_d,b.stock stock_d,b.order_num order_num_d,b.assessed,c.id id_g,c.catalog_id,c.name,c.price price_g,c.price_before,c.head_img_url,c.publisher_id,c.publisher_name,c.POST_PRICE,c.flag,c.status
+    from b_order a,b_order_detail b,b_goods c
+    where a.order_num=b.order_num and b.goods_id=c.id
+    <if test="sellerUserId != null" >
+       and a.SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+    	<if test="status==0">and (a.STATUS = 0 or a.STATUS = 8) </if>
+    	<if test="status!=0">and a.STATUS = #{status,jdbcType=SMALLINT}</if>
+    </if>
+    order by a.CREATE_TIME DESC
+  </select>
+  
+   <select id="selectBreakerOrderByPosterId" resultMap="BasePTResultMapList" >
+    select 
+    a.* ,b.id id_d,b.price price_d,b.stock stock_d,b.order_num order_num_d,b.assessed,b.status status_d,c.id id_g,c.catalog_id,c.name,c.price price_g,c.price_before,c.head_img_url,c.publisher_id,c.publisher_name,c.POST_PRICE,c.flag,c.status
+    from b_order a,b_order_detail b,b_goods c
+    where a.order_num=b.order_num and b.goods_id=c.id and a.POST_TIME is not null
+    <if test="posterId != null" >
+       and a.POSTER_ID = #{posterId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+        <if test="status==0">and (a.STATUS = 0 or a.STATUS = 8) </if>
+    	<if test="status!=0">and a.STATUS = #{status,jdbcType=SMALLINT}</if>
+    </if>
+    order by a.CREATE_TIME DESC
+  </select>
+  
+<!--   app订单接口 -->
+  <select id="selectByStatusOrUserListPage" resultMap="BasePTResultMapList" >
+    select 
+    a.id,a.order_num,a.MERGE_NUM,a.total_price,a.TOTAL_STOCK,a.shop_id,a.ADDR_ID,a.sign,a.STATUS,a.PAY_WAY,a.CREATE_TIME,a.CODE_URL,a.PRE_PAYMENT,b.id id_d,b.SPEC_ID,b.price price_d,b.stock stock_d,b.goods_id GOODS_IDG,b.order_num order_num_d,b.assessed,b.sign sign_d,b.status status_d,c.id id_g,c.CASH_PRICE,c.catalog_id,c.name,c.price price_g,c.price_before,c.head_img_url,c.publisher_id,c.publisher_name,c.flag,c.POST_PRICE
+    from b_order a,b_order_detail b,b_goods c
+    where a.order_num=b.order_num and b.goods_id=c.id  and a.status!=7
+    <if test="buyUserId != null" >
+       and a.BUY_USER_ID = #{buyUserId,jdbcType=INTEGER}
+    </if>
+    <if test="sellerUserId != null" >
+       and a.SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER}
+    </if>
+    <if test="sign != null" >
+       and a.SIGN = #{sign,jdbcType=SMALLINT}
+    </if>
+    <if test="status != null" >
+    	<if test="status==0">and (a.STATUS = 0 or a.STATUS = 8) </if>
+    	<if test="status!=0">and a.STATUS = #{status,jdbcType=SMALLINT}</if>
+    </if>
+    <if test="payWay!=null">
+    	and a.PAY_WAY=#{payWay,jdbcType=SMALLINT}
+    </if>
+    <if test="goodsId!=null">
+    	and b.goods_id=#{goodsId,jdbcType=INTEGER}
+    </if>
+    <if test="assessed!=null">
+    	and a.ASSESSED=#{assessed,jdbcType=SMALLINT}
+    </if>
+    order by a.CREATE_TIME DESC
+  </select>
+  <update id="deleteByMergeNum">
+  	update b_order set status=7  where MERGE_NUM = #{mergeNum,jdbcType=VARCHAR} and STATUS=#{status,jdbcType=SMALLINT}
+  </update>
+  <select id="selectGslcOrderListPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_order
+    where status!=4
+    <if test="userId != null" >
+       and (BUY_USER_ID = #{userId,jdbcType=INTEGER} or SELLER_USER_ID = #{userId,jdbcType=INTEGER})
+    </if>
+    <if test="buyUserId != null" >
+       and BUY_USER_ID = #{buyUserId,jdbcType=INTEGER}
+    </if>
+    <if test="sellerUserId != null" >
+       and SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER}
+    </if>
+    <if test="sign != null" >
+       and SIGN = #{sign,jdbcType=SMALLINT}
+    </if>
+    <if test="status != null" >
+       and STATUS = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="nowday != null and nowday!=''" >
+       and STATUS_CHANGE_TIME = #{nowday,jdbcType=DATE}
+    </if>
+    <if test="orderBy=='up'" >
+    	order by price
+    </if>
+    <if test="orderBy=='down'" >
+    	order by price DESC
+    </if>
+    <if test="orderBy == null or orderBy==''" >
+    	order by CREATE_TIME DESC
+    </if>
+  </select>
+</mapper>

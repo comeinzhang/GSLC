@@ -1,0 +1,46 @@
+package com.tyh.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class zanCount {
+    private Integer id;
+
+    private Double zanPrice;
+
+    private Date updateTime;
+
+    private Date createTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Double getZanPrice() {
+        return zanPrice;
+    }
+
+    public void setZanPrice(Double zanPrice) {
+        this.zanPrice = zanPrice;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+}

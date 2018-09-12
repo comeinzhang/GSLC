@@ -1,0 +1,32 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_User_Car;
+
+
+public interface B_User_CarMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int deleteByListId(@Param("ListId")String[] ListId);
+    
+    int insertSelective(B_User_Car car);
+
+    B_User_Car selectByPrimaryKey(@Param("id")Integer id);
+
+    int updateByPrimaryKeySelective(B_User_Car record);
+
+    List<B_User_Car> selectByUser_Id(@Param("user_id")Integer user_id);
+    
+    List<B_User_Car> selectByUserIdAndShopId(@Param("userId")Integer userId,@Param("shopId")Integer shopId);
+    
+    List<B_User_Car> selectByListId(@Param("ListId")String[] ListId);
+    
+    B_User_Car selectInCars(B_User_Car car);
+    
+    int selectGoodsCountByUserId(Integer userId);
+    
+    List<Integer> selectShopIdByUserId(Integer userId);
+}

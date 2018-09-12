@@ -1,0 +1,27 @@
+package com.tyh.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Goods;
+import com.tyh.unitl.PageInfo;
+
+
+public interface B_GoodsMapper {
+    B_Goods selectByPrimaryKey(@Param("id") Integer id);
+    B_Goods selectByBarCode(@Param("barCode") String barCode,@Param("publisherId")Integer publisherId);
+    List<B_Goods> selectByFlag(@Param("catalog_id")String catalog_id,@Param("flag")String flag,@Param("limit")Integer limit,@Param("status")Short status,@Param("goodsType")Short goodsType);
+    List<B_Goods> selectBreakerIndex(@Param("flag")String flag,@Param("limit")Integer limit,@Param("status")Short status,@Param("gardenId")Integer gardenId,@Param("goodsType")Short goodsType);
+    List<B_Goods> selectByCataLog_IdListPage(@Param("catalog_id")String catalog_id,@Param("sign")String sign,@Param("flag")String flag,@Param("page")PageInfo page,@Param("status")Short status,@Param("goodsType")Short goodsType,@Param("gardenId")Integer gardenId);
+    List<B_Goods> getGoodsByKeywordListPage(Map<String, Object> map);
+    List<B_Goods> getSellerGoodsListPage(Map<String, Object> map);
+    int updateByPrimaryKey(B_Goods record);
+    int updateByPrimaryKeySelective(B_Goods record);
+    int appReleaseGoods(B_Goods record);
+    int insertSelective(B_Goods record);
+    int delGoodsByPrimaryKey(@Param("id")Integer id);
+    List<B_Goods> myGoodsByStatusListPage(@Param("flag")String flag,@Param("status")Short status,@Param("shopId")Integer shopId,@Param("page")PageInfo page,@Param("goodsType")Short goodsType);
+    Integer myGoodsCountByStatus(@Param("endIs")Short endIs,@Param("status")Short status,@Param("publisherId")Integer publisherId,@Param("goodsType")Short goodsType);
+}

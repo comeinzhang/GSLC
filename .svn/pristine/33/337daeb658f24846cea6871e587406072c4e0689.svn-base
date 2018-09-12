@@ -1,0 +1,215 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class ClubReply {
+    private Integer id;
+    
+    private String title;
+
+    private Integer clubId;
+
+    private String clubName;
+
+    private Integer userId;
+
+    private String userName;
+
+    private String headImg;
+
+    private Double stock;
+    
+    private Double price;
+    
+    private Double totalPrice;
+    
+    private Short status;
+
+    private Short type;
+
+    private String remarks;
+
+    private Date updateTime;
+
+    private Date createTime;
+    
+    private String btnName1;
+    
+    private String btnInter1;
+    
+    private String btnName2;
+    
+    private String btnInter2;
+    
+    private String flag;
+    
+    private String typeName;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(Integer clubId) {
+        this.clubId = clubId;
+    }
+
+    public String getClubName() {
+        return clubName;
+    }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName == null ? null : clubName.trim();
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
+
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg == null ? null : headImg.trim();
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+	public String getBtnName1() {
+		return btnName1;
+	}
+
+	public void setBtnName1(String btnName1) {
+		this.btnName1 = btnName1;
+	}
+
+	public String getBtnName2() {
+		return btnName2;
+	}
+
+	public void setBtnName2(String btnName2) {
+		this.btnName2 = btnName2;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Double getStock() {
+		return stock;
+	}
+
+	public void setStock(Double stock) {
+		this.stock = stock;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public String getBtnInter1() {
+		return btnInter1;
+	}
+
+	public void setBtnInter1(String btnInter1) {
+		this.btnInter1 = btnInter1;
+	}
+
+	public String getBtnInter2() {
+		return btnInter2;
+	}
+
+	public void setBtnInter2(String btnInter2) {
+		this.btnInter2 = btnInter2;
+	}
+}

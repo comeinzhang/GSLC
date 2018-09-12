@@ -1,0 +1,25 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.Voucher;
+
+public interface VoucherMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Voucher record);
+
+    int insertSelective(Voucher record);
+
+    Voucher selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Voucher record);
+
+    int updateByPrimaryKeyWithBLOBs(Voucher record);
+
+    int updateByPrimaryKey(Voucher record);
+    
+    List<Voucher> getVoucherOfStatus(@Param("status")Short status,@Param("autois")Short autois,@Param("indexIs")Short indexIs,@Param("targ")String targ,@Param("rang")String rang);
+}

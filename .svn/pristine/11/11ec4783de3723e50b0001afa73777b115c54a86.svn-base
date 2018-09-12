@@ -1,0 +1,12 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.B_Goods_Ext;
+
+
+public interface B_Goods_ExtMapper {
+    List<B_Goods_Ext> selectByGoods_id(Integer goods_id);
+    int updateByPrimaryKeySelective(B_Goods_Ext record);
+    int insert(B_Goods_Ext record);
+}

@@ -1,0 +1,75 @@
+package com.tyh.service;
+
+import java.io.IOException;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.stereotype.Service;
+
+import com.tyh.unitl.RyHttpUtil;
+
+
+
+@Service
+public class RyService {
+	
+	Logger logger = Logger.getLogger(this.getClass());
+    
+	
+	/**
+	 * 获取对象user token
+	 * @param userId
+	 * @param status 0(null):调试  1：正式版本
+	 * @throws IOException 
+	 * @throws JSONException 
+	 */
+	public String getUserToken(String userId, String userName, String headPhotoUrl) throws Exception{
+		String token = null;
+		try {
+			String params = "userId="+userId+"&name="+userName;
+			if(StringUtils.isNotBlank(headPhotoUrl)){
+				params += "&portraitUri="+(headPhotoUrl.replaceAll("\\\\", "/"));
+			}
+			String result = RyHttpUtil.sendToRy("http://api.cn.ronghub.com/user/getToken.json", 
+					params);
+			if(StringUtils.isNotBlank(result)){
+				 JSONObject resultJson = new JSONObject(result);
+				 int code = (Integer) resultJson.get("code");
+				 logger.info("获取第三方服务器的用户token返回code："+code+"\n");
+				 if(code==200){
+					 token = (String) resultJson.get("token");
+				 }
+			}
+		} catch (Exception e) {
+			logger.info("获取用户token发生异常");
+			e.printStackTrace();
+		}
+		return token;
+	}
+
+	public String createChatRoomId(String studioId){
+		String chatId = null;
+		try {
+			// 向融云请求建立商会群聊
+			String result = RyHttpUtil.sendToRy(RyHttpUtil.CREATE_CHATROOM, 
+					"chatroom["+studioId+"_ChatRoom"+"]=聊天室"+studioId);
+			if(!RyHttpUtil.checkRYResult(result)){
+				throw new Exception("调取融云接口创建聊天室发生异常！");
+			}else{
+				chatId = studioId+"_ChatRoom";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return chatId;
+	}
+
+	public static void main(String[] args) throws Exception {
+		String result = new RyService().getUserToken("29222222222222226", "bill", null);
+		System.out.println(result);
+	}
+
+}

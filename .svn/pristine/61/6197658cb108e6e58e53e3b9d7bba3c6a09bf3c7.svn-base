@@ -1,0 +1,17 @@
+package com.tyh.mapper;
+
+import com.tyh.model.ReplyUser;
+
+public interface ReplyUserMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ReplyUser record);
+
+    int insertSelective(ReplyUser record);
+
+    ReplyUser selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(ReplyUser record);
+
+    int updateByPrimaryKey(ReplyUser record);
+}

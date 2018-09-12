@@ -1,0 +1,112 @@
+package com.tyh.controller;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.tyh.model.ProConfig;
+import com.tyh.model.SysVersion;
+import com.tyh.service.ProConfigService;
+import com.tyh.service.SysService;
+
+
+@Controller
+@RequestMapping("/sys")
+public class SysController {
+	
+	Logger logger = Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private SysService sysService;
+	@Autowired
+    private ProConfigService proConfigService;
+	@RequestMapping("/getVersion")
+	public void getNewVersion(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException{
+		response.setContentType("text/html;charset=UTF-8");
+		
+		String deviceType = request.getParameter("deviceType"); //0:安卓  1：IOS
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		
+		
+		int state = 200;
+		String msg = "";
+		if(StringUtils.isNotBlank(deviceType)){
+			List<SysVersion> svs = sysService.getSysVersionList(Integer.parseInt(deviceType));
+			if(svs!=null&&svs.size()>0){
+				SysVersion sv =  svs.get(0);
+				svs = new ArrayList<SysVersion>();
+				svs.add(sv);
+				
+				listMap.put("list", svs);
+				map.put("data", listMap);
+			}
+		}else{
+			state = 400;
+			msg = "参数为空";
+		}
+		
+		map.put("state", state);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		logger.info("最新版本jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	@ResponseBody
+	@RequestMapping("initConfig")
+	public void initConfig(HttpServletRequest request){
+		proConfigService.configMap();
+	}
+	@ResponseBody
+	@RequestMapping("updatePbcPrice")
+	public Map<String, Object> updatePbcPrice(HttpServletRequest request){
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		String price = request.getParameter("pbcPrice");
+		String state = "success";
+		String msg = "";
+		try {
+			if (StringUtils.isNotBlank(price)) {
+				List<ProConfig> proConfigs = proConfigService.selectByKey("pbcPrice");
+				if (proConfigs.size()>0) {
+					ProConfig proConfig = proConfigs.get(0);
+					proConfig.setProvalue(price);
+					proConfigService.updateByPrimaryKeySelective(proConfig);
+				}else {
+					ProConfig proConfig = new ProConfig();
+					proConfig.setProkey("pbcPrice");
+					proConfig.setProvalue(price);
+					proConfig.setMark("pbc价格");
+					proConfig.setUpdateTime(new Date());
+					proConfigService.insert(proConfig);
+				}
+				proConfigService.configMap();
+			}else {
+				msg = "参数为空";
+			}
+		} catch (Exception e) {
+			state="fail";
+			msg="系统错误";
+			// TODO: handle exception
+		}
+		map.put("state", state);
+		map.put("msg", msg);
+		return map;
+	}
+}

@@ -1,0 +1,185 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class ClassTrain {
+    private Integer id;
+
+    private Integer classCatalogId;
+
+    private String title;
+
+    private String headImgUrl;
+
+    private Date publishTime;
+    
+    private String ptime;
+
+    private String publisher;
+
+    private String publisherImg;
+
+    private String publisherId;
+
+    private String publisherDesc;
+
+    private Short status;
+
+    private Date updateTime;
+
+    private Long price;
+
+    private Date time;
+
+    private String addr;
+
+    private Integer peopleNum;
+
+    private Integer clickCount;
+
+    private String info;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getClassCatalogId() {
+        return classCatalogId;
+    }
+
+    public void setClassCatalogId(Integer classCatalogId) {
+        this.classCatalogId = classCatalogId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl == null ? null : headImgUrl.trim();
+    }
+
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher == null ? null : publisher.trim();
+    }
+
+    public String getPublisherImg() {
+        return publisherImg;
+    }
+
+    public void setPublisherImg(String publisherImg) {
+        this.publisherImg = publisherImg == null ? null : publisherImg.trim();
+    }
+
+    public String getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(String publisherId) {
+        this.publisherId = publisherId == null ? null : publisherId.trim();
+    }
+
+    public String getPublisherDesc() {
+        return publisherDesc;
+    }
+
+    public void setPublisherDesc(String publisherDesc) {
+        this.publisherDesc = publisherDesc == null ? null : publisherDesc.trim();
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr == null ? null : addr.trim();
+    }
+
+    public Integer getPeopleNum() {
+        return peopleNum;
+    }
+
+    public void setPeopleNum(Integer peopleNum) {
+        this.peopleNum = peopleNum;
+    }
+
+    public Integer getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(Integer clickCount) {
+        this.clickCount = clickCount;
+    }
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
+	public String getPtime() {
+		return ptime;
+	}
+
+	public void setPtime(String ptime) {
+		this.ptime = ptime;
+	}
+}

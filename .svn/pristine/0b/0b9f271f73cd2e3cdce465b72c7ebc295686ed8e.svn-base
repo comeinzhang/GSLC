@@ -1,0 +1,65 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class PickCustomer {
+    private Integer id;
+
+    private Integer userId;
+
+    private Integer customerId;
+
+    private Short flag;
+
+    private Date updateTime;
+
+    private Date createTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    public Short getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Short flag) {
+        this.flag = flag;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+}

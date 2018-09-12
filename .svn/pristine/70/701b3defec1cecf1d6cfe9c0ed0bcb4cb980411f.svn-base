@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.Credit;
+
+public interface CreditMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Credit record);
+
+    int insertSelective(Credit record);
+
+    Credit selectByPrimaryKey(Integer id);
+    
+    List<Credit> selectByType(Short type);
+    
+    int updateByPrimaryKeySelective(Credit record);
+
+    int updateByPrimaryKey(Credit record);
+}

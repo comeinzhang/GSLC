@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.ProConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.ProConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="proKey" property="prokey" jdbcType="VARCHAR" />
+    <result column="proValue" property="provalue" jdbcType="VARCHAR" />
+    <result column="mark" property="mark" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, proKey, proValue, mark, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_pro_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectConfigList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_pro_config
+  </select>
+  <select id="selectByKey" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_pro_config
+    where proKey = #{prokey,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_pro_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.ProConfig" >
+    insert into b_pro_config (id, proKey, proValue, 
+      mark, update_time)
+    values (#{id,jdbcType=INTEGER}, #{prokey,jdbcType=VARCHAR}, #{provalue,jdbcType=VARCHAR}, 
+      #{mark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.ProConfig" >
+    insert into b_pro_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="prokey != null" >
+        proKey,
+      </if>
+      <if test="provalue != null" >
+        proValue,
+      </if>
+      <if test="mark != null" >
+        mark,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="prokey != null" >
+        #{prokey,jdbcType=VARCHAR},
+      </if>
+      <if test="provalue != null" >
+        #{provalue,jdbcType=VARCHAR},
+      </if>
+      <if test="mark != null" >
+        #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.ProConfig" >
+    update b_pro_config
+    <set >
+      <if test="prokey != null" >
+        proKey = #{prokey,jdbcType=VARCHAR},
+      </if>
+      <if test="provalue != null" >
+        proValue = #{provalue,jdbcType=VARCHAR},
+      </if>
+      <if test="mark != null" >
+        mark = #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.ProConfig" >
+    update b_pro_config
+    set proKey = #{prokey,jdbcType=VARCHAR},
+      proValue = #{provalue,jdbcType=VARCHAR},
+      mark = #{mark,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,145 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class Club {
+    private Integer id;
+    
+    private Integer userId;
+
+    private String name;
+
+    private String headImg;
+
+    private Integer totalNum;
+
+    private Integer personNum;
+
+    private Long poolNum;
+
+    private Long totalBuy;
+    
+    private Double price;
+
+    private Short status;
+
+    private String ext1;
+    
+    private String btnName;
+
+    private Date updateTime;
+
+    private Date createTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg == null ? null : headImg.trim();
+    }
+
+    public Integer getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Integer totalNum) {
+        this.totalNum = totalNum;
+    }
+
+    public Integer getPersonNum() {
+        return personNum;
+    }
+
+    public void setPersonNum(Integer personNum) {
+        this.personNum = personNum;
+    }
+
+    public Long getPoolNum() {
+        return poolNum;
+    }
+
+    public void setPoolNum(Long poolNum) {
+        this.poolNum = poolNum;
+    }
+
+    public Long getTotalBuy() {
+        return totalBuy;
+    }
+
+    public void setTotalBuy(Long totalBuy) {
+        this.totalBuy = totalBuy;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public String getExt1() {
+        return ext1;
+    }
+
+    public void setExt1(String ext1) {
+        this.ext1 = ext1 == null ? null : ext1.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public String getBtnName() {
+		return btnName;
+	}
+
+	public void setBtnName(String btnName) {
+		this.btnName = btnName;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+}

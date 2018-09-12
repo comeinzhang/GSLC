@@ -1,0 +1,603 @@
+package com.tyh.unitl.wx;
+
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import org.apache.http.HttpResponse;
+
+import com.google.gson.Gson;
+import com.tyh.model.ProConfigMap;
+public class WxPayUtil {
+
+
+	private String timeStamp;
+	private String nonceStr;
+	private String packageStr;
+
+	private String paySign;
+	
+	private  String ipAddress = "120.77.61.74";
+	
+	private String appid;
+	private String appsecret;
+	private String mch_id;
+	private String partnerkey;
+	/**
+	 * 获取JSAPI签名
+	 * 
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
+	 */
+	public String WxJsApiCheck() {
+
+		String jsapi_ticket = getJsapiTicket();// 看清楚.这是ticket..用token在https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi里换的
+		String nonce_str = Sha1Util.getNonceStr();// 随机字符串
+		String timestamp = Sha1Util.getTimeStamp();// 时间戳
+		String appid1 = appid;// APPID,谁在问我为什么报没有APPID就去死吧
+		String url = "http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/goods/";// 发起支付的前端页面的URL地址.而且...而且必须在微信支付里面配置才行!!!
+		String sign = null;
+		try {
+			SortedMap<String, String> packageParams = new TreeMap<String, String>();
+			packageParams.put("jsapi_ticket", jsapi_ticket);
+			packageParams.put("noncestr", nonce_str);
+			packageParams.put("timestamp", timestamp);
+			packageParams.put("url", url);
+			sign = Sha1Util.createSHA1Sign(packageParams);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String res = "appId : \"" + appid1 + "\",timestamp : \"" + timestamp
+				+ "\", nonceStr : \"" + nonce_str + "\", signature : \"" + sign
+				+ "\"";
+		return res;
+	}
+
+	private String getJsapiTicket() {
+		try {
+			// 直接访问url来获取返回数据
+			// 这里必须是https，该死的微信非得用https，否则获取不到数据的
+			String returnData = getReturnData("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid+"&secret="+appsecret);
+			Gson gson = new Gson();
+			TokenClass tokenClass = gson.fromJson(returnData, TokenClass.class);
+
+			String token = tokenClass.getAccess_token();
+			String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="
+					+ token + "&type=jsapi";
+			String returnData2 = getReturnData(url);
+			Ticket ticket = gson.fromJson(returnData2, Ticket.class);
+			if (ticket.getErrcode() == 0) {
+				return ticket.getTicket();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "kgt8ON7yVITDhtdwci0qeTPi4uLRAN-5WPf5pygQ7_8OEmKM518hH7rc9QLKKqTeV2LY4kIoGCVbaXKf3oIwgw";
+	}
+
+	/**
+	 * 内部类，用于Gson解析返回的数据，获取内容
+	 * 
+	 * @author aaron
+	 * 
+	 */
+	private class TokenClass {
+
+		private String access_token;
+		private String expires_in;
+
+		public String getAccess_token() {
+			return access_token;
+		}
+
+		public void setAccess_token(String access_token) {
+			this.access_token = access_token;
+		}
+
+		public String getExpires_in() {
+			return expires_in;
+		}
+
+		public void setExpires_in(String expires_in) {
+			this.expires_in = expires_in;
+		}
+
+	}
+
+	/**
+	 * 内部类，用于Gson解析返回的数据，获取内容
+	 * 
+	 * @author aaron
+	 * 
+	 */
+	private class Ticket {
+
+		private Integer errcode;
+		private String errmsg;
+		private String ticket;
+		private String expires_in;
+
+		public String getExpires_in() {
+			return expires_in;
+		}
+
+		public void setExpires_in(String expires_in) {
+			this.expires_in = expires_in;
+		}
+
+		public String getErrmsg() {
+			return errmsg;
+		}
+
+		public void setErrmsg(String errmsg) {
+			this.errmsg = errmsg;
+		}
+
+		public String getTicket() {
+			return ticket;
+		}
+
+		public void setTicket(String ticket) {
+			this.ticket = ticket;
+		}
+
+		public Integer getErrcode() {
+			return errcode;
+		}
+
+		public void setErrcode(Integer errcode) {
+			this.errcode = errcode;
+		}
+
+	}
+
+	// 支付页面获取openId后获取的值
+	private String code;
+	private String state;
+	private String totalFee;
+	private String payCodeSuccess;
+
+	public Map<String, Object> dopay(String state1,String code1,String openId1,String flag) throws Exception {
+		state = state1;
+		code = code1;
+		String[] split = state.split("CUT");
+		String payCode = split[1];
+		// 网页授权后获取传递的参数
+		String orderNo="";
+		if (payCode.contains("CZ")) {
+			orderNo = payCode;
+		}else {
+			String ran = String.valueOf(System.currentTimeMillis());
+			orderNo = ran+"-"+payCode;
+			if (split.length==3) {
+				orderNo = orderNo+"V"+split[2];
+			}
+		}
+		// 金额转化为分为单位，所以传的时候是分的单位，换成元为单位就加两个零
+		// 因为我的业务都是整数金额，所以直接拼接两个零，如果涉及到小数，就要进行转换和乘法
+		String money = split[0];
+		String body = ProConfigMap.configMap.get("webName");
+		// 商户相关资料
+		if (flag.equals("wx")) {
+			appid = ProConfigMap.configMap.get("APPID");
+			appsecret = ProConfigMap.configMap.get("APPSECRET");
+			mch_id = ProConfigMap.configMap.get("MCH_ID");// 邮件里的商户号
+			partnerkey = ProConfigMap.configMap.get("PARTNERKEY");// 在微信商户平台pay.weixin.com里自己写入的那个key
+		}else if (flag.equals("app")) {
+			appid = ProConfigMap.configMap.get("APPID_APP");
+			appsecret = ProConfigMap.configMap.get("APPSECRET_APP");
+			mch_id = ProConfigMap.configMap.get("MCH_ID_APP");// 邮件里的商户号
+			partnerkey = ProConfigMap.configMap.get("PARTNERKEY_APP");// 在微信商户平台pay.weixin.com里自己写入的那个key
+		}
+		String openId = "";
+		if (flag.equals("wx")) {
+			if (openId1==null||"".equals(openId1)) {
+				openId = getOpenId();
+			}else {
+				openId = openId1;
+			}
+		}
+		// 用oath授权得到的openid
+
+		// 获取openId后调用统一支付接口https://api.mch.weixin.qq.com/pay/unifiedorder
+		String currTime = TenpayUtil.getCurrTime();
+		// 8位日期
+		String strTime = currTime.substring(8, currTime.length());
+		// 四位随机数
+		String strRandom = TenpayUtil.buildRandom(4) + "";
+		// 10位序列号,可以自行调整。
+		String strReq = strTime + strRandom;
+
+		// 子商户号 非必输
+		// String sub_mch_id="";
+		// 设备号 非必输
+		String device_info = "";
+		// 随机数
+		String nonce_str = strReq;
+		// 商品描述
+		// String body = describe;
+
+		// 商品描述根据情况修改
+		
+		// 附加数据
+		// String attach = userId;
+		// 商户订单号
+		String out_trade_no = orderNo;
+		// int intMoney = Integer.parseInt(finalmoney);
+
+		// 总金额以分为单位，不带小数点
+		// int total_fee = intMoney;
+		// 订单生成的机器 IP
+		/*HttpServletRequest request = ServletActionContext.getRequest();
+		String ipAddress = request.getRemoteAddr();
+		if (ipAddress.equals("0:0:0:0:0:0:0:1%0")) {
+			ipAddress = "172.168.0.1";
+		}*/
+		String spbill_create_ip = ipAddress;
+		// 订 单 生 成 时 间 非必输
+		// String time_start ="";
+		// 订单失效时间 非必输
+		// String time_expire = "";
+		// 商品标记 非必输
+		// String goods_tag = "";
+
+		// 这里notify_url是 支付完成后微信发给该链接信息，可以判断会员是否支付成功，改变订单状态等。
+		String notify_url = "http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/order/pay_callback";
+		
+		String trade_type ="";
+		if (flag.equals("wx")) {
+			trade_type = "JSAPI";
+		}else if (flag.equals("app")) {
+			trade_type = "APP";
+		}
+		String openid = openId;
+		// 非必输
+		// String product_id = "";
+		SortedMap<String, String> packageParams = new TreeMap<String, String>();
+		packageParams.put("appid", appid);
+		packageParams.put("mch_id", mch_id);
+		packageParams.put("nonce_str", nonce_str);
+		packageParams.put("body", body);
+		// packageParams.put("attach", attach);
+		packageParams.put("out_trade_no", out_trade_no);
+
+		// 这里写的金额为1 分到时修改
+		if (money != null) {
+			packageParams.put("total_fee", money);
+		} else {
+			packageParams.put("total_fee", "1000");
+		}
+		// packageParams.put("total_fee", "finalmoney");
+		packageParams.put("spbill_create_ip", spbill_create_ip);
+		packageParams.put("notify_url", notify_url);
+
+		packageParams.put("trade_type", trade_type);
+		packageParams.put("openid", openid);
+
+		RequestHandler reqHandler = new RequestHandler(null, null);
+		reqHandler.init(appid, appsecret, partnerkey);
+
+		String sign = reqHandler.createSign(packageParams);
+		String xml = "<xml>" + "<appid>" + appid + "</appid>" + "<mch_id>"
+				+ mch_id + "</mch_id>" + "<nonce_str>" + nonce_str
+				+ "</nonce_str>" + "<sign><![CDATA[" + sign + "]]></sign>"
+				+ "<body><![CDATA[" + body + "]]></body>"
+				+ "<out_trade_no>"
+				+ out_trade_no
+				+ "</out_trade_no>"
+				+
+
+				// 金额，这里写的1 分到时修改
+				"<total_fee>"
+				+ money
+				+ "</total_fee>"
+				+
+				// "<total_fee>"+finalmoney+"</total_fee>"+
+				"<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
+				+ "<notify_url>" + notify_url + "</notify_url>"
+				+ "<trade_type>" + trade_type + "</trade_type>" + "<openid>"
+				+ openid + "</openid>" + "</xml>";
+		System.out.println(xml);
+		String allParameters = "";
+		try {
+			allParameters = reqHandler.genPackage(packageParams);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String createOrderURL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+		Map<String, Object> dataMap2 = new HashMap<String, Object>();
+		String prepay_id = "";
+		try {
+			prepay_id = new GetWxOrderno().getPayNo(createOrderURL, xml);
+			if (prepay_id.equals("")) {
+				System.out.println("统一支付接口获取预支付订单出错");
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println("prepay_id:" + prepay_id);
+		SortedMap<String, String> finalpackage = new TreeMap<String, String>();
+		String appid2 = appid;
+		String timestamp = Sha1Util.getTimeStamp();
+		String nonceStr2 = nonce_str;
+		String prepay_id2 = "prepay_id=" + prepay_id;
+		String packages = prepay_id2;
+		finalpackage.put("appId", appid2);
+		finalpackage.put("timeStamp", timestamp);
+		finalpackage.put("nonceStr", nonceStr2);
+		finalpackage.put("package", packages);
+		finalpackage.put("signType", "MD5");
+		String finalsign = reqHandler.createSign(finalpackage);
+		timeStamp = timestamp;
+		nonceStr = nonceStr2;
+		packageStr = packages;
+		paySign = finalsign;
+		payCodeSuccess = out_trade_no;
+		String str = "timestamp:\""
+				+ timestamp // 这里的也是小写~~
+				+ "\",nonceStr:\"" + nonceStr2 + "\",package:\"" + packages
+				+ "\",signType: \"MD5" + "\",paySign:\"" + finalsign + "\"";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("timeStamp", timestamp);
+		map.put("nonceStr", nonceStr);
+		map.put("packageStr", packageStr);
+		map.put("paySign", paySign);
+		map.put("payCodeSuccess", payCodeSuccess);
+		map.put("signType", "MD5");
+		map.put("appid", appid2);
+		map.put("orderNum", payCode);
+		return map;
+	}
+	private String getOpenId() throws Exception {
+		System.out
+				.println("************************getOpenId*********************");
+		System.out.println("+++++++++++" + getCode() + "++++++++++");
+		if (getCode() != null) {
+
+			// 狗日的微信又是必须要https请求，千万不要搞错了
+			String url = "https://api.weixin.qq.com/sns/oauth2/access_token?"
+					+ "appid="+appid
+					+ "&secret="+appsecret + "&code="
+					+ getCode() + "&grant_type=authorization_code";
+			System.out.println(url);
+			String returnData = getReturnData(url);
+			System.out.println(returnData + "################");
+			Gson gson = new Gson();
+			OpenIdClass openIdClass = gson.fromJson(returnData,
+					OpenIdClass.class);
+
+			if (openIdClass.getOpenid() != null) {
+				return openIdClass.getOpenid();
+			}
+		}
+		return "oPDemv4uWCuW**************";
+	}
+
+	private class OpenIdClass {
+		private String access_token;
+		private String expires_in;
+		private String refresh_token;
+		private String openid;
+		private String scope;
+		private String unionid;
+
+		public String getAccess_token() {
+			return access_token;
+		}
+
+		public void setAccess_token(String access_token) {
+			this.access_token = access_token;
+		}
+
+		public String getExpires_in() {
+			return expires_in;
+		}
+
+		public void setExpires_in(String expires_in) {
+			this.expires_in = expires_in;
+		}
+
+		public String getRefresh_token() {
+			return refresh_token;
+		}
+
+		public void setRefresh_token(String refresh_token) {
+			this.refresh_token = refresh_token;
+		}
+
+		public String getOpenid() {
+			return openid;
+		}
+
+		public void setOpenid(String openid) {
+			this.openid = openid;
+		}
+
+		public String getScope() {
+			return scope;
+		}
+
+		public void setScope(String scope) {
+			this.scope = scope;
+		}
+
+		public String getUnionid() {
+			return unionid;
+		}
+
+		public void setUnionid(String unionid) {
+			this.unionid = unionid;
+		}
+
+		public String getErrcode() {
+			return errcode;
+		}
+
+		public void setErrcode(String errcode) {
+			this.errcode = errcode;
+		}
+
+		public String getErrmsg() {
+			return errmsg;
+		}
+
+		public void setErrmsg(String errmsg) {
+			this.errmsg = errmsg;
+		}
+
+		private String errcode;
+		private String errmsg;
+	}
+
+	public String getReturnData(String urlString) throws Exception {
+		String res = "";
+		try {
+			URL url = new URL(urlString);
+			java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url
+					.openConnection();
+			conn.connect();
+			java.io.BufferedReader in = new java.io.BufferedReader(
+					new java.io.InputStreamReader(conn.getInputStream(),
+							"UTF-8"));
+			String line;
+			while ((line = in.readLine()) != null) {
+				res += line;
+			}
+			in.close();
+		} catch (Exception e) {
+			throw e;
+		}
+		return res;
+	}
+
+	@SuppressWarnings("unused")
+	private String getCharsetFromResponse(HttpResponse ressponse) {
+		// Content-Type:text/html; charset=GBK
+		if (ressponse.getEntity() != null
+				&& ressponse.getEntity().getContentType() != null
+				&& ressponse.getEntity().getContentType().getValue() != null) {
+			String contentType = ressponse.getEntity().getContentType()
+					.getValue();
+			if (contentType.contains("charset=")) {
+				return contentType
+						.substring(contentType.indexOf("charset=") + 8);
+			}
+		}
+		return null;
+	}
+
+	public String getNonceStr() {
+		return nonceStr;
+	}
+
+	public void setNonceStr(String nonceStr) {
+		this.nonceStr = nonceStr;
+	}
+
+	public String getPackageStr() {
+		return packageStr;
+	}
+
+	public void setPackageStr(String packageStr) {
+		this.packageStr = packageStr;
+	}
+
+	public String getPaySign() {
+		return paySign;
+	}
+
+	public void setPaySign(String paySign) {
+		this.paySign = paySign;
+	}
+
+	public String getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(String timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getTotalFee() {
+		return totalFee;
+	}
+
+	public void setTotalFee(String totalFee) {
+		this.totalFee = totalFee;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getPayCodeSuccess() {
+		return payCodeSuccess;
+	}
+
+	public void setPayCodeSuccess(String payCodeSuccess) {
+		this.payCodeSuccess = payCodeSuccess;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+
+	public String getAppid() {
+		return appid;
+	}
+
+	public void setAppid(String appid) {
+		this.appid = appid;
+	}
+
+	public String getAppsecret() {
+		return appsecret;
+	}
+
+	public void setAppsecret(String appsecret) {
+		this.appsecret = appsecret;
+	}
+
+	public String getMch_id() {
+		return mch_id;
+	}
+
+	public void setMch_id(String mch_id) {
+		this.mch_id = mch_id;
+	}
+
+	public String getPartnerkey() {
+		return partnerkey;
+	}
+
+	public void setPartnerkey(String partnerkey) {
+		this.partnerkey = partnerkey;
+	}
+
+
+}

@@ -1,0 +1,17 @@
+package com.tyh.mapper;
+
+import com.tyh.model.B_Deal_Money;
+
+public interface B_Deal_MoneyMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_Deal_Money record);
+
+    int insertSelective(B_Deal_Money record);
+
+    B_Deal_Money selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(B_Deal_Money record);
+
+    int updateByPrimaryKey(B_Deal_Money record);
+}

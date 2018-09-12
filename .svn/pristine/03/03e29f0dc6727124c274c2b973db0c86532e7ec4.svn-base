@@ -1,0 +1,42 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.GslcMapper;
+import com.tyh.model.Gslc;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class GslcService {
+	
+	@Resource
+	private GslcMapper mapper;
+	
+	public Integer updateGslc(Gslc gslc) {
+		return mapper.updateByPrimaryKeySelective(gslc);
+	}
+	
+	public Integer insertGslc(Gslc gslc) {
+		return mapper.insertSelective(gslc);
+	}
+	
+	public List<Gslc> selectGslcListPage(PageInfo page,Integer userId,String statusSign) {
+		return mapper.selectGslcListPage(page,userId,statusSign);
+	}
+	
+	public Gslc selectByPrimaryKey(Integer id) {
+		return mapper.selectByPrimaryKey(id);
+	}
+	
+	public Long selectMyGslcCount(Integer userId,Short status) {
+		return mapper.selectMyGslcCount(userId,status);
+	}
+}

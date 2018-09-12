@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.ClubMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.Club" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="total_num" property="totalNum" jdbcType="INTEGER" />
+    <result column="person_num" property="personNum" jdbcType="INTEGER" />
+    <result column="pool_num" property="poolNum" jdbcType="DECIMAL" />
+    <result column="total_buy" property="totalBuy" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,user_id, name, head_img,price, total_num, person_num, pool_num, total_buy, status, ext1, update_time, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_club
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectClubListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_club
+    where 1=1
+    <if test="name!=null and name!=''">
+    	and name LIKE concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_club
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.Club" >
+    insert into b_club (id, user_id,name, head_img, 
+      total_num, person_num, pool_num, price,
+      total_buy, status, ext1, 
+      update_time, create_time)
+    values (#{id,jdbcType=INTEGER},#{userId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, 
+      #{totalNum,jdbcType=INTEGER}, #{personNum,jdbcType=INTEGER}, #{poolNum,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
+      #{totalBuy,jdbcType=DECIMAL}, #{status,jdbcType=SMALLINT}, #{ext1,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.Club" keyProperty="id" useGeneratedKeys="true">
+    insert into b_club
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="headImg != null" >
+        head_img,
+      </if>
+      <if test="totalNum != null" >
+        total_num,
+      </if>
+      <if test="personNum != null" >
+        person_num,
+      </if>
+      <if test="poolNum != null" >
+        pool_num,
+      </if>
+      <if test="totalBuy != null" >
+        total_buy,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null" >
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null" >
+        #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="personNum != null" >
+        #{personNum,jdbcType=INTEGER},
+      </if>
+      <if test="poolNum != null" >
+        #{poolNum,jdbcType=DECIMAL},
+      </if>
+      <if test="totalBuy != null" >
+        #{totalBuy,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.Club" >
+    update b_club
+    <set >
+    	<if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="headImg != null" >
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null" >
+        total_num = #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="personNum != null" >
+        person_num = #{personNum,jdbcType=INTEGER},
+      </if>
+      <if test="poolNum != null" >
+        pool_num = #{poolNum,jdbcType=DECIMAL},
+      </if>
+      <if test="totalBuy != null" >
+        total_buy = #{totalBuy,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.Club" >
+    update b_club
+    set name = #{name,jdbcType=VARCHAR},
+      head_img = #{headImg,jdbcType=VARCHAR},
+      total_num = #{totalNum,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      person_num = #{personNum,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      pool_num = #{poolNum,jdbcType=DECIMAL},
+      total_buy = #{totalBuy,jdbcType=DECIMAL},
+      status = #{status,jdbcType=SMALLINT},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updatePrice" parameterType="com.tyh.model.Club" >
+    update b_club
+    <set >
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateTotalNum" parameterType="com.tyh.model.Club" >
+    update b_club
+    <set >
+      <if test="totalNum != null" >
+        total_num = #{totalNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePersonNum" parameterType="com.tyh.model.Club" >
+    update b_club
+    <set >
+      <if test="personNum != null" >
+        person_num = #{personNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePoolNum" parameterType="com.tyh.model.Club" >
+    update b_club
+    <set >
+      <if test="poolNum != null" >
+        pool_num = #{poolNum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateTotalBuy" parameterType="com.tyh.model.Club" >
+    update b_club
+    <set >
+      <if test="totalBuy != null" >
+        total_buy = #{totalBuy,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

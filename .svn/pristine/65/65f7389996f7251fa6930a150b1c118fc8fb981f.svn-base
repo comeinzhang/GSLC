@@ -1,0 +1,31 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.CreditMapper;
+import com.tyh.model.Credit;
+
+
+
+@Service
+public class CreditService {
+	
+	@Resource
+	private CreditMapper mapper;
+	
+	public Credit selectByPrimaryKey(Integer id) {
+		return mapper.selectByPrimaryKey(id);
+	}
+	public List<Credit> selectByType(Short type){
+		return  mapper.selectByType(type);
+	}
+	public int updateByPrimaryKeySelective(Credit credit) {
+		return mapper.updateByPrimaryKeySelective(credit);
+	}
+}

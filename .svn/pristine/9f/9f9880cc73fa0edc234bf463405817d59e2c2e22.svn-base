@@ -1,0 +1,158 @@
+package com.tyh.unitl;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.tyh.unitl.encrypt.SHA1;
+
+
+
+
+
+public class RyHttpUtil{
+	
+	static Logger logger = Logger.getLogger(RyHttpUtil.class);
+	
+	public final static String GET_TOKEN = "https://api.cn.rong.io/user/getToken.json";
+	
+	public final static String CREATE_CHATROOM = "https://api.cn.rong.io/chatroom/create.json";
+	
+	public final static String GET_USER_INFO = "https://api.cn.rong.io/user/info.json";
+	
+	
+	final static String NONCE = "1370194858";
+	/**
+     * 向指定 URL 发送POST方法的请求
+     * 
+     * @param url
+     *            发送请求的 URL
+     * @param param
+     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     * @return 所代表远程资源的响应结果
+     */
+    public static String sendToRy(String url, String param) {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+        	String status = PropertiesUtil.RY_ENVIRONMENT;
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            URLConnection conn = realUrl.openConnection();
+            conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+            
+            if(StringUtils.isNotBlank(status)&&"1".equals(status)){
+            	//正式环境
+            	String appSecret = "BHGhXFY7bf";
+                String Timestamp = new Date().getTime()/1000+"";
+                String Signature = new SHA1().getDigestOfString((appSecret+NONCE+Timestamp).getBytes()); 
+            	
+            	conn.setRequestProperty("App-Key","bmdehs6pbm4is");
+            	conn.setRequestProperty("appSecret",appSecret);
+            	conn.setRequestProperty("Nonce",NONCE);
+            	conn.setRequestProperty("Timestamp",Timestamp);
+            	conn.setRequestProperty("Signature",Signature);
+            }else{
+            	//测试环境
+            	String appSecret = "XNbVfztQNB0Sj";
+                String Timestamp = new Date().getTime()/1000+"";
+                String Signature = new SHA1().getDigestOfString((appSecret+NONCE+Timestamp).getBytes()); 
+                
+            	conn.setRequestProperty("App-Key"," n19jmcy5n1ze9");
+            	conn.setRequestProperty("appSecret",appSecret);
+            	conn.setRequestProperty("Nonce",NONCE);
+            	conn.setRequestProperty("Timestamp",Timestamp);
+            	conn.setRequestProperty("Signature",Signature);
+            }
+            
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+            // 发送请求参数
+            out.print(param);
+            // flush输出流的缓冲
+            out.flush();
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+            logger.info("发送 "+url+"?"+param+" 请求出现异常！"+e);
+            e.printStackTrace();
+        }
+        //使用finally块来关闭输出流、输入流
+        finally{
+            try{
+                if(out!=null){
+                    out.close();
+                }
+                if(in!=null){
+                    in.close();
+                }
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }    
+
+    public static boolean checkRYResult(String result) throws JSONException{
+    	boolean resultFlag = false;
+    	if(StringUtils.isNotBlank(result)){
+			 JSONObject resultJson = new JSONObject(result);
+			 int code = (Integer) resultJson.get("code");
+			 logger.info("获取第三方服务器的用户token返回code："+code+"\n");
+			 if(code==200){
+				 return true;
+			 }
+		}
+    	return resultFlag;
+    }
+    
+    
+    public static void main(String[] args) throws Exception {
+//        String sr = sendToRy("https://api.cn.rong.io/user/getToken.json", "userId=6&name=樊华", "0");
+//        String sr = sendToRy("https://api.cn.rong.io/group/create.json", "userId=6&groupId=9&groupName=广东韶关分会2");
+//        logger.info(sr);
+//        JSONObject resultJson;
+//		try {
+//			resultJson = new JSONObject(sr);
+//			logger.info(resultJson);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//    		new RyService().createChatRoomId("3434");
+    	String a = sendToRy("http://api.map.baidu.com/telematics/v3/weather", "location=广州&output=JSON&ak=FRtLDKq5GOmPdqdabCWMu3BXI3fvY8b4");
+    	System.out.println(a);
+	}
+	
+//    public static void sendNewsSys(String toUserId, String groupTypeStr) throws Exception{
+//		// 向融云请求发送群系统消息
+//		String param = "toUserId="+toUserId;
+//		param += "&fromUserId="+RyHttpUtil.NEWS_SYS_USER_ID+"&objectName=RC:TxtMsg" +
+//				"&content={\"content\":\"你有新的商秘信息\",\"extra\":\""+RyHttpUtil.NEWS_SYS_USER_PHOTO_URL+"\"}" +
+//				"&pushData=你有新的商秘消息&pushContent=你有新的商秘消息";
+//		String result = RyHttpUtil.sendToRy(RyHttpUtil.SEND_GROUP_SYS_MS, param);
+//		if(!RyHttpUtil.checkRYResult(result)){
+//			throw new Exception("调取融云接口向管理员发送商秘系统消息发生异常！");
+//		}
+//	}
+	
+}

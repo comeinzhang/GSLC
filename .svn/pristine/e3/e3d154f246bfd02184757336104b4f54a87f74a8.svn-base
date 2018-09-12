@@ -1,0 +1,8 @@
+package com.tyh.model;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ProConfigMap {
+	public static Map<String, String> configMap = new HashMap<String, String>();
+}

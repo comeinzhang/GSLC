@@ -1,0 +1,635 @@
+package com.tyh.service;
+
+
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tyh.common.CommonParam;
+import com.tyh.mapper.B_BankMapper;
+import com.tyh.mapper.B_BillMapper;
+import com.tyh.mapper.B_GardenMapper;
+import com.tyh.mapper.B_Order_TrackMapper;
+import com.tyh.mapper.B_ShopMapper;
+import com.tyh.mapper.B_UserMapper;
+import com.tyh.mapper.B_User_RoleMapper;
+import com.tyh.mapper.CheckCodeMapper;
+import com.tyh.mapper.ReplyUserMapper;
+import com.tyh.mapper.ShopCatalogMapper;
+import com.tyh.mapper.SymptomMapper;
+import com.tyh.mapper.TextMessageMapper;
+import com.tyh.mapper.zanCountMapper;
+import com.tyh.model.B_Bank;
+import com.tyh.model.B_Bill;
+import com.tyh.model.B_Garden;
+import com.tyh.model.B_Order_Track;
+import com.tyh.model.B_Shop;
+import com.tyh.model.B_User;
+import com.tyh.model.B_User_Role;
+import com.tyh.model.CheckCode;
+import com.tyh.model.CheckCodeExample;
+import com.tyh.model.ImgSet;
+import com.tyh.model.ProConfigMap;
+import com.tyh.model.ReplyUser;
+import com.tyh.model.ShopCatalog;
+import com.tyh.model.Symptom;
+import com.tyh.model.TextMessage;
+import com.tyh.model.zanCount;
+import com.tyh.unitl.DateUtils;
+import com.tyh.unitl.FileUnitl;
+import com.tyh.unitl.IdGen;
+import com.tyh.unitl.JavaSmsApi;
+import com.tyh.unitl.MD5Code;
+import com.tyh.unitl.PageInfo;
+
+
+@Service
+public class B_UserService {
+	
+	@Resource
+	private B_UserMapper mapper;
+	@Resource
+	private B_ShopMapper shopMapper;
+	@Resource
+	private B_Order_TrackMapper trackMapper;
+	@Resource
+	private B_BankMapper bankMapper;
+	@Resource
+	private B_BillMapper billMapper;
+	@Resource
+	private B_GardenMapper gardenMapper;
+	@Resource
+	private CheckCodeMapper checkCodeMapper;
+	@Resource
+	private SymptomMapper symptomMapper;
+	@Resource
+	private ShopCatalogMapper shopCatalogMapper;
+	@Autowired
+    private B_User_RoleMapper userRoleMapper;
+	@Autowired
+    private TextMessageMapper textMessageMapper;
+	@Autowired
+    private ReplyUserMapper replyUserMapper;
+	@Autowired
+    private zanCountMapper zanCountMapper;
+	
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	@Transactional
+	public int insert(B_User record){
+    	int returnCode = mapper.insert(record);
+    	return returnCode;
+    }
+
+	public B_User selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+	public int insertSelective(B_Shop record){
+		return shopMapper.insertSelective(record);
+	}
+	public int updateByPrimaryKeySelective(B_User record){
+    	return mapper.updateByPrimaryKeySelective(record);
+    }
+	public int updateComsYes(B_User record){
+		return mapper.updateComsYes(record);
+	}
+	public int updateComsNo(B_User record){
+		return mapper.updateComsNo(record);
+	}
+	public int updateComs(B_User record){
+		return mapper.updateComs(record);
+	}
+	public int updateBalance(B_User record){
+		return mapper.updateBalance(record);
+	}
+	public int updateRechargeNum(B_User record){
+		return mapper.updateRechargeNum(record);
+	}
+	public int updateRechargeBlock(B_User record){
+		return mapper.updateRechargeBlock(record);
+	}
+	public int updateOweNum(B_User record){
+		return mapper.updateOweNum(record);
+	}
+	public int updateAlonepay(B_User record){
+		return mapper.updateAlonepay(record);
+	}
+	public int updateBonusNum(B_User record){
+		return mapper.updateBonusNum(record);
+	}
+	public int updateOfferNum(B_User record){
+		return mapper.updateOfferNum(record);
+    }
+	public int updateReferNum(B_User record){
+		return mapper.updateReferNum(record);
+	}
+	public int updatePayment(B_User record){
+		return mapper.updatePayment(record);
+	}
+	public int updateBonus(B_User record){
+		return mapper.updateBonus(record);
+	}
+	public int updateRefer(B_User record){
+		return mapper.updateRefer(record);
+	}
+	public int updateTPayment(B_User record){
+		return mapper.updateTPayment(record);
+	}
+	public int updateWeekPay(B_User record){
+		return mapper.updateWeekpay(record);
+	}
+	public int updateHeadImg(B_User record){
+		return mapper.updateHeadImg(record);
+	}
+	public int updateSex(B_User record){
+		return mapper.updateSex(record);
+	}
+	public int updatePbcUser(B_User record){
+		return mapper.updatePbcUser(record);
+	}
+	public int updatePbcSeller(B_User record){
+		return mapper.updatePbcSeller(record);
+	}
+	public int updatePbcBlock(B_User record){
+		return mapper.updatePbcBlock(record);
+	}
+	public int updateNickName(B_User record){
+		return mapper.updateNickName(record);
+	}
+	public B_User selectByNamePwd(String login_name,String pwd){
+    	return mapper.selectByNamePwd(login_name, pwd);
+    }
+	public B_User selectByName(String login_name){
+    	return mapper.selectByName(login_name);
+    }
+	public B_User selectByOpenId(String openId){
+		return mapper.selectByOpenId(openId);
+	}
+	public B_User selectByUnionId(String unionId){
+		return mapper.selectByUnionId(unionId);
+	}
+	public List<ShopCatalog> selectAllParentShopCatalog(){
+		return shopCatalogMapper.selectAllParentList();
+	}
+	public List<ShopCatalog> selectByParentId(Integer parentId){
+		return shopCatalogMapper.selectByParentId(parentId);
+	}
+	
+	public ShopCatalog selectShopCatalog(Integer id){
+		return shopCatalogMapper.selectByPrimaryKey(id);
+	}
+	
+	public B_User selectByPhone(String phone){
+    	return mapper.selectByPhone(phone);
+    }
+	
+	public B_User selectByShartCode(String shareCode){
+		return mapper.selectByShartCode(shareCode);
+	}
+	
+	public B_User selectByShartCode2(String shareCode2){
+		return mapper.selectByShartCode2(shareCode2);
+	}
+	
+	public B_Shop selectShopByPrimaryKey(Integer id){
+		return shopMapper.selectByPrimaryKey(id);
+	}
+	public B_Shop selectByUserId(Integer userId,Integer status){
+		return shopMapper.selectByUserId(userId,status);
+	}
+	public int updateByPrimaryKeySelective(B_Shop record){
+		return shopMapper.updateByPrimaryKeySelective(record);
+	}
+	public List<B_Shop> selectByGardenId(Integer gardenId){
+		return shopMapper.selectByGardenId(gardenId);
+	}
+	public List<B_Shop> selectByReferId(Integer referId){
+		return shopMapper.selectByReferId(referId);
+	}
+	public List<B_Shop> selectByAddr(String addr){
+		return shopMapper.selectByAddr(addr);
+	}
+	public List<B_User> selectUserByReferId(Integer referId,String referCode){
+		return mapper.selectUserByReferId(referId,referCode);
+	}
+	
+	public List<B_User> selectUserByReferIdListPage(PageInfo page,Integer referId,String referCode){
+		return mapper.selectUserByReferIdListPage(page,referId,referCode);
+	}
+	
+	public List<B_User> selectAgentByShopAddr(String roleId,String addr){
+		return mapper.selectAgentByShopAddr(roleId,addr);
+	}
+	
+	public List<B_User> selectByroleIdandAddr(String roleId,String addr){
+		return mapper.selectByroleIdandAddr(roleId,addr);
+	}
+	
+	public List<B_User> selectByRoleId(String roleId){
+		return mapper.selectByRoleId(roleId);
+	}
+	public List<B_User> selectUserByOwerId(Integer owerId){
+		return mapper.selectUserByOwerId(owerId);
+	}
+	public int getCountComsByroleIdandAddr(String roleId,String addr){
+		return mapper.getCountComsByroleIdandAddr(roleId, addr);
+	}
+    
+	public int getCountComsUserByReferId(Integer referId){
+		return mapper.getCountComsUserByReferId(referId);
+	}
+    
+	public int getCountComsUserByOwerId(Integer owerId){
+		return mapper.getCountComsUserByOwerId(owerId);
+	}
+	public List<B_Shop> selectShopListPage(PageInfo page,Integer status,String name,String addr,List<Integer> catalogIdList,Short shopType){
+		return shopMapper.selectShopListPage(page, status,name,addr,catalogIdList,shopType);
+	}
+	public List<B_Shop> selectBldShopList(Integer status,List<Integer> catalogIdList,Short shopType){
+		return shopMapper.selectBldShopList(status,catalogIdList,shopType);
+	}
+	public Map getCountComsReferId(Integer referId,String addr) {
+		return shopMapper.getCountComsReferId(referId,addr);
+	}
+	public int insertSelective(B_Order_Track record){
+		return trackMapper.insertSelective(record);
+	}
+	public List<B_Bank> selectBanksByUserId(Integer userId,String flag){
+		return bankMapper.selectByUserId(userId,flag);
+	}
+	public int insertSelective(B_Bank record){
+		return bankMapper.insertSelective(record);
+	}
+	public int delBank(Integer id){
+		return bankMapper.delBank(id);
+	}
+	public int updateByPrimaryKeySelective(B_Bank record){
+		return bankMapper.updateByPrimaryKeySelective(record);
+	}
+	public B_Bank selectBankByPrimaryKey(Integer id){
+		return bankMapper.selectByPrimaryKey(id);
+	}
+	public int deletebankByPrimaryKey(Integer id){
+		return bankMapper.deleteByPrimaryKey(id);
+	}
+	public int insertSelective(B_Bill record){
+		return billMapper.insertSelective(record);
+	}
+	public B_Garden selectGardenByPrimaryKey(Integer id){
+		return gardenMapper.selectByPrimaryKey(id);
+	}
+	public List<B_Garden> selectGardenList(){
+		return gardenMapper.selectGardenList();
+	}
+	public int saveGarden(B_Garden record){
+		return gardenMapper.insertSelective(record);
+	}
+	public int insertSymptom(Symptom record){
+		return symptomMapper.insertSelective(record);
+	}
+	public B_User_Role selectRoleByPrimaryKey(Integer id){
+		return userRoleMapper.selectByPrimaryKey(id);
+	}
+	public TextMessage selectTextByOpenId(String fromusername){
+		return textMessageMapper.selectByOpenId(fromusername);
+	}
+	public int insertSelective(TextMessage record){
+		return textMessageMapper.insertSelective(record);
+	}
+	public B_User registUser(String referId,String unionid, String password, String phoneNum, String nickName, String headPhoto,String pwd2,String referCode,HttpServletRequest request) throws Exception{
+		
+        B_User user = null;
+        try{  
+       	//新建用户
+    		user = new B_User();
+    		if(StringUtils.isNotBlank(unionid)){
+    			user.setUnionId(unionid);
+    		}
+    		if(StringUtils.isNotBlank(phoneNum)){
+    			user.setPhone(phoneNum);
+    			user.setLoginName(phoneNum);
+    		}
+    		if (StringUtils.isNotBlank(referId)) {
+				user.setReferId(Integer.parseInt(referId));
+			}
+    		if (StringUtils.isBlank(nickName)) {
+    			user.setNickName(phoneNum);
+			}else {
+				user.setNickName(nickName);
+			}
+    		user.setPwd(MD5Code.md5_base64(password));
+    		if (StringUtils.isNotBlank(pwd2)) {
+    			user.setPwd2(MD5Code.md5_base64(pwd2));
+			}
+    		user.setRegistTime(DateUtils.currtime());
+    		user.setUserRoleId(CommonParam.USER_ROLE_MEMBER);
+    		user.setMonthpay(0d);
+			user.setJifenNo(0.0);
+			user.setJifenYes(0.0);
+			user.setStatus((short) 0);
+			user.setUserType((short) 0);
+			user.setComsNo(0d);
+			user.setComsYes(0d);
+			user.setBalance(0d);
+			user.setTotalpay(0d);
+			user.setSurpluspay(0d);
+			user.setRechargeNum(0d);
+			user.setOweNum(100d);
+			user.setStatus((short) 0);
+			user.setGardenId(1);
+			user.setBonusNum(0d);
+			user.setTotalComs(0d);
+			user.setMonthComs(0d);
+			user.setAlonepay(0d);
+			user.setPayment(0d);
+			user.setReferNum(0d);
+			user.setTotalBonus(0d);
+			user.setMonthBonus(0d);
+			user.setTotalPayment(0d);
+			user.setMonthPayment(0d);
+			user.setTotalRefer(0d);
+			user.setMonthRefer(0d);
+			user.setOfferNum(0d);
+			user.setWeekpay(0d);
+			user.setPbcUser(0d);
+			user.setPbcSeller(0d);
+			user.setPbcBlock(0d);
+			user.setRechargeBlock(0d);
+			user.setTotalPbc(0d);
+			user.setAuthed((short) 0);
+			/*String shareCode1 = IdGen.randomBase62(6);
+			String shareCode2 = IdGen.randomBase62(6);
+			user.setShareCode1(shareCode1);
+			user.setShareCode2(shareCode2);*/
+			
+			user.setReferCode(referCode);
+    		//上传头像
+    		if(StringUtils.isNotBlank(headPhoto)){
+    			if(StringUtils.isNotBlank(unionid)){
+    				user.setHeadImgUrl(headPhoto);
+    			}else{
+    				String fileName = Calendar.getInstance().getTimeInMillis()+".jpg";
+    				if(new FileUnitl().GenerateImage(headPhoto, fileName)){
+    					String img_url = new FileUnitl().gethead_img_url()+fileName;
+    					user.setHeadImgUrl(img_url);
+    					user.setUnionId(phoneNum);
+    				}
+    			}
+    		}else {
+    			user.setHeadImgUrl("default/user_head_default.jpg");
+			}
+//    		this.insert(user);
+    		mapper.insert(user);
+    		user.setShareCode1(user.getId()+"a");
+			user.setShareCode2(user.getId()+"b");
+			mapper.updateByPrimaryKeySelective(user);
+        }catch(Exception e){  
+       	 e.printStackTrace();
+        }
+		
+		return user;
+	}
+	
+	public  synchronized String canSendCheckCode(String phoneNum) {
+		try {
+			CheckCodeExample example = new CheckCodeExample();
+			CheckCodeExample.Criteria c = example.createCriteria();
+			
+			example.setOrderByClause(" CREATE_DATE desc ");
+			
+			if(StringUtils.isNotBlank(phoneNum)){
+				c.andPhoneNumEqualTo(Long.parseLong(phoneNum));
+			}
+			List<CheckCode> checkCodes = checkCodeMapper.selectByExample(
+					example);
+			
+			if(checkCodes!=null && checkCodes.size()>0){
+				CheckCode cc = checkCodes.get(0);
+				if(cc.getPhoneNum()!=null){
+					if(cc.getCreateDate().getTime()+1*60*1000>new Date().getTime()){
+						return cc.getCheckCode();
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String sendCheckCode(String phoneNum) {
+		String checkCode = "";
+		try {
+			Random random = new Random();
+			int x = random.nextInt(8999);
+			x = x+1000;
+			checkCode = x+"";
+			
+			CheckCode ck = new CheckCode();
+			if(StringUtils.isNotBlank(phoneNum)){
+				ck.setPhoneNum(Long.parseLong(phoneNum));
+			}
+			ck.setCreateDate(new Date());
+			ck.setCheckCode(checkCode);
+			checkCodeMapper.insert(ck);
+			
+			if(StringUtils.isNotBlank(phoneNum)){
+				 //设置模板ID，如使用1号模板:【#company#】您的验证码是#code#
+		        String apikey = "a0703efb5da71f38a5284bffc4a68867";
+		    	long tpl_id = 1;
+		    	String mobile = phoneNum;
+		        //设置对应的模板变量值
+		        //如果变量名或者变量值中带有#&=%中的任意一个特殊符号，需要先分别进行urlencode编码
+		        //如code值是#1234#,需作如下编码转换
+		        String codeValue = URLEncoder.encode(checkCode, "utf-8");
+		        String tpl_value = "#code#=" + codeValue + "&#company#="+ProConfigMap.configMap.get("webName");
+		        //模板发送的调用示例
+		        System.out.println(JavaSmsApi.tplSendSms(apikey, tpl_id, tpl_value, mobile));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return checkCode;
+	}
+	
+	public CheckCode getCheckCode(String phoneNum) {
+		CheckCodeExample example = new CheckCodeExample();
+		CheckCodeExample.Criteria c = example.createCriteria();
+		example.setOrderByClause(" CREATE_DATE desc ");
+		c.andPhoneNumEqualTo(Long.parseLong(phoneNum));
+		
+		List<CheckCode> cks = checkCodeMapper.selectByExample(example);
+		
+		if(cks!=null&&cks.size()>0){
+			CheckCode ck  = cks.get(0);
+			int min = DateUtils.minBetween(ck.getCreateDate(), new Date());
+			if (min>5) {
+				return null;
+			}else {
+				return  ck;
+			}
+		}else{
+			return null;
+		}
+	}
+	public int updatePhoneAndAddr(B_User record){
+		return mapper.updatePhoneAndAddr(record);
+	}
+	public List<ImgSet> getImgSet(String flag) {
+		Map<String, String> map = ProConfigMap.configMap;
+		String ASSET_URL = ProConfigMap.configMap.get("RESOURECE_URL");
+		List<ImgSet> imgSets = new ArrayList<ImgSet>();
+		if (flag.equals("indexBanner")) {
+			if (StringUtils.isNotBlank(map.get("appBannerImgId0"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appBannerImgId0"));
+				imgSet.setType(map.get("appBannerImgFlag0"));
+				imgSet.setImg(ASSET_URL+map.get("appBannerImg0"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appBannerImgId1"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appBannerImgId1"));
+				imgSet.setType(map.get("appBannerImgFlag1"));
+				imgSet.setImg(ASSET_URL+map.get("appBannerImg1"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appBannerImgId2"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appBannerImgId2"));
+				imgSet.setType(map.get("appBannerImgFlag2"));
+				imgSet.setImg(ASSET_URL+map.get("appBannerImg2"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appBannerImgId3"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appBannerImgId3"));
+				imgSet.setType(map.get("appBannerImgFlag3"));
+				imgSet.setImg(ASSET_URL+map.get("appBannerImg3"));
+				imgSets.add(imgSet);
+			}
+		}
+		if (flag.equals("xgms")) {
+			if (StringUtils.isNotBlank(map.get("appXgGoodsImgId0"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appXgGoodsImgId0"));
+				imgSet.setType("goods");
+				imgSet.setyPrice(map.get("appXgGoodsYPrice0"));
+				imgSet.setxPrice(map.get("appXgGoodsXPrice0"));
+				imgSet.setImg(ASSET_URL+map.get("appXgGoodsImg0"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appXgGoodsImgId1"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appXgGoodsImgId1"));
+				imgSet.setType("goods");
+				imgSet.setyPrice(map.get("appXgGoodsYPrice1"));
+				imgSet.setxPrice(map.get("appXgGoodsXPrice1"));
+				imgSet.setImg(ASSET_URL+map.get("appXgGoodsImg1"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appXgGoodsImgId2"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appXgGoodsImgId2"));
+				imgSet.setType("goods");
+				imgSet.setyPrice(map.get("appXgGoodsYPrice2"));
+				imgSet.setxPrice(map.get("appXgGoodsXPrice2"));
+				imgSet.setImg(ASSET_URL+map.get("appXgGoodsImg2"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appXgGoodsImgId3"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appXgGoodsImgId3"));
+				imgSet.setType("goods");
+				imgSet.setyPrice(map.get("appXgGoodsYPrice3"));
+				imgSet.setxPrice(map.get("appXgGoodsXPrice3"));
+				imgSet.setImg(ASSET_URL+map.get("appXgGoodsImg3"));
+				imgSets.add(imgSet);
+			}
+		}
+		if (flag.equals("shopBanner")) {
+			if (StringUtils.isNotBlank(map.get("appShopImgName0"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appShopImgName0"));
+				imgSet.setType("shop");
+				imgSet.setImg(ASSET_URL+map.get("appShopImg0"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appShopImgName1"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appShopImgName1"));
+				imgSet.setType("shop");
+				imgSet.setImg(ASSET_URL+map.get("appShopImg1"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appShopImgName2"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appShopImgName2"));
+				imgSet.setType("shop");
+				imgSet.setImg(ASSET_URL+map.get("appShopImg2"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appShopImgName3"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appShopImgName3"));
+				imgSet.setType("shop");
+				imgSet.setImg(ASSET_URL+map.get("appShopImg3"));
+				imgSets.add(imgSet);
+			}
+		}
+		if (flag.equals("shopMBanner")) {
+			if (StringUtils.isNotBlank(map.get("appMImgId0"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appMImgId0"));
+				imgSet.setType(map.get("appMImgFlag0"));
+				imgSet.setImg(ASSET_URL+map.get("appMImg0"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appMImgId1"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appMImgId1"));
+				imgSet.setType(map.get("appMImgFlag1"));
+				imgSet.setImg(ASSET_URL+map.get("appMImg1"));
+				imgSets.add(imgSet);
+			}
+			if (StringUtils.isNotBlank(map.get("appMImgId2"))) {
+				ImgSet imgSet = new ImgSet();
+				imgSet.setId(map.get("appMImgId2"));
+				imgSet.setType(map.get("appMImgFlag2"));
+				imgSet.setImg(ASSET_URL+map.get("appMImg2"));
+				imgSets.add(imgSet);
+			}
+		}
+		return imgSets;
+	}
+	public int insertReplyUser(ReplyUser record){
+		return replyUserMapper.insertSelective(record);
+	}
+	public ReplyUser selectReplyUserByPrimaryKey(Integer id){
+		return replyUserMapper.selectByPrimaryKey(id);
+	}
+	public int updateReplyUser(ReplyUser record){
+		return replyUserMapper.updateByPrimaryKeySelective(record);
+	}
+	
+	public List<zanCount> selectAllZanCount() {
+		return zanCountMapper.selectAllZanCount();
+	}
+}

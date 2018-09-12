@@ -1,0 +1,433 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Shop {
+    private Integer id;
+
+    private String name;
+
+    private Integer userId;
+    
+    private Integer referId;
+    
+    private String catalogId;
+    
+    private String phone;
+
+    private String realName;
+    
+    private String bank;
+
+    private String bankName;
+
+    private String account;
+
+    private String card;
+
+    private String cardUrl1;
+
+    private String cardUrl2;
+    
+    private Integer gardenId;
+    
+    private String chartUrl;
+    
+    private String chartUrl1;
+    
+    private Short shopType;
+    
+    private B_User user;
+    
+    private Integer shopLevId;
+
+    private String mainGoods;
+
+    private String logoUrl;
+
+    private String shopDes;
+
+    private String shopDetail;
+
+    private String createTime;
+
+    private String expiryTime;
+
+    private String checkResult;
+
+    private Integer status;
+
+    private double totalMoney;
+    private double monthMoney;
+    private double maxMoney;
+
+    private double latelyMoney;
+    
+    private Double lineMoney;
+    private Double onlineMoney;
+    
+    private String lon;
+    private String lat;
+    
+    private Date updateTime;
+    private String checkCode;
+    private String referPhone;
+    private String userPhone;
+    private String idstr;
+    private String userAddr;
+    private String addrDetail;
+    private String flag;
+    private Double longNum;
+    public String getUserAddr() {
+		return userAddr;
+	}
+
+	public void setUserAddr(String userAddr) {
+		this.userAddr = userAddr;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getShopLevId() {
+        return shopLevId;
+    }
+
+    public void setShopLevId(Integer shopLevId) {
+        this.shopLevId = shopLevId;
+    }
+
+    public String getMainGoods() {
+        return mainGoods;
+    }
+
+    public void setMainGoods(String mainGoods) {
+        this.mainGoods = mainGoods == null ? null : mainGoods.trim();
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl == null ? null : logoUrl.trim();
+    }
+
+    public String getShopDes() {
+        return shopDes;
+    }
+
+    public void setShopDes(String shopDes) {
+        this.shopDes = shopDes == null ? null : shopDes.trim();
+    }
+
+    public String getShopDetail() {
+        return shopDetail;
+    }
+
+    public void setShopDetail(String shopDetail) {
+        this.shopDetail = shopDetail == null ? null : shopDetail.trim();
+    }
+
+    public String getCheckResult() {
+        return checkResult;
+    }
+
+    public void setCheckResult(String checkResult) {
+        this.checkResult = checkResult == null ? null : checkResult.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getExpiryTime() {
+		return expiryTime;
+	}
+
+	public void setExpiryTime(String expiryTime) {
+		this.expiryTime = expiryTime;
+	}
+
+	public B_User getUser() {
+		return user;
+	}
+
+	public void setUser(B_User user) {
+		this.user = user;
+	}
+
+	public double getTotalMoney() {
+		return totalMoney;
+	}
+
+	public void setTotalMoney(double totalMoney) {
+		this.totalMoney = totalMoney;
+	}
+
+	public double getMaxMoney() {
+		return maxMoney;
+	}
+
+	public void setMaxMoney(double maxMoney) {
+		this.maxMoney = maxMoney;
+	}
+
+	public double getLatelyMoney() {
+		return latelyMoney;
+	}
+
+	public void setLatelyMoney(double latelyMoney) {
+		this.latelyMoney = latelyMoney;
+	}
+
+	public Integer getReferId() {
+		return referId;
+	}
+
+	public void setReferId(Integer referId) {
+		this.referId = referId;
+	}
+
+	public String getChartUrl() {
+		return chartUrl;
+	}
+
+	public void setChartUrl(String chartUrl) {
+		this.chartUrl = chartUrl;
+	}
+
+	public Short getShopType() {
+		return shopType;
+	}
+
+	public void setShopType(Short shopType) {
+		this.shopType = shopType;
+	}
+
+	public Integer getGardenId() {
+		return gardenId;
+	}
+
+	public void setGardenId(Integer gardenId) {
+		this.gardenId = gardenId;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getCard() {
+		return card;
+	}
+
+	public void setCard(String card) {
+		this.card = card;
+	}
+
+	public String getCardUrl1() {
+		return cardUrl1;
+	}
+
+	public void setCardUrl1(String cardUrl1) {
+		this.cardUrl1 = cardUrl1;
+	}
+
+	public String getCardUrl2() {
+		return cardUrl2;
+	}
+
+	public void setCardUrl2(String cardUrl2) {
+		this.cardUrl2 = cardUrl2;
+	}
+
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getCheckCode() {
+		return checkCode;
+	}
+
+	public void setCheckCode(String checkCode) {
+		this.checkCode = checkCode;
+	}
+
+	public String getReferPhone() {
+		return referPhone;
+	}
+
+	public void setReferPhone(String referPhone) {
+		this.referPhone = referPhone;
+	}
+
+	public String getUserPhone() {
+		return userPhone;
+	}
+
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
+	}
+
+	public String getIdstr() {
+		return idstr;
+	}
+
+	public void setIdstr(String idstr) {
+		this.idstr = idstr;
+	}
+
+	public String getChartUrl1() {
+		return chartUrl1;
+	}
+
+	public void setChartUrl1(String chartUrl1) {
+		this.chartUrl1 = chartUrl1;
+	}
+
+	public double getMonthMoney() {
+		return monthMoney;
+	}
+
+	public void setMonthMoney(double monthMoney) {
+		this.monthMoney = monthMoney;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+	public String getAddrDetail() {
+		return addrDetail;
+	}
+
+	public void setAddrDetail(String addrDetail) {
+		this.addrDetail = addrDetail;
+	}
+
+	public Double getLineMoney() {
+		return lineMoney;
+	}
+
+	public void setLineMoney(Double lineMoney) {
+		this.lineMoney = lineMoney;
+	}
+
+	public Double getOnlineMoney() {
+		return onlineMoney;
+	}
+
+	public void setOnlineMoney(Double onlineMoney) {
+		this.onlineMoney = onlineMoney;
+	}
+
+	public String getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+
+	public String getLon() {
+		return lon;
+	}
+
+	public void setLon(String lon) {
+		this.lon = lon;
+	}
+
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public Double getLongNum() {
+		return longNum;
+	}
+
+	public void setLongNum(Double longNum) {
+		this.longNum = longNum;
+	}
+}

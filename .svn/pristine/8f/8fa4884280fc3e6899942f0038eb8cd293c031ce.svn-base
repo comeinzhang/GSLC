@@ -1,0 +1,96 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class RedPacket {
+    private Integer id;
+
+    private Integer userId;
+
+    private Integer remaindNum;
+
+    private Double remaindmoney;
+
+    private Double returnamount;
+
+    private Integer allNum;
+
+    private Short status;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getRemaindNum() {
+        return remaindNum;
+    }
+
+    public void setRemaindNum(Integer remaindNum) {
+        this.remaindNum = remaindNum;
+    }
+
+
+    public Integer getAllNum() {
+        return allNum;
+    }
+
+    public void setAllNum(Integer allNum) {
+        this.allNum = allNum;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public Double getRemaindmoney() {
+		return remaindmoney;
+	}
+
+	public void setRemaindmoney(Double remaindmoney) {
+		this.remaindmoney = remaindmoney;
+	}
+
+	public Double getReturnamount() {
+		return returnamount;
+	}
+
+	public void setReturnamount(Double returnamount) {
+		this.returnamount = returnamount;
+	}
+}

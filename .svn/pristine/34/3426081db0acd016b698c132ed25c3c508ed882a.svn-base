@@ -1,0 +1,13 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.SysVersion;
+
+
+public interface SysVersionMapper {
+
+	SysVersion selectByPrimaryKey(Integer id);
+
+    List<SysVersion> getSysVersionList(Integer deviceType);
+}

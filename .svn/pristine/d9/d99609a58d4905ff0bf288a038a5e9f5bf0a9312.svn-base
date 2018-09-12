@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_User_AddrMapper" >
+  <resultMap id="BaseResultMap" type="B_User_Addr" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="ADDR" property="addr" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="POSTALCODE" property="postalcode" jdbcType="VARCHAR" />
+    <result column="FLAG" property="flag" jdbcType="SMALLINT" />
+    <result column="DEL" property="del" jdbcType="SMALLINT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, ADDR, NAME, PHONE, POSTALCODE, UPDATE_TIME,FLAG,DEL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_user_addr
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUser_Id" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_user_addr
+    where USER_ID = #{user_id,jdbcType=INTEGER} and DEL != 1
+    <if test="flag != null" >
+      and  FLAG = #{flag,jdbcType=SMALLINT}
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_user_addr
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="B_User_Addr"  useGeneratedKeys="true" keyProperty="id">
+    insert into b_user_addr (USER_ID, ADDR, 
+      NAME, PHONE, POSTALCODE, FLAG,DEL)
+    values (#{userId,jdbcType=INTEGER}, #{addr,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{postalcode,jdbcType=VARCHAR}, #{flag,jdbcType=SMALLINT}, #{del,jdbcType=SMALLINT})
+  </insert>
+  <update id="updateFlagByUserId">
+  	update b_user_addr set flag=0 where user_id=#{userId}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="B_User_Addr" >
+    update b_user_addr
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="addr != null" >
+        ADDR = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="postalcode != null" >
+        POSTALCODE = #{postalcode,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null" >
+        DEL = #{del,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

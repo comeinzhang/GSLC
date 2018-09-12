@@ -1,0 +1,34 @@
+package com.tyh.mapper;
+
+import com.tyh.model.JifenDetail;
+import com.tyh.model.JifenDetailExample;
+import com.tyh.unitl.PageInfo;
+
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface JifenDetailMapper {
+    int countByExample(JifenDetailExample example);
+
+    int deleteByExample(JifenDetailExample example);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(JifenDetail record);
+
+    int insertSelective(JifenDetail record);
+
+    List<JifenDetail> selectJifenDetailListPage(@Param("userId")Integer userId, @Param("page")PageInfo page);
+    
+    List<JifenDetail> selectByExample(JifenDetailExample example);
+
+    JifenDetail selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") JifenDetail record, @Param("example") JifenDetailExample example);
+
+    int updateByExample(@Param("record") JifenDetail record, @Param("example") JifenDetailExample example);
+
+    int updateByPrimaryKeySelective(JifenDetail record);
+
+    int updateByPrimaryKey(JifenDetail record);
+}

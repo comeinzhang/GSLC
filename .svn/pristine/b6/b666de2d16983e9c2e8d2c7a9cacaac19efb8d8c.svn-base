@@ -1,0 +1,475 @@
+package com.tyh.controller;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.alibaba.fastjson.JSON;
+import com.tyh.model.B_User;
+import com.tyh.model.CheckCode;
+import com.tyh.service.B_UserService;
+import com.tyh.unitl.FileUnitl;
+import com.tyh.unitl.MD5Code;
+
+
+
+
+@Controller
+@RequestMapping("/userM")
+public class UserMController {
+	@Autowired
+    private B_UserService userService;
+	
+	Logger logger = Logger.getLogger(this.getClass());
+	
+	@RequestMapping("/regist")
+	public void regist(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String unionid = request.getParameter("unionid");
+		
+		String phoneNum = request.getParameter("phoneNum");
+		String password = request.getParameter("password");
+		String headPhoto = request.getParameter("headPhoto"); 
+		String nickName = request.getParameter("nickName"); 
+		String checkCode = request.getParameter("checkCode");
+		
+		//String status = request.getParameter("status");  //0:调试  1：正式版本
+		
+//		String deviceType = request.getParameter("deviceType");
+//		String cid = request.getParameter("cid");//推送
+		
+		System.out.println("-->/regist.html?unionid="+unionid+"&password="+password
+				+"&phoneNum="+phoneNum+"&checkCode="+checkCode
+				+"&nickName="+nickName+"&headPhoto="+headPhoto);
+		
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		int code = 1;
+		String msg = "";
+		
+		if(StringUtils.isNotBlank(unionid)){
+			B_User user = this.userService.selectByUnionId(unionid);
+			if(user == null){
+				user = this.userService.registUser(null,unionid, password, phoneNum, nickName, headPhoto,"","",request);
+			}else{
+				user.setHeadImgUrl(headPhoto);
+				user.setNickName(nickName);
+				this.userService.updateHeadImg(user);
+				this.userService.updateNickName(user);
+			}
+			List<B_User> users = new ArrayList<B_User>();
+			
+			user.setPwd(null);
+			users.add(user);
+			
+			listMap.put("list", users);
+			map.put("data", listMap);
+		}else if(StringUtils.isNotBlank(password) && StringUtils.isNotBlank(checkCode)
+				&& StringUtils.isNotBlank(phoneNum) && StringUtils.isNotBlank(headPhoto) && StringUtils.isNotBlank(nickName)){
+			boolean checkFlag = true;
+			//验证验证码
+			CheckCode ck = null;
+			if(StringUtils.isNotBlank(phoneNum)){
+				ck = this.userService.getCheckCode(phoneNum);
+			}
+			if(ck==null || !ck.getCheckCode().equals(checkCode)){
+				code = -1;
+				msg = "验证码不正确！";
+				checkFlag = false;
+			}
+			//验证手机号
+			if(StringUtils.isNotBlank(phoneNum)){
+				B_User user = this.userService.selectByPhone(phoneNum);
+				if(user!=null){
+					code = -1;
+					msg = "该手机号已注册！";
+					checkFlag = false;
+				}
+			}
+			//正式开始注册
+			if(checkFlag){
+				password = MD5Code.md5_base64(password);
+				B_User user = this.userService.registUser(null,unionid, password, phoneNum, nickName, headPhoto,"","",request);
+				
+				List<B_User> users = new ArrayList<B_User>();
+				
+				user.setPwd(null);
+				users.add(user);
+				
+				listMap.put("list", users);
+				map.put("data", listMap);
+			}
+		}else{
+			code = -1;
+			msg = "参数为空！";
+		}
+		
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		System.out.println("注册jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	@RequestMapping("/registYph")
+	public void registYph(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String unionid = request.getParameter("unionid");
+		
+		String phoneNum = request.getParameter("phoneNum");
+		String password = request.getParameter("password");
+		String headPhoto = request.getParameter("headPhoto"); 
+		String nickName = request.getParameter("nickName"); 
+		String checkCode = request.getParameter("checkCode");
+		
+		//String status = request.getParameter("status");  //0:调试  1：正式版本
+		
+//		String deviceType = request.getParameter("deviceType");
+//		String cid = request.getParameter("cid");//推送
+		
+		System.out.println("-->/regist.html?unionid="+unionid+"&password="+password
+				+"&phoneNum="+phoneNum+"&checkCode="+checkCode
+				+"&nickName="+nickName+"&headPhoto="+headPhoto);
+		
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		int code = 1;
+		String msg = "";
+		
+		if(StringUtils.isNotBlank(unionid)){
+			B_User user = this.userService.selectByUnionId(unionid);
+			if(user == null){
+				user = this.userService.registUser(null,unionid, password, phoneNum, nickName, headPhoto,"","",request);
+			}else{
+				user.setHeadImgUrl(headPhoto);
+				user.setNickName(nickName);
+				this.userService.updateNickName(user);
+				this.userService.updateHeadImg(user);
+			}
+			List<B_User> users = new ArrayList<B_User>();
+			request.getSession().setAttribute("user", user);
+			user.setPwd(null);
+			users.add(user);
+			String lastPage = (String) request.getSession().getAttribute("lastPage");
+			listMap.put("list", users);
+			listMap.put("lastPage", lastPage);
+			map.put("data", listMap);
+		}else if(StringUtils.isNotBlank(password) && StringUtils.isNotBlank(checkCode)
+				&& StringUtils.isNotBlank(phoneNum) && StringUtils.isNotBlank(headPhoto) && StringUtils.isNotBlank(nickName)){
+			boolean checkFlag = true;
+			//验证验证码
+			CheckCode ck = null;
+			if(StringUtils.isNotBlank(phoneNum)){
+				ck = this.userService.getCheckCode(phoneNum);
+			}
+			if(ck==null || !ck.getCheckCode().equals(checkCode)){
+				code = -1;
+				msg = "验证码不正确！";
+				checkFlag = false;
+			}
+			//验证手机号
+			if(StringUtils.isNotBlank(phoneNum)){
+				B_User user = this.userService.selectByPhone(phoneNum);
+				if(user!=null){
+					code = -1;
+					msg = "该手机号已注册！";
+					checkFlag = false;
+				}
+			}
+			//正式开始注册
+			if(checkFlag){
+				password = MD5Code.md5_base64(password);
+				B_User user = this.userService.registUser(null,unionid, password, phoneNum, nickName, headPhoto,"","",request);
+				
+				List<B_User> users = new ArrayList<B_User>();
+				
+				user.setPwd(null);
+				users.add(user);
+				
+				listMap.put("list", users);
+				map.put("data", listMap);
+			}
+		}else{
+			code = -1;
+			msg = "参数为空！";
+		}
+		
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		System.out.println("注册jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	@RequestMapping("/login")
+	public void login(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String phoneNum = request.getParameter("phoneNum");
+		String password = request.getParameter("password");
+//		String deviceType = request.getParameter("deviceType"); //0: 安卓  	1：IOS
+//		String cid = request.getParameter("cid");
+		
+		System.out.println("-->/login.html?phoneNum="+phoneNum+"&password="+password);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		int code = 1;
+		String msg = "";
+		
+		if(StringUtils.isNotBlank(phoneNum) && StringUtils.isNotBlank(password)){  
+			B_User user = this.userService.selectByPhone(phoneNum);
+			password = MD5Code.md5_base64(password);
+			if(user==null){
+				code = -1;
+				msg = "用户不存在！";
+			}else if(!user.getPwd().equals(password)){
+				code = -1;
+				msg = "密码错误！";
+			}else{
+//				if(StringUtils.isNotBlank(cid)){
+//					user.setCid(cid);
+//					user.setDeviceType(deviceType==null?0:Integer.parseInt(deviceType));
+//					this.loginDao.updateUser(user);
+//				}
+				
+				//获取融云token
+//				user = loginService.getUserToken(user, status);
+				
+				//保存用户信息
+//				this.loginDao.updateUser(user);
+				
+				
+				List<B_User> users = new ArrayList<B_User>();
+				user.setPwd(null);
+				users.add(user);
+				listMap.put("list", users);
+				
+				map.put("data", listMap);
+			}
+		}else{
+			code = -1;
+			msg = "参数为空！";
+		}
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		System.out.println("登陆jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	
+	
+	@RequestMapping("/getUserData")
+	public void getMemberData(HttpServletRequest request,HttpServletResponse response){
+		String userId = request.getParameter("userId");
+		
+		System.out.println("-->getUserData.html?userId="+userId);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		
+		int code = 1;
+		String msg = "";
+		
+		if(StringUtils.isNotBlank(userId)){
+			B_User user = this.userService.selectByPrimaryKey(Integer.parseInt(userId));
+			if(user != null){
+				List<B_User> users = new ArrayList<B_User>();
+				user.setPwd(null);
+				users.add(user);
+				
+				listMap.put("list", users);
+				
+				map.put("data", listMap);
+			}
+		}else{
+			code = -1;
+			msg = "参数为空";
+		}
+		
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		System.out.println("获取会员信息jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	@RequestMapping("/updateUser")
+	public void updateUser(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String userId = request.getParameter("userId");
+		
+		String headPhoto = request.getParameter("headPhoto"); 
+		String nickName = request.getParameter("nickName");
+		
+		
+		logger.info("-->/updateUser.html?userId="+userId+"&headPhoto="+StringUtils.isNotBlank(headPhoto)
+				+"&nickName="+nickName);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		
+		int code = 1;
+		String msg = "";
+		try {
+			B_User user = this.userService.selectByPrimaryKey(Integer.parseInt(userId));
+			if(user==null){
+				code = -1;
+				msg = "用户不存在";
+			}else{
+				//上传头像
+	     		if(StringUtils.isNotBlank(headPhoto)){
+	     			String fileName = Calendar.getInstance().getTimeInMillis()+".jpg";
+	     			if(new FileUnitl().GenerateImage(headPhoto, fileName)){
+	     				String img_url = new FileUnitl().gethead_img_url()+fileName;
+	     				user.setHeadImgUrl(img_url);
+	     			}
+	     		}
+				if(StringUtils.isNotBlank(nickName)){
+					user.setNickName(nickName);
+				}
+				this.userService.updateNickName(user);
+				this.userService.updateHeadImg(user);
+				user.setPwd(null);
+				
+				List<B_User> users = new ArrayList<B_User>();
+				users.add(user);
+				
+				listMap.put("list", users);
+				map.put("data", listMap);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		logger.info("更新个人信息jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	@RequestMapping("/updatePassword")
+	public void updatePassword(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String phoneNum = request.getParameter("phoneNum");
+		String newPassword = request.getParameter("newPassword");
+		String checkCode = request.getParameter("checkCode");
+		
+		logger.info("-->/updatePassword.html?phoneNum="+phoneNum+"&newPassword="+newPassword
+				+"&checkCode="+checkCode);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		int code = 1;
+		String msg = "";
+		
+		if(StringUtils.isNotBlank(phoneNum) && StringUtils.isNotBlank(newPassword)
+				&& StringUtils.isNotBlank(checkCode)){
+			//验证验证码
+			CheckCode ck = null;
+			if(StringUtils.isNotBlank(phoneNum)){
+				ck = this.userService.getCheckCode(phoneNum);
+			}
+			if(ck==null || !ck.getCheckCode().equals(checkCode)){
+				code = -1;
+				msg = "验证码不正确！";
+			}else{
+				B_User user = this.userService.selectByPhone(phoneNum);
+				if(user==null){
+					code = -1;
+					msg = "用户不存在！";
+				}else{
+					newPassword = MD5Code.md5_base64(newPassword);
+					user.setPwd(newPassword);
+					this.userService.updatePhoneAndAddr(user);
+				}
+			}
+		}else{
+			code = -1;
+			msg = "参数为空！";
+		}
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		logger.info("修改密码jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	@RequestMapping("/sendCheckCode")
+	public void sendCheckCode(HttpServletRequest request,HttpServletResponse response){
+		String phoneNum = request.getParameter("phoneNum");
+		//String email = request.getParameter("email");
+		
+		
+		response.setContentType("text/html;charset=UTF-8");
+		
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		HashMap<String, Object> listMap = new HashMap<String,Object>();
+		
+		int code = 1;
+		String msg = "";
+		listMap.put("phoneNum", phoneNum);
+
+		if(StringUtils.isNotBlank(phoneNum)){
+			String oldCode = userService.canSendCheckCode(phoneNum);
+			if(StringUtils.isBlank(oldCode)){
+				String checkCodeResult = this.userService.sendCheckCode(phoneNum);
+//				msg = checkCodeResult;
+			}else{
+				code = -1;
+				msg = "验证码已发送，请查看信息！";
+			}
+		}else{
+			code = -1;
+//			msg = "参数为空";
+		}
+		map.put("data", listMap);
+		map.put("code", code);
+		map.put("msg", msg);
+		
+		String jsonResult = JSON.toJSONString(map);
+		
+		System.out.println("发送验证码jsonResult:"+jsonResult); 
+		BaseController.ajaxResultData(response, jsonResult);
+	}
+	
+	
+	
+	
+	
+}

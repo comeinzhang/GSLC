@@ -1,0 +1,18 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Goods_Reply;
+
+
+public interface B_Goods_ReplyMapper {
+
+    int insert(B_Goods_Reply record);
+
+    int insertSelective(B_Goods_Reply record);
+
+    List<B_Goods_Reply> selectByGoods_id(@Param("goods_id")Integer goods_id,@Param("star")String star,@Param("type")Short type);
+
+}

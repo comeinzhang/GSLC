@@ -1,0 +1,211 @@
+package com.tyh.unitl;
+
+
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.tyh.model.B_User;
+import com.tyh.model.ProConfigMap;
+import com.tyh.service.B_UserService;
+
+
+public class LoginFilter extends HandlerInterceptorAdapter {
+		
+	 	@Override    
+	    public boolean preHandle(HttpServletRequest request,    
+	            HttpServletResponse response, Object handler) throws Exception {
+	 		B_UserService b_UserService = (B_UserService) SpringContextUtil.getApplicationContext().getBean("b_UserService");
+	 		//楷小灶
+//	 		String codeUrl="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+PropertiesUtil.APPID+"&redirect_uri=http%3A%2F%2F"+ProConfigMap.configMap.get("DOMAIN_NAME")+"%2Fuser%2FgetCodeInfo%2F&response_type=code&scope=snsapi_userinfo&state=state_info#wechat_redirect";
+	        StringBuffer url;
+	 		url = request.getRequestURL();
+	 		Enumeration<String> paraNames=request.getParameterNames();
+	 		StringBuffer params=new StringBuffer();
+	 		String unionid = "";
+	 		for(Enumeration e=paraNames;e.hasMoreElements();){
+	 		       String thisName=e.nextElement().toString();
+	 		       String thisValue=request.getParameter(thisName);
+	 		       if (thisName.equals("unionid")) {
+	 		    	  unionid = thisValue;
+	 		       }
+	 		       params.append(thisName+"="+thisValue+"&");
+	 		}
+	 		String url_new = url.append("?"+params).toString();
+	 		if (url_new.contains("weixinLogin")) {
+				url_new="http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/user/mycenter?";
+			}
+	 		boolean wxIn = false;
+	 		String ua = ((HttpServletRequest) request).getHeader("user-agent")  
+	 		        .toLowerCase();  
+	 		if (ua.indexOf("micromessenger") > 0) {// 是微信浏览器  
+	 			wxIn = true;
+	 		}
+	 		request.getSession().setAttribute("wxIn", wxIn);
+	 		String webIn = (String) request.getSession().getAttribute("webIn");
+	 		if (webIn==null||"".equals(webIn)) {
+		 		webIn = "yph";
+		 		if (ProConfigMap.configMap.get("PRO_NAME").equals("KXZ")) {
+		 			webIn = "kxz";
+				}else if (ProConfigMap.configMap.get("PRO_NAME").equals("YPH")) {
+					if (!wxIn) {
+						webIn = "yphApp";
+					}
+				}else if (ProConfigMap.configMap.get("PRO_NAME").equals("兰云门窗")) {
+//					if (!wxIn) {
+//						webIn = "yunlanApp";
+//					}else{
+						webIn = "yunlan";
+//					}
+				}else if (ProConfigMap.configMap.get("PRO_NAME").equals("YHLM")) {
+					webIn = "yhlm";
+				}
+		 		request.getSession().setAttribute("webIn", webIn);
+			}
+	 		String codeUrl=ProConfigMap.configMap.get("codeUrl")+url_new+"#wechat_redirect";
+	 		B_User user = (B_User) request.getSession().getAttribute("user");
+	 		if (unionid!=null&&!"".equals(unionid)&&!url_new.contains("getCodeInfo")) {
+	 			if ((user==null||"".equals(user))) {
+	 				request.getSession().setAttribute("url", url_new);
+		        	response.sendRedirect("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/user/getCodeInfo?unionid="+unionid);
+		        	return false;
+				}
+			}
+	        if ((user==null||"".equals(user))) {
+		        		if(url_new.contains("user")) {
+							if (url_new.contains("getCodeInfo")) {
+								return true;
+							}else if (url_new.contains("getWxConfig")) {
+								return true;
+							}else if (url_new.contains("toLogin")) {
+								return true;
+							}else if (url_new.contains("login")) {
+								return true;
+							}else if (url_new.contains("toLogout")) {
+								return true;
+							}else if (url_new.contains("toRegister")) {
+								return true;
+							}else if (url_new.contains("register")) {
+								return true;
+							}else if (url_new.contains("postCode")) {
+								return true;
+							}else if (url_new.contains("bindIndex")) {
+								return true;
+							}else if (url_new.contains("toBindAccount")) {
+								return true;
+							}else if (url_new.contains("noBindAccount")) {
+								return true;
+							}else if (url_new.contains("bindAccount")) {
+								return true;
+							}else if (url_new.contains("myMoneyList")) {
+								return true;
+							}else if (url_new.contains("checkPhoneCode")) {
+								return true;
+							}else if (url_new.contains("toUpdatePwd")) {
+								return true;
+							}else if (url_new.contains("updatePwd")) {
+								return true;
+							}else if (url_new.contains("cookieLogin")) {
+								return true;
+							}else if (url_new.contains("aboutHD")) {
+								return true;
+							}else if (url_new.contains("aboutReplyShop")) {
+								return true;
+							}else if (url_new.contains("school")) {
+								return true;
+							}else if (url_new.contains("replySymptom")) {
+								return true;
+							}else if (url_new.contains("toReplySymptom")) {
+								return true;
+							}else if (url_new.contains("extengUser")) {
+								return true;
+							}else if (url_new.contains("qrcodeUrl")) {
+								return true;
+							}else if (url_new.contains("aboutRRHX")) {
+								return true;
+							}else if (url_new.contains("aboutSecret")) {
+								return true;
+							}else if (url_new.contains("howToSpread")) {
+								return true;
+							}else{
+								System.out.println("url_new::::::"+url_new);
+								System.out.println(codeUrl);
+								request.getSession().setAttribute("url", url_new);
+								request.getSession().setAttribute("lastPage", url_new);
+					        	if (wxIn) {
+					        		response.sendRedirect(codeUrl);
+								}else {
+									response.sendRedirect("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/user/toLogin");
+								}
+								return false;
+							}
+						}else if (url_new.contains("goods")) {
+							if (url_new.contains("index")||url_new.contains("catagoryList")||url_new.contains("signList")||url_new.contains("catagoryListPage")||url_new.contains("getGoodsByCatagoryIdListPage")
+								||url_new.contains("getGoodsByCatagoryListPage")||url_new.contains("pmGoodsListPage")||url_new.contains("getGoodsByKeyWListPage")||url_new.contains("getGoodsByKeywordListPage")
+								||url_new.contains("getGoodsById")||url_new.contains("getGoodsSpecList")||url_new.contains("getGoodsExt")||url_new.contains("crowdList")||url_new.contains("getGoodsSpec")||url_new.contains("getCrowdById")
+								||url_new.contains("getCrowdGoodsById")||url_new.contains("getCrowdGoodsListById")||url_new.contains("toPmGoodsList")||url_new.contains("toPreSellIndex")||url_new.contains("preSellList")||url_new.contains("getDzById")
+								||url_new.contains("toDzIndex")||url_new.contains("dzListPage")||url_new.contains("mzGoodsList")||url_new.contains("xzGoodsList")||url_new.contains("xzGoodsListPage")||url_new.contains("getIndexVoucher")) {
+								if (url_new.contains("index?flag=breaker")) {
+									System.out.println("url_new::::::"+url_new);
+									request.getSession().setAttribute("url", url_new);
+									request.getSession().setAttribute("lastPage", url_new);
+						        	if (wxIn) {
+						        		response.sendRedirect(codeUrl);
+									}else {
+										response.sendRedirect("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/user/toLogin");
+									}
+						        	return false;
+								}else {
+									return true;
+								}
+							}else {
+								System.out.println("url_new::::::"+url_new);
+								request.getSession().setAttribute("url", url_new);
+								request.getSession().setAttribute("lastPage", url_new);
+					        	if (wxIn) {
+					        		response.sendRedirect(codeUrl);
+								}else {
+									response.sendRedirect("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/user/toLogin");
+								}
+								return false;
+							}
+						}else if (url_new.contains("order")){
+							if (url_new.contains("pay_callback")) {
+								return true;
+							}else if (url_new.contains("getAppPay")) {
+								return true;
+							}else if (url_new.contains("saveSchoolImg")) {
+								return true;
+							}else if (url_new.contains("zfbNotify")) {
+								return true;
+							}
+							System.out.println("url_new::::::"+url_new);
+							request.getSession().setAttribute("url", url_new);
+							request.getSession().setAttribute("lastPage", url_new);
+				        	if (wxIn) {
+				        		response.sendRedirect(codeUrl);
+							}else {
+								response.sendRedirect("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/user/toLogin");
+							}
+							return false;
+						}
+	        }
+	        return true;     
+	    }
+	    
+	    @Override    
+	    public void postHandle(HttpServletRequest request,    
+	            HttpServletResponse response, Object handler,    
+	            ModelAndView modelAndView) throws Exception {
+	    }
+	    
+	    @Override    
+	    public void afterCompletion(HttpServletRequest request,    
+	            HttpServletResponse response, Object handler, Exception ex)    
+	            throws Exception {   
+	    }
+}

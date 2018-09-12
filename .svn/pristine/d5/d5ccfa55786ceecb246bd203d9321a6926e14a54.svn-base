@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.B_Garden;
+
+public interface B_GardenMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_Garden record);
+
+    int insertSelective(B_Garden record);
+
+    B_Garden selectByPrimaryKey(Integer id);
+    
+    List<B_Garden> selectGardenList();
+
+    int updateByPrimaryKeySelective(B_Garden record);
+
+    int updateByPrimaryKey(B_Garden record);
+}

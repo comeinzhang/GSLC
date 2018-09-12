@@ -1,0 +1,236 @@
+package com.tyh.model;
+
+
+
+public class B_Order_Detail {
+	
+    private Integer id;
+
+    private String orderNum;
+    
+    private String mergeNum;
+    
+    private Integer specId;
+    
+    private Integer shareId;
+    
+    private B_Spec spec;
+    
+    private B_Goods goods;
+    
+    private Crowd crowd;
+    
+    private Integer goodsId;
+    
+    private Integer shopId;
+    
+    private double price;
+    
+    private double priceSource;
+    
+    private double prePayment;
+    
+    private double postPrice;
+    
+    private Double totalPrice;
+
+	private Short checkRed;
+    
+    private Integer stock;
+
+    private Short assessed;
+    
+    private Short status;
+    
+    private String goodsName;
+    
+    private String updateTime;
+    private Short sign;
+    private String enableTime;
+    
+    public double getPrePayment() {
+		return prePayment;
+	}
+
+	public void setPrePayment(double prePayment) {
+		this.prePayment = prePayment;
+	}
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum == null ? null : orderNum.trim();
+    }
+
+	public B_Goods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(B_Goods goods) {
+		this.goods = goods;
+	}
+
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+
+	public Short getAssessed() {
+		return assessed;
+	}
+
+	public void setAssessed(Short assessed) {
+		this.assessed = assessed;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public Integer getSpecId() {
+		return specId;
+	}
+
+	public void setSpecId(Integer specId) {
+		this.specId = specId;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Integer getGoodsId() {
+		return goodsId;
+	}
+
+	public void setGoodsId(Integer goodsId) {
+		this.goodsId = goodsId;
+	}
+
+	public Crowd getCrowd() {
+		return crowd;
+	}
+
+	public void setCrowd(Crowd crowd) {
+		this.crowd = crowd;
+	}
+
+	public double getPriceSource() {
+		return priceSource;
+	}
+
+	public void setPriceSource(double priceSource) {
+		this.priceSource = priceSource;
+	}
+
+	public Short getSign() {
+		return sign;
+	}
+
+	public void setSign(Short sign) {
+		this.sign = sign;
+	}
+
+	public Short getCheckRed() {
+		return checkRed;
+	}
+
+	public void setCheckRed(Short checkRed) {
+		this.checkRed = checkRed;
+	}
+
+	public String getEnableTime() {
+		return enableTime;
+	}
+
+	public void setEnableTime(String enableTime) {
+		this.enableTime = enableTime;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
+	}
+
+	public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public double getPostPrice() {
+		return postPrice;
+	}
+
+	public void setPostPrice(double postPrice) {
+		this.postPrice = postPrice;
+	}
+
+	public B_Spec getSpec() {
+		return spec;
+	}
+
+	public void setSpec(B_Spec spec) {
+		this.spec = spec;
+	}
+
+	public String getMergeNum() {
+		return mergeNum;
+	}
+
+	public void setMergeNum(String mergeNum) {
+		this.mergeNum = mergeNum;
+	}
+
+	public Integer getShareId() {
+		return shareId;
+	}
+
+	public void setShareId(Integer shareId) {
+		this.shareId = shareId;
+	}
+
+}

@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_EmsType;
+
+public interface B_EmsTypeMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_EmsType record);
+
+    int insertSelective(B_EmsType record);
+
+    B_EmsType selectByPrimaryKey(Integer id);
+    
+    B_EmsType selectByType(@Param("type")String type);
+
+    int updateByPrimaryKeySelective(B_EmsType record);
+
+    int updateByPrimaryKey(B_EmsType record);
+}

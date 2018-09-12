@@ -1,0 +1,23 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.ShopCatalog;
+
+public interface ShopCatalogMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ShopCatalog record);
+
+    int insertSelective(ShopCatalog record);
+
+    ShopCatalog selectByPrimaryKey(Integer id);
+    
+    List<ShopCatalog> selectAllParentList();
+    
+    List<ShopCatalog> selectByParentId(Integer parentId);
+    
+    int updateByPrimaryKeySelective(ShopCatalog record);
+
+    int updateByPrimaryKey(ShopCatalog record);
+}

@@ -1,0 +1,38 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.TradeMapper;
+import com.tyh.model.Trade;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class TradeService {
+	
+	@Resource
+	private TradeMapper mapper;
+	
+	public List<Trade> selectAllTrade() {
+		return mapper.selectAllTrade();
+	}
+	
+	public Trade selectLastTrade() {
+		return mapper.selectLastTrade();
+	}
+	
+	public Long getCountVolumes() {
+		return mapper.getCountVolumes();
+	}
+	
+	public List<Trade> selectTradeListPage(PageInfo page) {
+		return mapper.selectTradeListPage(page);
+	}
+}

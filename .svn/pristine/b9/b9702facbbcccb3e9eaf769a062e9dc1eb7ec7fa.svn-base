@@ -1,0 +1,23 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import com.tyh.model.ProConfig;
+
+public interface ProConfigMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ProConfig record);
+
+    int insertSelective(ProConfig record);
+
+    ProConfig selectByPrimaryKey(Integer id);
+    
+    List<ProConfig> selectByKey(String proKey);
+
+    List<ProConfig> selectConfigList();
+    
+    int updateByPrimaryKeySelective(ProConfig record);
+
+    int updateByPrimaryKey(ProConfig record);
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Goods_ImgMapper" >
+  <resultMap id="BaseResultMap" type="B_Goods_Img" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="INTEGER" />
+    <result column="IMG_URL" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="SEQ" property="seq" jdbcType="SMALLINT" />
+    <result column="TYPE" property="type" jdbcType="SMALLINT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GOODS_ID, IMG_URL, SEQ, UPDATE_TIME
+  </sql>
+  <select id="selectByGoods_id" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods_img
+    where GOODS_ID = #{goods_id,jdbcType=INTEGER} 
+    <if test="type!=null">
+    	and type=#{type} 
+    </if>
+    order by SEQ
+  </select>
+  <insert id="saveGoodsImg" parameterType="com.tyh.model.B_Goods_Img">
+  	insert into b_goods_img (goods_id,img_url,seq,type) values (#{goodsId},#{imgUrl},#{seq},#{type})
+  </insert>
+  <delete id="delGoodsImg">
+  	delete from b_goods_img where goods_id=#{goodsId} and type = #{type}
+  </delete>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Goods_Img" >
+    update b_goods_img
+    <set >
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null" >
+        IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="seq != null" >
+        seq = #{seq,jdbcType=SMALLINT},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_BankMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Bank" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CARD_CODE" property="cardCode" jdbcType="VARCHAR" />
+    <result column="BANK" property="bank" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+    <result column="BANK_NAM" property="bankNam" jdbcType="VARCHAR" />
+    <result column="BRANCH" property="branch" jdbcType="VARCHAR" />
+    <result column="PROV" property="prov" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="SMALLINT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CARD_CODE, BANK, USER_ID,BRANCH,PROV,CITY,ID_CARD,PHONE,DEL_FLAG, FLAG, BANK_NAM, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_bank
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_bank
+    where USER_ID = #{userId,jdbcType=INTEGER} and DEL_FLAG!=1
+    <if test="flag!=null and flag!='' and flag=='zfb'">
+    	and FLAG =  1
+    </if>
+    <if test="flag!=null and flag!='' and flag=='yhk'">
+    	and FLAG =  0
+    </if>
+    order by ID DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_bank
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.tyh.model.B_Bank" keyProperty="id" useGeneratedKeys="true">
+    insert into b_bank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="cardCode != null" >
+        CARD_CODE,
+      </if>
+      <if test="bank != null" >
+        BANK,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="flag != null" >
+        FLAG,
+      </if>
+      <if test="bankNam != null" >
+        BANK_NAM,
+      </if>
+      <if test="branch != null" >
+        BRANCH,
+      </if>
+      <if test="prov != null" >
+        PROV,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="idCard != null" >
+        ID_CARD,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNam != null" >
+        #{bankNam,jdbcType=VARCHAR},
+      </if>
+      <if test="branch != null" >
+        #{branch,jdbcType=VARCHAR},
+      </if>
+      <if test="prov != null" >
+        #{prov,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=SMALLINT},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Bank" >
+    update b_bank
+    <set >
+      <if test="cardCode != null" >
+        CARD_CODE = #{cardCode,jdbcType=VARCHAR},
+      </if>
+       <if test="branch != null" >
+        BRANCH = #{branch,jdbcType=VARCHAR},
+      </if>
+      <if test="prov != null" >
+        PROV = #{prov,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        BANK = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNam != null" >
+        BANK_NAM = #{bankNam,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        ID_CARD = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="delBank" parameterType="java.lang.Integer">
+    update b_bank 
+    set DEL_FLAG = 1
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

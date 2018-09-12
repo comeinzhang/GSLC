@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.ClubReplyMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.ClubReply" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="club_id" property="clubId" jdbcType="INTEGER" />
+    <result column="club_name" property="clubName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="type" property="type" jdbcType="SMALLINT" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="stock" property="stock" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, club_id, club_name,title,stock,price,total_price, user_id, user_name, head_img, status, type, remarks, update_time, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_club_reply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByUserIdType" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_club_reply
+    where 1=1
+    <if test="userId">
+    	and user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="clubId != null" >
+        and club_id = #{clubId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+        and status = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="type != null" >
+        and type = #{type,jdbcType=SMALLINT}
+    </if>
+  </select>
+  
+  <select id="selectListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_club_reply
+    where 1=1
+    <if test="userId!=null">
+    	and user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="clubId != null" >
+        and club_id = #{clubId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+        and status = #{status,jdbcType=SMALLINT}
+    </if>
+    <if test="typeName!=null and typeName!='' and typeName=='reply'">
+    	and (type=0 or type=1)
+    </if>
+    <if test="typeName!=null and typeName!='' and typeName=='owner'">
+    	and (type=0 or type=2 or type=3 or type=4)
+    </if>
+    <if test="typeName!=null and typeName!='' and typeName=='member'">
+    	and type=2
+    </if>
+    <if test="typeName!=null and typeName!='' and typeName=='buy'">
+    	and type=5
+    </if>
+    <if test="orderBy==null or orderBy==''">
+    	order by create_time DESC
+    </if>
+    <if test="orderBy!=null and orderBy!='' and orderBy=='buy'">
+    	order by stock
+    </if>
+    <if test="orderBy!=null and orderBy!='' and orderBy=='time'">
+    	order by create_time DESC
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_club_reply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.ClubReply" >
+    insert into b_club_reply (id, club_id, club_name, title,stock,price,total_price
+      user_id, user_name, head_img, 
+      status, type, remarks, 
+      update_time, create_time)
+    values (#{id,jdbcType=INTEGER}, #{clubId,jdbcType=INTEGER}, #{clubName,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},#{stock,jdbcType=DECIMAL},#{price,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, 
+      #{status,jdbcType=SMALLINT}, #{type,jdbcType=SMALLINT}, #{remarks,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.ClubReply" >
+    insert into b_club_reply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="stock != null" >
+        stock,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="clubId != null" >
+        club_id,
+      </if>
+      <if test="clubName != null" >
+        club_name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="headImg != null" >
+        head_img,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="clubId != null" >
+        #{clubId,jdbcType=INTEGER},
+      </if>
+      <if test="clubName != null" >
+        #{clubName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null" >
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.ClubReply" >
+    update b_club_reply
+    <set >
+      <if test="clubId != null" >
+        club_id = #{clubId,jdbcType=INTEGER},
+      </if>
+      <if test="clubName != null" >
+        club_name = #{clubName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null" >
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        stock = #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.ClubReply" >
+    update b_club_reply
+    set club_id = #{clubId,jdbcType=INTEGER},
+      club_name = #{clubName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      head_img = #{headImg,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      title = #{title,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=DECIMAL},
+      type = #{type,jdbcType=SMALLINT},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Order_DetailMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Order_Detail" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ORDER_NUM" property="orderNum" jdbcType="VARCHAR" />
+    <result column="MERGE_NUM" property="mergeNum" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_SOURCE" property="priceSource" jdbcType="DECIMAL" />
+    <result column="PRE_PAYMENT" property="prePayment" jdbcType="DECIMAL" />
+    <result column="TOTAL_PRICE" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="POST_PRICE" property="postPrice" jdbcType="DECIMAL" />
+    <result column="STOCK" property="stock" jdbcType="INTEGER" />
+    <result column="SIGN" property="sign" jdbcType="SMALLINT" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="INTEGER" />
+    <result column="SHARE_ID" property="shareId" jdbcType="INTEGER" />
+    <result column="SHOP_ID" property="shopId" jdbcType="INTEGER" />
+    <result column="SPEC_ID" property="specId" jdbcType="INTEGER" />
+    <result column="ASSESSED" property="assessed" jdbcType="SMALLINT" />
+    <result column="CHECKRED" property="checkRed" jdbcType="SMALLINT" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="ENABLE_TIME" property="enableTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="GOODS_NAME" property="goodsName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap type="com.tyh.model.B_Order_Detail" id="BaseResultMapList" extends="BaseResultMap"> 
+		    <association property="goods" javaType="com.tyh.model.B_Goods">
+			    <id column="ID_G" property="id" jdbcType="INTEGER" />
+			    <result column="CATALOG_ID" property="catalogId" jdbcType="INTEGER" />
+			    <result column="NAME" property="name" jdbcType="VARCHAR" />
+			    <result column="HEAD_IMG_URL" property="headImgUrl" jdbcType="VARCHAR" />
+			    <result column="PRICE_G" property="price" jdbcType="DECIMAL" />
+			    <result column="PUBLISHER_ID" property="publisherId" jdbcType="INTEGER" />
+		    	<result column="PUBLISHER_NAME" property="publisherName" jdbcType="VARCHAR" />
+		    	<result column="STATUS_G" property="status" jdbcType="SMALLINT" />
+		    	<result column="Flag" property="flag" jdbcType="VARCHAR" />
+		    	<result column="SELL_COUNT" property="sellCount" jdbcType="INTEGER" />
+			    <result column="PRICE_BEFORE" property="priceBefore" jdbcType="DECIMAL" />
+			    <result column="DISCOUNT_PRICE" property="discountPrice" jdbcType="DECIMAL" />
+			    <result column="END_IS" property="endIs" jdbcType="SMALLINT" />
+			    <result column="CLICK_COUNT" property="clickCount" jdbcType="INTEGER" />
+			    <result column="POST_PRICE" property="postPrice" jdbcType="DECIMAL" />
+			    <result column="COMS_TYPE" property="comsType" jdbcType="SMALLINT" />
+		    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_NUM,MERGE_NUM,SPEC_VALUE, GOODS_ID,SHOP_ID,TOTAL_PRICE,SHARE_ID, PRICE,POST_PRICE, PRICE_SOURCE,PRE_PAYMENT,GOODS_NAME, STOCK,ASSESSED,STATUS,CHECKRED, ENABLE_TIME,UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMapList" parameterType="java.lang.Integer" >
+    select 
+    a.*,b.id id_g,b.catalog_id,b.name,b.price price_g,b.price_before,b.publisher_id,b.publisher_name,b.head_img_url,b.status STATUS_G,b.SELL_COUNT,b.CLICK_COUNT,b.flag,b.POST_PRICE,b.END_IS,b.COMS_TYPE
+    from b_order_detail a,b_goods b
+    where a.ID = #{id,jdbcType=INTEGER} and a.goods_id=b.id
+  </select>
+  <select id="selectLineDetailListPage" resultMap="BaseResultMap">
+    select a.ORDER_NUM,a.TOTAL_PRICE,a.POST_PRICE,a.PRICE,a.STOCK,a.CHECKRED,a.GOODS_NAME,a.ENABLE_TIME
+    from b_order_detail a,b_order b 
+    where  b.SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER} and a.order_num = b.order_num
+    <if test="sign!=null">
+      and (a.SIGN = 4 )
+    </if>
+    order by a.ENABLE_TIME DESC
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * 
+    from b_order_detail 
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectLineDetailCount" resultType="java.math.BigDecimal">
+  	select COALESCE(sum(a.PRICE*a.STOCK),0) moneyCount
+    from b_order_detail a,b_order b 
+    where a.CHECKRED = 1 and a.order_num = b.order_num and b.SELLER_USER_ID = #{sellerUserId,jdbcType=INTEGER} and b.PAY_WAY!=2
+    <if test="monFlag!=null">
+    	and	month(a.ENABLE_TIME) = month(curdate()) and year(a.ENABLE_TIME) = year(curdate())
+    </if>
+  </select>
+  <select id="selectBonusListPage" resultMap="BaseResultMap">
+    select a.ORDER_NUM,a.TOTAL_PRICE,a.POST_PRICE,a.PRICE,a.STOCK,a.GOODS_ID,a.GOODS_NAME,a.ENABLE_TIME,a.PRE_PAYMENT
+    from b_order_detail a,b_order b 
+    where a.CHECKRED = 1 and a.order_num = b.order_num 
+    <if test="buyUserIdList!=null and buyUserIdList.size>0">
+    	and b.BUY_USER_ID in 
+    	<foreach collection="buyUserIdList" item="buyUserId" open="(" separator="," close=")">
+    	 #{buyUserId ,jdbcType=INTEGER}
+    	</foreach>
+    </if>
+    <if test="sellUserIdList!=null and sellUserIdList.size>0">
+    	and b.SELLER_USER_ID in 
+    	<foreach collection="sellUserIdList" item="sellUserId" open="(" separator="," close=")">
+    	 #{sellUserId ,jdbcType=INTEGER}
+    	</foreach>
+    </if>
+    <if test="payWay!=null">
+    	and b.PAY_WAY!=#{payWay,jdbcType=SMALLINT}
+    </if>
+    order by a.ENABLE_TIME DESC
+  </select>
+  <select id="selectByorderNum" resultMap="BaseResultMapList">
+  	select 
+    a.*,b.id id_g,b.catalog_id,b.name,b.price price_g,b.price_before,b.publisher_id,b.publisher_name,b.head_img_url,b.status STATUS_G,b.SELL_COUNT,b.CLICK_COUNT,b.flag,b.POST_PRICE,b.END_IS,b.DISCOUNT_PRICE,b.COMS_TYPE
+    from b_order_detail a,b_goods b 
+    where a.ORDER_NUM = #{orderNum,jdbcType=INTEGER} and a.goods_id=b.id 
+  </select>
+  
+  <select id="getByorderNum" resultMap="BaseResultMap">
+  	select *
+    from b_order_detail 
+    where ORDER_NUM = #{orderNum,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_order_detail
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByOrderNum">
+    delete from b_order_detail
+    where order_num = #{orderNum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.B_Order_Detail" keyProperty="id" useGeneratedKeys="true">
+    insert into b_order_detail (ORDER_NUM,MERGE_NUM,SPEC_ID,GOODS_ID,SHOP_ID,STATUS,SIGN,GOODS_NAME,PRE_PAYMENT,
+    ENABLE_TIME, TOTAL_PRICE,POST_PRICE,PRICE, PRICE_SOURCE, STOCK,CHECKRED,SHARE_ID
+      )
+    values (#{orderNum,jdbcType=VARCHAR},#{mergeNum,jdbcType=VARCHAR},#{specId,jdbcType=VARCHAR},#{goodsId,jdbcType=INTEGER},#{shopId,jdbcType=INTEGER},#{status,jdbcType=SMALLINT}, #{sign,jdbcType=SMALLINT},#{goodsName,jdbcType=VARCHAR},#{prePayment,jdbcType=DECIMAL},
+      #{enableTime,jdbcType=TIMESTAMP},#{totalPrice,jdbcType=DECIMAL},#{postPrice,jdbcType=DECIMAL},#{price,jdbcType=DECIMAL}, #{priceSource,jdbcType=DECIMAL}, #{stock,jdbcType=INTEGER}, #{checkRed,jdbcType=INTEGER}, #{shareId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.B_Order_Detail" >
+    update b_order_detail
+    <set >
+      <if test="orderNum != null" >
+        ORDER_NUM = #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mergeNum != null" >
+        MERGE_NUM = #{mergeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="specId != null" >
+        SPEC_ID = #{specId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        GOODS_ID = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        SHOP_ID = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="priceSource != null" >
+        PRICE_SOURCE = #{priceSource,jdbcType=DECIMAL},
+      </if>
+      <if test="prePayment != null" >
+        PRE_PAYMENT = #{prePayment,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null" >
+        STOCK = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="assessed != null" >
+        ASSESSED = #{assessed,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectMergeCount" resultType="java.util.Map">
+  	select IFNULL(count(1),0) count,MERGE_NUM mergeNum from b_order_detail where GOODS_ID = #{goodsId,jdbcType=INTEGER} and STATUS !=7
+  	<if test="status!=null">
+  		and STATUS = #{status,jdbcType=INTEGER}
+  	</if>
+  	group by MERGE_NUM
+  </select>
+  
+</mapper>

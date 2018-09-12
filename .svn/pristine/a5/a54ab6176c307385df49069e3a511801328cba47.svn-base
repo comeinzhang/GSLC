@@ -1,0 +1,64 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_User_CarMapper;
+import com.tyh.model.B_User_Car;
+
+
+@Service
+public class B_User_CarService {
+	
+	@Resource
+	private B_User_CarMapper mapper;
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+	
+	public int selectGoodsCountByUserId(Integer userId){
+		return mapper.selectGoodsCountByUserId(userId);
+	}
+	
+	public int insertSelective(B_User_Car car){
+    	return mapper.insertSelective(car);
+    }
+
+	public B_User_Car selectByPrimaryKey(Integer id){
+    	return mapper.selectByPrimaryKey(id);
+    }
+
+	public int updateByPrimaryKeySelective(B_User_Car record){
+    	return mapper.updateByPrimaryKeySelective(record);
+    }
+
+	public List<B_User_Car> selectByUser_Id(Integer user_id){
+    	return mapper.selectByUser_Id(user_id);
+    }
+	
+	public List<B_User_Car> selectByUserIdAndShopId(Integer userId,Integer shopId){
+    	return mapper.selectByUserIdAndShopId(userId,shopId);
+    }
+	
+	public List<B_User_Car> selectByListId(String[] ListId) {
+		return mapper.selectByListId(ListId);
+	}
+	
+	public B_User_Car selectInCars(B_User_Car car){
+		return mapper.selectInCars(car);
+	}
+	
+	public int deleteByListId(@Param("ListId")String[] ListId){
+		return mapper.deleteByListId(ListId);
+	}
+	
+	public List<Integer> selectShopIdByUserId(Integer userId){
+		return mapper.selectShopIdByUserId(userId);
+	}
+}

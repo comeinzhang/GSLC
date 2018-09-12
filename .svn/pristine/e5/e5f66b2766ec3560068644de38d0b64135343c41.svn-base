@@ -1,0 +1,22 @@
+package com.tyh.mapper;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Order_Track;
+
+public interface B_Order_TrackMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_Order_Track record);
+
+    int insertSelective(B_Order_Track record);
+
+    B_Order_Track selectByPrimaryKey(Integer id);
+    
+    B_Order_Track selectByDetailId(@Param("detailId")Integer detailId);
+    B_Order_Track selectByOrderNum(@Param("orderNum")String orderNum);
+
+    int updateByPrimaryKeySelective(B_Order_Track record);
+
+    int updateByPrimaryKey(B_Order_Track record);
+}

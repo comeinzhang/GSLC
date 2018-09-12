@@ -1,0 +1,23 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.CrowdPresell;
+
+public interface CrowdPresellMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CrowdPresell record);
+
+    int insertSelective(CrowdPresell record);
+
+    CrowdPresell selectByPrimaryKey(Integer id);
+    
+    List<CrowdPresell> selectByCid(@Param("cId")Integer cId);
+
+    int updateByPrimaryKeySelective(CrowdPresell record);
+
+    int updateByPrimaryKey(CrowdPresell record);
+}

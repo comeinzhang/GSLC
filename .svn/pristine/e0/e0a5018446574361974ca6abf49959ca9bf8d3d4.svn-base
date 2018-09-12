@@ -1,0 +1,215 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class ReplyUser {
+    private Integer id;
+
+    private Integer referId;
+
+    private Integer userId;
+
+    private String name;
+
+    private String phone;
+
+    private String idCard;
+    
+    private String cardImg1;
+    
+    private String cardImg2;
+    
+    private String cardImg3;
+    
+    private String cardImg4;
+    
+    private String cardImg5;
+    
+    private String cardImg6;
+    
+    private String code;
+    
+    private Short payWay;
+
+    private String addr;
+
+    private Short type;
+
+    private Short status;
+
+    private String checkMsg;
+
+    private Date updateTime;
+
+    private Date createTime;
+    
+    private Double totalPrice;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getReferId() {
+        return referId;
+    }
+
+    public void setReferId(Integer referId) {
+        this.referId = referId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard == null ? null : idCard.trim();
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr == null ? null : addr.trim();
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public String getCheckMsg() {
+        return checkMsg;
+    }
+
+    public void setCheckMsg(String checkMsg) {
+        this.checkMsg = checkMsg == null ? null : checkMsg.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+	public String getCardImg1() {
+		return cardImg1;
+	}
+
+	public void setCardImg1(String cardImg1) {
+		this.cardImg1 = cardImg1;
+	}
+
+	public String getCardImg2() {
+		return cardImg2;
+	}
+
+	public void setCardImg2(String cardImg2) {
+		this.cardImg2 = cardImg2;
+	}
+
+	public String getCardImg3() {
+		return cardImg3;
+	}
+
+	public void setCardImg3(String cardImg3) {
+		this.cardImg3 = cardImg3;
+	}
+
+	public String getCardImg4() {
+		return cardImg4;
+	}
+
+	public void setCardImg4(String cardImg4) {
+		this.cardImg4 = cardImg4;
+	}
+
+	public String getCardImg5() {
+		return cardImg5;
+	}
+
+	public void setCardImg5(String cardImg5) {
+		this.cardImg5 = cardImg5;
+	}
+
+	public String getCardImg6() {
+		return cardImg6;
+	}
+
+	public void setCardImg6(String cardImg6) {
+		this.cardImg6 = cardImg6;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Short getPayWay() {
+		return payWay;
+	}
+
+	public void setPayWay(Short payWay) {
+		this.payWay = payWay;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+}

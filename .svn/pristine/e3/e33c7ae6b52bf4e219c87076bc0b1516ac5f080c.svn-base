@@ -1,0 +1,21 @@
+package com.tyh.mapper;
+
+import com.tyh.model.School;
+
+public interface SchoolMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(School record);
+
+    int insertSelective(School record);
+
+    School selectByPrimaryKey(Integer id);
+    
+    School selectBySchoolId(String schoolId);
+
+    int updateByPrimaryKeySelective(School record);
+
+    int updateByPrimaryKeyWithBLOBs(School record);
+
+    int updateByPrimaryKey(School record);
+}

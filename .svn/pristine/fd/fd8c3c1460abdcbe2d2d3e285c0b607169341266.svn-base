@@ -1,0 +1,65 @@
+package com.tyh.unitl;
+
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradeAppPayModel;
+import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.response.AlipayTradeAppPayResponse;
+import com.shine.idc.constant.SysConstant;
+import com.shine.idc.util.CodeUtil;
+import com.shine.idc.util.DateUtil;
+import com.tyh.common.CommonParam;
+import com.tyh.model.ProConfigMap;
+
+/**
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author ShineU
+ * @date 2015年10月23日 下午3:22:26
+ * @version 1.0
+ */
+
+public class ZfbPayUtil {
+    
+	public static String doAppPay(String price, String subject, String body, String orderNum) throws Exception {  
+		String resultStr = null;
+		
+		//实例化客户端
+		AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", ProConfigMap.configMap.get("APP_ZFB_APPID"), CommonParam.APP_ZFB_PRIVATE_KEY, "JSON", "utf-8", CommonParam.ZFB_PUBLIC_KEY, "RSA2");
+		//实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.trade.app.pay
+		AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
+		//SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
+		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
+		model.setBody(body);
+		model.setSubject(subject);
+		model.setOutTradeNo(orderNum);
+		model.setTimeoutExpress("30m");
+		model.setTotalAmount(price);
+		model.setProductCode("QUICK_MSECURITY_PAY");
+//		if(SysConfigData.CREDIT_PAY_FLAG==0){	//不允许使用信用卡
+//			model.setEnablePayChannels("balance,moneyFund,debitCardExpress,creditCard,bankPay,coupon");
+//		}
+		
+//		model.setDisablePayChannels("creditCard,creditCardExpress,creditCardCartoon,credit_group");
+		request.setBizModel(model);
+		request.setNotifyUrl("http://"+ProConfigMap.configMap.get("DOMAIN_NAME")+"/order/zfbNotify");
+		try {
+	        //这里和普通的接口调用不同，使用的是sdkExecute
+	        AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
+	        System.out.println("支付宝返回值："+response.getBody());//就是orderString 可以直接给客户端请求，无需再做处理。
+	        resultStr = response.getBody();
+	    } catch (AlipayApiException e) {
+	        e.printStackTrace();
+		}
+		return resultStr;
+	}
+	
+	
+	public static void main(String[] args) throws Exception {
+//		ZfbPayUtil.doAppPay("0.2", "商品支付", "跨境云购商品购买", ("11111111111111321")+"_"+1111+"_CZ");
+	}
+	
+}
+	
+	
+	

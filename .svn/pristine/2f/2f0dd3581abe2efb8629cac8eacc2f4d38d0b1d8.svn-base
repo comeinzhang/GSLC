@@ -1,0 +1,79 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_User_Car {
+    private Integer id;
+    private Integer userId;
+    private Integer shopId;
+    private B_Goods goods;
+    private B_Spec spec;
+    private Integer stock;
+    private String createTime;
+    private Date updateTime;
+
+	public B_Spec getSpec() {
+		return spec;
+	}
+
+	public void setSpec(B_Spec spec) {
+		this.spec = spec;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public B_Goods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(B_Goods goods) {
+		this.goods = goods;
+	}
+
+	public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+
+    public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+}

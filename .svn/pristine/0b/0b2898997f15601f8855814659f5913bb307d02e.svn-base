@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+	<classPathEntry location="C:\Users\wudixiaofei\Workspaces\MyEclipse 10\anzhuWeb\WebRoot\WEB-INF\lib\mysql-connector-java-5.1.22-bin.jar" />
+  <context id="context1" >
+  	<commentGenerator>
+		<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+		<property name="suppressAllComments" value="true" />
+		<!-- <property name="suppressDate" value="true" /> --><!-- 是否生成注释代时间戳 -->
+	</commentGenerator>
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://120.76.205.34:3306/yph" userId="root" password="1qazXSW2" />
+    <javaModelGenerator targetPackage="com.tyh.model" targetProject="YPH" />
+    <sqlMapGenerator targetPackage="com.tyh.mapper" targetProject="YPH" />
+    <javaClientGenerator targetPackage="com.tyh.mapper" targetProject="YPH" type="XMLMAPPER" />
+    <table tableName="b_jifen_detail" domainObjectName="JifenDetail">
+			<generatedKey column="id" sqlStatement="MySQL" identity="true" />
+			<ignoreColumn column="UPDATE_TIME" />
+		</table>
+  </context>
+</generatorConfiguration>

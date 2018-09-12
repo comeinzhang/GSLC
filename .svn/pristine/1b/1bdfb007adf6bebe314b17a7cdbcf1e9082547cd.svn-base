@@ -1,0 +1,40 @@
+package com.tyh.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.ShopGoodsMapper;
+import com.tyh.model.ShopGoods;
+
+
+
+@Service
+public class ShopGoodsService {
+	
+	@Resource
+	private ShopGoodsMapper mapper;
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	public int insertSelective(ShopGoods record){
+		return mapper.insertSelective(record);
+	}
+
+	public ShopGoods selectByPrimaryKey(Integer id){
+		return mapper.selectByPrimaryKey(id);
+	}
+
+	public int updateByPrimaryKeySelective(ShopGoods record){
+		return mapper.updateByPrimaryKeySelective(record);
+	}
+    
+	public List<ShopGoods> selectByShopIdOrGoodsId(Integer shopId,Integer goodsId,Short status){
+		return mapper.selectByShopIdOrGoodsId(shopId, goodsId, status);
+	}
+
+}
+

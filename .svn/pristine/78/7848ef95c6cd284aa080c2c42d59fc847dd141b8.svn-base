@@ -1,0 +1,94 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.ClubMapper;
+import com.tyh.mapper.ClubReplyMapper;
+import com.tyh.mapper.ClubUserMapper;
+import com.tyh.model.Club;
+import com.tyh.model.ClubReply;
+import com.tyh.model.ClubUser;
+import com.tyh.unitl.PageInfo;
+
+
+
+@Service
+public class ClubService {
+	
+	@Resource
+	private ClubMapper clubMapper;
+	@Resource
+	private ClubUserMapper clubUserMapper;
+	@Resource
+	private ClubReplyMapper clubReplyMapper;
+	//俱乐部
+	public Club selectClubByPrimaryKey(Integer id) {
+		return clubMapper.selectByPrimaryKey(id);
+	}
+	public int updateClub(Club club) {
+		return clubMapper.updateByPrimaryKeySelective(club);
+	}
+	public int insertClubSelective(Club club) {
+		return clubMapper.insertSelective(club);
+	}
+	public List<Club> selectClubListPage(PageInfo page,String name) {
+		return clubMapper.selectClubListPage(page,name);
+	}
+	public int updateTotalNum(Club club){
+		return clubMapper.updateTotalNum(club);
+	}
+    
+	public int updatePersonNum(Club club){
+		return clubMapper.updatePersonNum(club);
+	}
+    
+	public int updatePoolNum(Club club){
+		return clubMapper.updatePoolNum(club);
+	}
+    
+	public int updateTotalBuy(Club club){
+		return clubMapper.updateTotalBuy(club);
+	}
+    
+	public int updatePrice(Club club){
+		return clubMapper.updatePrice(club);
+	}
+	//申请、邀请
+	public ClubReply selectClubReplyByPrimaryKey(Integer id) {
+		return clubReplyMapper.selectByPrimaryKey(id);
+	}
+	public int updateClubReply(ClubReply clubReply) {
+		return clubReplyMapper.updateByPrimaryKeySelective(clubReply);
+	}
+	public int insertClubReplySelective(ClubReply clubReply) {
+		return clubReplyMapper.insertSelective(clubReply);
+	}
+	public List<ClubReply> selectClubReplyListPage(PageInfo page,Integer userId,Integer clubId,String typeName,String orderBy,Short status) {
+		return clubReplyMapper.selectListPage(page, userId,clubId,typeName,orderBy,status);
+	}
+	public ClubReply selectClubReplyByUserIdType(Integer userId,Integer clubId,Short type,Short status){
+		return clubReplyMapper.selectByUserIdType(userId, clubId, type, status);
+	}
+	//成员
+	public ClubUser selectClubUserByPrimaryKey(Integer id) {
+		return clubUserMapper.selectByPrimaryKey(id);
+	}
+	public List<ClubUser> selectClubUserByUserIdStatus(Integer userId,Short status,Integer clubId){
+		return clubUserMapper.selectByUserIdStatus(userId, status,clubId);
+	}
+	public int updateClubUser(ClubUser clubUser) {
+		return clubUserMapper.updateByPrimaryKeySelective(clubUser);
+	}
+	public int insertClubUserSelective(ClubUser clubUser) {
+		return clubUserMapper.insertSelective(clubUser);
+	}
+	public List<ClubUser> selectClubUserListPage(PageInfo page,Short status,Integer clubId,String orderBy) {
+		return clubUserMapper.selectClubUserListPage(page,status,clubId,orderBy);
+	}
+}

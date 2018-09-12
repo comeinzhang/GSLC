@@ -1,0 +1,23 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Goods_Store;
+
+public interface B_Goods_StoreMapper {
+    int deleteByPrimaryKey(@Param("id")Integer id);
+
+    int insertSelective(B_Goods_Store store);
+
+    List<B_Goods_Store> selectByUserId(@Param("userId")Integer userId,@Param("catalog_id")Integer catalog_id);
+    
+    B_Goods_Store selectInStore(@Param("userId")Integer userId,@Param("goodsId")Integer goodsId,@Param("flag")Short flag);	
+    
+    List<B_Goods_Store> selectStorerByGoodsId(@Param("goodsId")Integer goodsId);
+    
+    int deleteInStore(@Param("userId")Integer userId,@Param("goodsId")Integer goodsId,@Param("flag")Short flag);
+    
+    int selectGoodsCountByUserId(Integer userId);
+}

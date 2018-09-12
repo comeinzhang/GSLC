@@ -1,0 +1,16 @@
+package com.tyh.mapper;
+
+import com.tyh.model.TextMessage;
+
+public interface TextMessageMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insertSelective(TextMessage record);
+    
+    TextMessage selectByPrimaryKey(Integer id);
+    
+    TextMessage selectByOpenId(String fromusername);
+
+    int updateByPrimaryKeySelective(TextMessage record);
+
+}

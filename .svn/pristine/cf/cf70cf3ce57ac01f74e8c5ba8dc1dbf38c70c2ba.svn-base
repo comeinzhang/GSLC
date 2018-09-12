@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.TradeMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.Trade" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="start_price" property="startPrice" jdbcType="DECIMAL" />
+    <result column="end_price" property="endPrice" jdbcType="DECIMAL" />
+    <result column="min_price" property="minPrice" jdbcType="DECIMAL" />
+    <result column="max_price" property="maxPrice" jdbcType="DECIMAL" />
+    <result column="cur_price" property="curPrice" jdbcType="DECIMAL" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="volumes" property="volumes" jdbcType="DECIMAL" />
+    <result column="enable_time" property="enableTime" jdbcType="DATE" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, start_price, end_price, min_price, max_price, cur_price, total_price, volumes, 
+    enable_time, update_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_trade
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllTrade" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_trade
+  </select>
+  <select id="selectLastTrade" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_trade
+    order by id DESC limit 1
+  </select>
+  <select id="getCountVolumes" resultType="java.lang.Long">
+    select 
+     IFNULL(sum(volumes),0)
+    from b_trade
+  </select>
+  
+  <select id="selectTradeListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_trade
+    order by enable_time DESC
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_trade
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyh.model.Trade" >
+    insert into b_trade (id, start_price, end_price, 
+      min_price, max_price, cur_price, 
+      total_price, volumes, enable_time, 
+      update_time, create_time)
+    values (#{id,jdbcType=INTEGER}, #{startPrice,jdbcType=DECIMAL}, #{endPrice,jdbcType=DECIMAL}, 
+      #{minPrice,jdbcType=DECIMAL}, #{maxPrice,jdbcType=DECIMAL}, #{curPrice,jdbcType=DECIMAL}, 
+      #{totalPrice,jdbcType=DECIMAL}, #{volumes,jdbcType=DECIMAL}, #{enableTime,jdbcType=DATE}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyh.model.Trade" >
+    insert into b_trade
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="startPrice != null" >
+        start_price,
+      </if>
+      <if test="endPrice != null" >
+        end_price,
+      </if>
+      <if test="minPrice != null" >
+        min_price,
+      </if>
+      <if test="maxPrice != null" >
+        max_price,
+      </if>
+      <if test="curPrice != null" >
+        cur_price,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="volumes != null" >
+        volumes,
+      </if>
+      <if test="enableTime != null" >
+        enable_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="startPrice != null" >
+        #{startPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endPrice != null" >
+        #{endPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="minPrice != null" >
+        #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="maxPrice != null" >
+        #{maxPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="curPrice != null" >
+        #{curPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="volumes != null" >
+        #{volumes,jdbcType=DECIMAL},
+      </if>
+      <if test="enableTime != null" >
+        #{enableTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.Trade" >
+    update b_trade
+    <set >
+      <if test="startPrice != null" >
+        start_price = #{startPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endPrice != null" >
+        end_price = #{endPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="minPrice != null" >
+        min_price = #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="maxPrice != null" >
+        max_price = #{maxPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="curPrice != null" >
+        cur_price = #{curPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="volumes != null" >
+        volumes = #{volumes,jdbcType=DECIMAL},
+      </if>
+      <if test="enableTime != null" >
+        enable_time = #{enableTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyh.model.Trade" >
+    update b_trade
+    set start_price = #{startPrice,jdbcType=DECIMAL},
+      end_price = #{endPrice,jdbcType=DECIMAL},
+      min_price = #{minPrice,jdbcType=DECIMAL},
+      max_price = #{maxPrice,jdbcType=DECIMAL},
+      cur_price = #{curPrice,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      volumes = #{volumes,jdbcType=DECIMAL},
+      enable_time = #{enableTime,jdbcType=DATE},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

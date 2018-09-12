@@ -1,0 +1,17 @@
+package com.tyh.mapper;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.B_Return;
+
+public interface B_ReturnMapper {
+    int deleteByPrimaryKey(@Param("id")Integer id);
+
+    int insert(B_Return record);
+
+    B_Return selectByPrimaryKey(@Param("id")Integer id);
+    
+    B_Return selectByOrderNum(@Param("orderNum")String orderNum);
+    
+    int updateByPrimaryKeySelective(B_Return record);
+}

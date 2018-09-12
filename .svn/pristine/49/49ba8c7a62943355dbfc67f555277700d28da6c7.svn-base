@@ -1,0 +1,26 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.ClubReply;
+import com.tyh.unitl.PageInfo;
+
+public interface ClubReplyMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ClubReply record);
+
+    int insertSelective(ClubReply record);
+
+    ClubReply selectByPrimaryKey(Integer id);
+    
+    ClubReply selectByUserIdType(@Param("userId")Integer userId,@Param("clubId")Integer clubId,@Param("type")Short type,@Param("status")Short status);
+    
+    List<ClubReply> selectListPage(@Param("page")PageInfo page,@Param("userId")Integer userId,@Param("clubId")Integer clubId,@Param("typeName")String typeName,@Param("orderBy")String orderBy,@Param("status")Short status);
+    
+    int updateByPrimaryKeySelective(ClubReply record);
+
+    int updateByPrimaryKey(ClubReply record);
+}

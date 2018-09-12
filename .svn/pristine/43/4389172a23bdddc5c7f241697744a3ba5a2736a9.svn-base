@@ -1,0 +1,27 @@
+package com.tyh.service;
+
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.CustomerTaskMapper;
+import com.tyh.model.CustomerTask;
+
+
+
+@Service
+public class CustomerTaskService {
+	
+	@Resource
+	private CustomerTaskMapper mapper;
+	
+	public int insertSelective(CustomerTask record) {
+		return mapper.insertSelective(record);
+	}
+	
+	public CustomerTask selectByUserIdTaskId(Integer customerId,Integer taskId) {
+		return mapper.selectByUserIdTaskId(customerId, taskId);
+	}
+}

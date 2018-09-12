@@ -1,0 +1,17 @@
+package com.tyh.mapper;
+
+import com.tyh.model.B_Bill;
+
+public interface B_BillMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(B_Bill record);
+
+    int insertSelective(B_Bill record);
+
+    B_Bill selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(B_Bill record);
+
+    int updateByPrimaryKey(B_Bill record);
+}

@@ -1,0 +1,47 @@
+package com.tyh.unitl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+
+/**
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author ShineU
+ * @date 2016年9月14日 上午11:15:27
+ * @version 1.0
+ */
+
+public class ClassSellJob extends Thread {
+    
+    private Logger log = Logger.getLogger(this.getClass());
+    
+    public ClassSellJob() {
+    }
+    
+    public void run() {
+        try {
+//        	System.out.println("定时任务启动");
+//            ClassSellService classSellService =
+//                (ClassSellService)SpringContextUtil.getApplicationContext().getBean("classSellService");
+//            UserDealService userDealService =
+//                (UserDealService)SpringContextUtil.getApplicationContext().getBean("userDealService");
+//            List<ClassSell> list = classSellService.listExpired();
+//            long sumPrice = 0;
+//            if (CollectionUtils.isNotEmpty(list)) {
+//                for (ClassSell cs : list) {
+//                    sumPrice = userDealService.sumClassSell(cs.getId() + "");
+//                    if (cs.getTargetPrice() != null) {
+//                        if (cs.getTargetPrice() > sumPrice) {
+//                            cs.setStatus((short)3);//失败
+//                            classSellService.update(cs);
+//                        }
+//                    }
+//                }
+//            }
+        } catch (Exception e) {
+            log.error("定时更新状态异常！", e);
+        }
+    }
+}

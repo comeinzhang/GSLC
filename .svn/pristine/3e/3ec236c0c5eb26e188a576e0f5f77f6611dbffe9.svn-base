@@ -1,0 +1,46 @@
+package com.tyh.service;
+
+
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.B_Goods_StoreMapper;
+import com.tyh.model.B_Goods_Store;
+
+
+
+@Service
+public class B_Goods_StoreService {
+	
+	@Resource
+	private B_Goods_StoreMapper mapper;
+	public int deleteByPrimaryKey(Integer id){
+		return mapper.deleteByPrimaryKey(id);
+	}
+
+	public int insertSelective(B_Goods_Store store){
+    	return mapper.insertSelective(store);
+    }
+	
+	public int selectGoodsCountByUserId(Integer userId){
+    	return mapper.selectGoodsCountByUserId(userId);
+    }
+	
+	public List<B_Goods_Store> selectByUserId(Integer userId,Integer catalog_id){
+    	return mapper.selectByUserId(userId,catalog_id);
+    }
+	public List<B_Goods_Store> selectStorerByGoodsId(Integer goodsId){
+    	return mapper.selectStorerByGoodsId(goodsId);
+    }
+	
+	public B_Goods_Store selectInStore(Integer userId,Integer goodsId,Short flag){
+    	return mapper.selectInStore(userId, goodsId,flag);
+    }
+	public int deleteInStore(Integer userId,Integer goodsId,Short flag){
+    	return mapper.deleteInStore(userId, goodsId,flag);
+    }
+}

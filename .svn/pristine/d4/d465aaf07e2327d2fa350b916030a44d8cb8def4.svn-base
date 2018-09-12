@@ -1,0 +1,27 @@
+package com.tyh.service;
+
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.tyh.mapper.PickCustomerMapper;
+import com.tyh.model.PickCustomer;
+
+
+
+@Service
+public class PickCustomerService {
+	
+	@Resource
+	private PickCustomerMapper mapper;
+	
+	public PickCustomer selectTodayByUserId(Integer userId) {
+		return mapper.selectTodayByUserId(userId);
+	}
+	
+	public int insertSelective(PickCustomer record) {
+		return mapper.insertSelective(record);
+	}
+}

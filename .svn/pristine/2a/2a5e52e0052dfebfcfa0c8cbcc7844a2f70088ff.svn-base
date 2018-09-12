@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_SpecMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Spec" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="INTEGER" />
+    <result column="SPEC_NAME" property="specName" jdbcType="VARCHAR" />
+    <result column="SPEC_VALUE" property="specValue" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="COMS" property="coms" jdbcType="DECIMAL" />
+    <result column="STOCK" property="stock" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GOODS_ID, SPEC_NAME, SPEC_VALUE,STATUS, PRICE,COMS, STOCK, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_spec
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <insert id="saveSpec" parameterType="com.tyh.model.B_Spec">
+  	insert into b_spec (GOODS_ID,SPEC_NAME,SPEC_VALUE,PRICE,COMS,STOCK,STATUS) values (#{goodsId},#{specName},#{specValue},#{price},#{coms},#{stock},#{status})
+  </insert>
+  <select id="selectByGoodsId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_spec
+    where GOODS_ID = #{goods_id,jdbcType=INTEGER} and status=0
+  </select>
+  <select id="selectLessGoodsListPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_spec
+    where 10>=STOCK and STATUS=0 and GOODS_ID in(select id from b_goods where STATUS=1 and PUBLISHER_ID=#{publisherId,jdbcType=INTEGER})
+    order by STOCK
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_spec
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Spec" >
+    update b_spec
+    <set >
+      <if test="goodsId != null" >
+        GOODS_ID = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="specName != null" >
+        SPEC_NAME = #{specName,jdbcType=VARCHAR},
+      </if>
+      <if test="specValue != null" >
+        SPEC_VALUE = #{specValue,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="coms != null" >
+        COMS = #{coms,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null" >
+        STOCK = #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

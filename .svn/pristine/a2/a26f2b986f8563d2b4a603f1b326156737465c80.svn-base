@@ -1,0 +1,20 @@
+package com.tyh.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tyh.model.ShopGoods;
+
+public interface ShopGoodsMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insertSelective(ShopGoods record);
+
+    ShopGoods selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(ShopGoods record);
+    
+    List<ShopGoods> selectByShopIdOrGoodsId(@Param("shopId")Integer shopId,@Param("goodsId")Integer goodsId,@Param("status")Short status);
+
+}

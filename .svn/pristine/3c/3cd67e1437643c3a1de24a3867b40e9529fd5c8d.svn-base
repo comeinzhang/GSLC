@@ -1,0 +1,658 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_User {
+	
+    private Integer id;
+
+    private String loginName;
+    
+    private Integer gardenId;
+    
+    private Integer referId;
+    
+    private Integer owerId;
+    
+    private String referPath;
+    
+    private String openId;
+    
+    private String unionId;
+
+    private String pwd;
+    
+    private String pwd2;
+
+    private String phone;
+
+    private String email;
+
+    private String nickName;
+
+    private String realName;
+
+    private String idCard;
+
+    private Short sex;
+
+    private String headImgUrl;
+
+    private String birthday;
+
+    private String registTime;
+
+    private String loginTime;
+
+    private Short userType;
+    
+    private String signature;
+
+    private Date updateTime;
+    
+    private String checkCode;
+    
+    private String userRoleId;
+    
+    private Double jifenYes;
+    
+    private Double jifenNo;
+    
+    private Double comsYes;
+    
+    private Double comsNo;
+    
+    private Double rechargeNum;
+    
+    private Double rechargeBlock;
+    
+    private Double balance;
+    
+    private Double offerNum;
+    
+    private Double oweNum;
+    
+    private Double pbcUser;
+    
+    private Double pbcSeller;
+    
+    private Double pbcBlock;
+    
+    private Double alonepay;
+    
+    private Double totalpay;
+    
+    private Double monthpay;
+    
+    private Double weekpay;
+    
+    private Double totalComs;
+    
+    private Double monthComs;
+    
+    private Double monthNum;
+    
+    private String qrcodeUrl;
+    
+    private Double bonusNum;
+    
+	private Double surpluspay;
+    
+    private Short status;
+    
+    private String addr;
+    
+    private Double referNum;
+    
+    private Double payment;
+    
+    private Double totalBonus;
+    
+    private Double monthBonus;
+    
+    private Double totalRefer;
+    
+    private Double monthRefer;
+    
+    private Double totalPayment;
+    
+    private Double monthPayment;
+  //view
+    private String userRoleName;
+    
+    private String onlineMoney;
+    
+    private String lineMoney;
+    
+    private Double totalPbc;
+    
+    private Short authed;
+    
+    private Double pbcTotal;
+    
+    private Double pbcPrice;
+    
+    private String pbcFloat;
+    
+    public Double getMonthpay() {
+		return monthpay;
+	}
+
+	public void setMonthpay(Double monthpay) {
+		this.monthpay = monthpay;
+	}
+    
+    public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+
+
+    public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName == null ? null : loginName.trim();
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd == null ? null : pwd.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName == null ? null : nickName.trim();
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName == null ? null : realName.trim();
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard == null ? null : idCard.trim();
+    }
+
+    public Short getSex() {
+        return sex;
+    }
+
+    public void setSex(Short sex) {
+        this.sex = sex;
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl == null ? null : headImgUrl.trim();
+    }
+
+    public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getRegistTime() {
+		return registTime;
+	}
+
+	public void setRegistTime(String registTime) {
+		this.registTime = registTime;
+	}
+
+	public String getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(String loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public Short getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Short userType) {
+        this.userType = userType;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String getCheckCode() {
+		return checkCode;
+	}
+
+	public void setCheckCode(String checkCode) {
+		this.checkCode = checkCode;
+	}
+
+	public Integer getGardenId() {
+		return gardenId;
+	}
+
+	public void setGardenId(Integer gardenId) {
+		this.gardenId = gardenId;
+	}
+
+	public Integer getReferId() {
+		return referId;
+	}
+
+	public void setReferId(Integer referId) {
+		this.referId = referId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
+	public Double getComsYes() {
+		return comsYes;
+	}
+
+	public void setComsYes(Double comsYes) {
+		this.comsYes = comsYes;
+	}
+
+	public Double getComsNo() {
+		return comsNo;
+	}
+
+	public void setComsNo(Double comsNo) {
+		this.comsNo = comsNo;
+	}
+
+	public Double getJifenYes() {
+		return jifenYes;
+	}
+
+	public void setJifenYes(Double jifenYes) {
+		this.jifenYes = jifenYes;
+	}
+
+	public Double getJifenNo() {
+		return jifenNo;
+	}
+
+	public void setJifenNo(Double jifenNo) {
+		this.jifenNo = jifenNo;
+	}
+
+	public String getUserRoleName() {
+		return userRoleName;
+	}
+
+	public void setUserRoleName(String userRoleName) {
+		this.userRoleName = userRoleName;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public String getReferPath() {
+		return referPath;
+	}
+
+	public void setReferPath(String referPath) {
+		this.referPath = referPath;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public String getUserRoleId() {
+		return userRoleId;
+	}
+
+	public void setUserRoleId(String userRoleId) {
+		this.userRoleId = userRoleId;
+	}
+
+	public Double getTotalpay() {
+		return totalpay;
+	}
+
+	public void setTotalpay(Double totalpay) {
+		this.totalpay = totalpay;
+	}
+
+	public Double getSurpluspay() {
+		return surpluspay;
+	}
+
+	public void setSurpluspay(Double surpluspay) {
+		this.surpluspay = surpluspay;
+	}
+
+	public Double getRechargeNum() {
+		return rechargeNum;
+	}
+
+	public void setRechargeNum(Double rechargeNum) {
+		this.rechargeNum = rechargeNum;
+	}
+
+	public String getPwd2() {
+		return pwd2;
+	}
+
+	public void setPwd2(String pwd2) {
+		this.pwd2 = pwd2;
+	}
+
+	public String getQrcodeUrl() {
+		return qrcodeUrl;
+	}
+
+	public void setQrcodeUrl(String qrcodeUrl) {
+		this.qrcodeUrl = qrcodeUrl;
+	}
+
+	public Integer getOwerId() {
+		return owerId;
+	}
+
+	public void setOwerId(Integer owerId) {
+		this.owerId = owerId;
+	}
+
+	public Double getOweNum() {
+		return oweNum;
+	}
+
+	public void setOweNum(Double oweNum) {
+		this.oweNum = oweNum;
+	}
+
+	public Double getTotalComs() {
+		return totalComs;
+	}
+
+	public void setTotalComs(Double totalComs) {
+		this.totalComs = totalComs;
+	}
+
+	public Double getMonthComs() {
+		return monthComs;
+	}
+
+	public void setMonthComs(Double monthComs) {
+		this.monthComs = monthComs;
+	}
+
+	public Double getMonthNum() {
+		return monthNum;
+	}
+
+	public void setMonthNum(Double monthNum) {
+		this.monthNum = monthNum;
+	}
+
+	public Double getBonusNum() {
+		return bonusNum;
+	}
+
+	public void setBonusNum(Double bonusNum) {
+		this.bonusNum = bonusNum;
+	}
+
+	public Double getReferNum() {
+		return referNum;
+	}
+
+	public void setReferNum(Double referNum) {
+		this.referNum = referNum;
+	}
+
+	public Double getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Double payment) {
+		this.payment = payment;
+	}
+
+	public Double getTotalBonus() {
+		return totalBonus;
+	}
+
+	public void setTotalBonus(Double totalBonus) {
+		this.totalBonus = totalBonus;
+	}
+
+	public Double getMonthBonus() {
+		return monthBonus;
+	}
+
+	public void setMonthBonus(Double monthBonus) {
+		this.monthBonus = monthBonus;
+	}
+
+	public Double getTotalRefer() {
+		return totalRefer;
+	}
+
+	public void setTotalRefer(Double totalRefer) {
+		this.totalRefer = totalRefer;
+	}
+
+	public Double getMonthRefer() {
+		return monthRefer;
+	}
+
+	public void setMonthRefer(Double monthRefer) {
+		this.monthRefer = monthRefer;
+	}
+
+	public Double getTotalPayment() {
+		return totalPayment;
+	}
+
+	public void setTotalPayment(Double totalPayment) {
+		this.totalPayment = totalPayment;
+	}
+
+	public Double getMonthPayment() {
+		return monthPayment;
+	}
+
+	public void setMonthPayment(Double monthPayment) {
+		this.monthPayment = monthPayment;
+	}
+
+	public Double getAlonepay() {
+		return alonepay;
+	}
+
+	public void setAlonepay(Double alonepay) {
+		this.alonepay = alonepay;
+	}
+
+	public String getOnlineMoney() {
+		return onlineMoney;
+	}
+
+	public void setOnlineMoney(String onlineMoney) {
+		this.onlineMoney = onlineMoney;
+	}
+
+	public String getLineMoney() {
+		return lineMoney;
+	}
+
+	public void setLineMoney(String lineMoney) {
+		this.lineMoney = lineMoney;
+	}
+
+	public Double getOfferNum() {
+		return offerNum;
+	}
+
+	public void setOfferNum(Double offerNum) {
+		this.offerNum = offerNum;
+	}
+
+	public Double getWeekpay() {
+		return weekpay;
+	}
+
+	public void setWeekpay(Double weekpay) {
+		this.weekpay = weekpay;
+	}
+
+	public Double getPbcUser() {
+		return pbcUser;
+	}
+
+	public void setPbcUser(Double pbcUser) {
+		this.pbcUser = pbcUser;
+	}
+
+	public Double getPbcSeller() {
+		return pbcSeller;
+	}
+
+	public void setPbcSeller(Double pbcSeller) {
+		this.pbcSeller = pbcSeller;
+	}
+
+	public Double getPbcBlock() {
+		return pbcBlock;
+	}
+
+	public void setPbcBlock(Double pbcBlock) {
+		this.pbcBlock = pbcBlock;
+	}
+
+	public Double getRechargeBlock() {
+		return rechargeBlock;
+	}
+
+	public void setRechargeBlock(Double rechargeBlock) {
+		this.rechargeBlock = rechargeBlock;
+	}
+
+	public Double getTotalPbc() {
+		return totalPbc;
+	}
+
+	public void setTotalPbc(Double totalPbc) {
+		this.totalPbc = totalPbc;
+	}
+
+	public Short getAuthed() {
+		return authed;
+	}
+
+	public void setAuthed(Short authed) {
+		this.authed = authed;
+	}
+
+	public Double getPbcTotal() {
+		return pbcTotal;
+	}
+
+	public void setPbcTotal(Double pbcTotal) {
+		this.pbcTotal = pbcTotal;
+	}
+
+	public Double getPbcPrice() {
+		return pbcPrice;
+	}
+
+	public void setPbcPrice(Double pbcPrice) {
+		this.pbcPrice = pbcPrice;
+	}
+
+	public String getPbcFloat() {
+		return pbcFloat;
+	}
+
+	public void setPbcFloat(String pbcFloat) {
+		this.pbcFloat = pbcFloat;
+	}
+
+}

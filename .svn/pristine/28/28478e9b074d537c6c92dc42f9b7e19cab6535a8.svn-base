@@ -1,0 +1,1961 @@
+package com.tyh.controller;
+
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tyh.common.CommonParam;
+import com.tyh.mapper.B_Goods_ExtMapper;
+import com.tyh.model.B_Catalog;
+import com.tyh.model.B_Goods;
+import com.tyh.model.B_Goods_Bid;
+import com.tyh.model.B_Goods_Ext;
+import com.tyh.model.B_Goods_Focus;
+import com.tyh.model.B_Goods_Img;
+import com.tyh.model.B_Goods_Reply;
+import com.tyh.model.B_Goods_Store;
+import com.tyh.model.B_Order;
+import com.tyh.model.B_Order_Detail;
+import com.tyh.model.B_Poster;
+import com.tyh.model.B_Shop;
+import com.tyh.model.B_Spec;
+import com.tyh.model.B_User;
+import com.tyh.model.B_User_Addr;
+import com.tyh.model.B_User_Car;
+import com.tyh.model.B_User_Voucher;
+import com.tyh.model.CrowdPresell;
+import com.tyh.model.DZReply;
+import com.tyh.model.ListMap;
+import com.tyh.model.ProConfigMap;
+import com.tyh.model.RedPacketRecord;
+import com.tyh.model.ShopGoods;
+import com.tyh.model.SpecList;
+import com.tyh.model.Voucher;
+import com.tyh.service.B_CatalogService;
+import com.tyh.service.B_GoodsService;
+import com.tyh.service.B_Goods_ExtService;
+import com.tyh.service.B_Goods_ImgService;
+import com.tyh.service.B_Goods_ReplyService;
+import com.tyh.service.B_Goods_StoreService;
+import com.tyh.service.B_OrderService;
+import com.tyh.service.B_Order_DetailService;
+import com.tyh.service.B_PosterService;
+import com.tyh.service.B_SpecService;
+import com.tyh.service.B_UserService;
+import com.tyh.service.B_User_AddrService;
+import com.tyh.service.B_User_CarService;
+import com.tyh.service.RedPacketService;
+import com.tyh.service.ShopGoodsService;
+import com.tyh.service.VoucherService;
+import com.tyh.unitl.DateUtils;
+import com.tyh.unitl.JavaSmsApi;
+import com.tyh.unitl.PageInfo;
+import com.tyh.unitl.wx.TenpayUtil;
+
+
+@Controller
+@RequestMapping("/goods")
+public class B_GoodsController {
+	@Autowired
+    private B_GoodsService goodsService;
+	@Autowired
+    private B_CatalogService catalogService;
+	@Autowired
+    private B_UserService userService;
+	@Autowired
+    private B_SpecService specService;
+	@Autowired
+    private B_Goods_ExtService extService;
+	@Autowired
+    private B_Goods_ImgService imgService;
+	@Autowired
+    private B_User_CarService carService ;
+	@Autowired
+    private B_Goods_StoreService storeService;
+	@Autowired
+    private B_User_AddrService addrService;
+	@Autowired
+    private B_OrderService orderService;
+	@Autowired
+    private B_PosterService posterService;
+	@Autowired
+    private B_Order_DetailService order_DetailService;
+	@Autowired
+    private B_Goods_ReplyService replyService;
+	@Autowired
+    private VoucherService voucherService;
+	@Autowired
+    private RedPacketService redPacketService;
+	@Autowired
+    private ShopGoodsService shopGoodsService;
+	@Resource
+	private B_Goods_ExtMapper goodsExtMapper;
+	
+	
+	String ASSET_URL = ProConfigMap.configMap.get("RESOURECE_URL");
+	@RequestMapping("index")
+	public String index(HttpServletRequest request){
+		String catalogId = request.getParameter("catalogId");
+		String flag = request.getParameter("flag");
+//		B_User user  = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+	
+			if (flag!=null&&"breaker".equals(flag)) {
+				if (user!=null&&!"".equals(user)) {
+					int gardenId = user.getGardenId();
+					List<B_Goods> goodsList = goodsService.selectBreakerIndex(CommonParam.FLAG_YOU,4,CommonParam.GOODS_STATUS_UP,gardenId,CommonParam.GOODS_TYPE_BREAKER);
+					List<B_Order> orderList = orderService.getGardenBreakerOrderList(4,gardenId);
+					List<B_Shop> shopList = userService.selectByGardenId(gardenId);
+					List<B_Poster> posterList = posterService.selectPostByGardenId(gardenId, 4,(short) 1);
+					B_Shop shop = userService.selectByUserId(user.getId(),1);
+					request.setAttribute("shop", shop);
+					request.setAttribute("goodsList", goodsList);
+					request.setAttribute("orderList", orderList);
+					request.setAttribute("shopList", shopList);
+					request.setAttribute("posterList", posterList);
+					request.setAttribute("ASSET_URL", ASSET_URL);
+					return "goods/index_breaker";
+				}
+			}
+		
+		String webIn = (String) request.getSession().getAttribute("webIn");
+		//新品推荐
+		List<B_Goods> new_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_NEW,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		//超值优惠
+		List<B_Goods> sell_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_SELL,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		//为你推荐
+		List<B_Goods> you_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_YOU,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		//首页顶部广告/本店特色
+		List<B_Goods> top_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_TOP,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		//新客专享
+		List<B_Goods> xkzx_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_USER,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		for(B_Goods goods:xkzx_goodsList){
+			List<B_Goods_Ext> extList = extService.selectByGoods_id(goods.getId());
+			goods.setGoodsExts(extList);
+			B_Shop shop = userService.selectShopByPrimaryKey(goods.getShopId());
+			goods.setShop(shop);
+		}
+		request.setAttribute("new_goodsList", new_goodsList);
+		request.setAttribute("sell_goodsList", sell_goodsList);
+		request.setAttribute("you_goodsList", you_goodsList);
+		request.setAttribute("top_goodsList", top_goodsList);
+		request.setAttribute("xkzx_goodsList", xkzx_goodsList);
+		
+		List<B_Catalog> catalogList  = catalogService.selectAllSon(1);
+		List<B_Catalog> parentCatalogs  = catalogService.selectAllParent(1);
+		List<B_Catalog> allCatalogs  = catalogService.selectAllParent(null);
+		List<B_Catalog> mzCatalogList = catalogService.selectByParentId(61,1);
+		List<B_Catalog> xzCatalogList = catalogService.selectByParentId(64,1);
+		B_Catalog yczf = catalogService.selectByPrimaryKey(71);
+		B_Catalog qqyx = catalogService.selectByPrimaryKey(72);
+		request.setAttribute("catalogList", catalogList);
+		request.setAttribute("parentCatalogs", parentCatalogs);
+		request.setAttribute("allCatalogs", allCatalogs);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("catalogId", catalogId);
+		request.setAttribute("xzCatalogList", xzCatalogList);
+		request.setAttribute("mzCatalogList", mzCatalogList);
+		request.setAttribute("yczf", yczf);
+		request.setAttribute("qqyx", qqyx);
+		request.setAttribute("map", ProConfigMap.configMap);
+		List<Voucher> vouchers = voucherService.getVoucherOfStatus(null, null, (short) 1, null, null);
+		if (vouchers.size()>0) {
+			request.setAttribute("voucher", vouchers.get(0));
+		}
+			if("yph".equals(webIn)){
+				return "goods/index_yph";
+			}else if("yunlan".equals(webIn)){
+				return "goods/index_yunlan";
+			}else if("yphApp".equals(webIn)){
+				return "goods/index_yph";
+			}else if("kxz".equals(webIn)){
+				return "goods/index_old";
+			}else if("yhlm".equals(webIn)){
+				return "goods/index_yhlm";
+			}
+			return "goods/index_old";	
+	}
+	@RequestMapping("catagoryList")
+	public String catagoryList(HttpServletRequest request){
+		List<B_Catalog> catagoryAllParent = catalogService.selectAllParent(null);
+		List<B_Catalog> catagoryAllSon = new ArrayList<B_Catalog>();
+		String catalogId = request.getParameter("catalogId");
+		if (catalogId==null||catalogId=="") {
+			catagoryAllSon = catalogService.selectAllSon(null);
+			if (catagoryAllSon.size()>0) {
+				catalogId = catagoryAllSon.get(0).getId()+"";
+			}
+		}else {
+			B_Catalog catalog = catalogService.selectByPrimaryKey(Integer.parseInt(catalogId));
+			if (catalog.getCatalogLev()==2) {
+				catagoryAllSon = catalogService.selectByParentId(catalog.getParentId(),null);
+			}else {
+				catagoryAllSon = catalogService.selectByParentId(Integer.parseInt(catalogId),null);
+				if (catagoryAllSon.size()>0) {
+					catalogId = catagoryAllSon.get(0).getId()+"";
+				}
+			}
+		}
+		request.setAttribute("catagoryAllParent", catagoryAllParent);
+		request.setAttribute("catagoryAllSon", catagoryAllSon);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("catalogId", catalogId);
+		return "goods/catagoryList";
+	}
+	@RequestMapping("mzGoodsList")
+	public String mzGoodsList(HttpServletRequest request){
+		String mzCatalogId = request.getParameter("mzCatalogId");
+		List<B_Catalog> xzCatalogList = catalogService.selectByParentId(64,null);
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (Iterator iterator = xzCatalogList.iterator(); iterator.hasNext();) {
+			B_Catalog b_Catalog = (B_Catalog) iterator.next();
+			List<B_Goods> goodsList = goodsService.selectByFlag(mzCatalogId+"%"+b_Catalog.getId(),null,3,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+			map.put(b_Catalog.getId()+"", goodsList);
+		}
+		B_Catalog mzCatalog = catalogService.selectByPrimaryKey(Integer.parseInt(mzCatalogId));
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("xzCatalogList", xzCatalogList);
+		request.setAttribute("mzCatalog", mzCatalog);
+		request.setAttribute("map", map);
+		return "goods/mzList";
+	}
+	@RequestMapping("xzGoodsList")
+	public String xzGoodsList(HttpServletRequest request){
+		String xzCatalogId = request.getParameter("xzCatalogId");
+		String mzCatalogId = request.getParameter("mzCatalogId");
+		List<B_Catalog> mzCatalogList = catalogService.selectByParentId(61,null);
+		if (StringUtils.isNotEmpty(xzCatalogId)) {
+			B_Catalog xzCatalog = catalogService.selectByPrimaryKey(Integer.parseInt(xzCatalogId));
+			request.setAttribute("xzCatalog", xzCatalog);
+		}
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("mzCatalogList", mzCatalogList);
+		request.setAttribute("xzCatalogId", xzCatalogId);
+		request.setAttribute("mzCatalogId", mzCatalogId);
+		return "goods/xzList";
+	}
+	@RequestMapping("signList")
+	public String signList(HttpServletRequest request){
+		String sign = request.getParameter("sign")==""?null:request.getParameter("sign");
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("sign", sign);
+		if (sign.equals("5")) {
+			return "goods/goodsList_app";
+		}else if (sign.equals("6")) {
+			return "goods/goodsList_xkzx";
+		}else {
+			return "goods/goodsList_yph";
+		}
+	}
+	@RequestMapping("breakerGoodsList")
+	public String breakerGoodsList(HttpServletRequest request){
+		return "goods/breakerGoodsList";
+	}
+	@RequestMapping("getindexCatalog")
+	public String getindexCatalog(HttpServletRequest request){
+		String catalogId = request.getParameter("catalogId");
+		B_Catalog catalog = catalogService.selectByPrimaryKey(Integer.parseInt(catalogId));
+		request.setAttribute("catalogId", catalogId);
+		request.setAttribute("catalog", catalog);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/index_catalog";
+	}
+	@ResponseBody
+	@RequestMapping("catagoryListPage")
+	public List<B_Catalog> catagoryListPage(HttpServletRequest request){
+		int parent_id = request.getParameter("parent_id")==null?1:Integer.parseInt(request.getParameter("parent_id"));
+		List<B_Catalog> catalogList = catalogService.selectByParentId(parent_id,null);
+		for (Iterator iterator = catalogList.iterator(); iterator.hasNext();) {
+			B_Catalog b_Catalog = (B_Catalog) iterator.next();
+			b_Catalog.setImgUrl(ASSET_URL+b_Catalog.getImgUrl());
+		}
+		return catalogList;
+	}
+	@RequestMapping("getGoodsByCatagoryIdListPage")
+	public String getGoodsByCatagoryIdListPage(HttpServletRequest request){
+		String flag = request.getParameter("flag")==null?"sell":request.getParameter("flag");
+		String catagory_id = request.getParameter("catagory_id")==null?null:request.getParameter("catagory_id");
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Goods> typeGoodsList = goodsService.selectByCataLog_IdListPage(catagory_id, null,flag, page, CommonParam.GOODS_STATUS_UP,(short) 0,null);
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		request.setAttribute("page", page);
+		request.setAttribute("flag", flag);
+		request.setAttribute("urlFlag", "cataLog");
+		request.setAttribute("catagory_id", catagory_id);
+		request.setAttribute("typeGoodsList", typeGoodsList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsList";
+	}
+	@ResponseBody
+	@RequestMapping("getGoodsByCatagoryListPage")
+	public Map<String, Object> getGoodsByCatagoryListPage(HttpServletRequest request){
+		Map<String, Object> map = new HashMap<String, Object>();
+		String flag = request.getParameter("flag")==null?"sell":request.getParameter("flag");
+		String sign = request.getParameter("sign")==""?null:request.getParameter("sign");
+		String catagory_id = request.getParameter("catagory_id")==""?null:request.getParameter("catagory_id");
+		String goodsTypeStr = request.getParameter("goodsType");
+		Short goodsType = CommonParam.GOODS_TYPE_NORMAL;
+		Integer gardenId = null;
+		if (StringUtils.isNotBlank(goodsTypeStr)) {
+			goodsType = Short.parseShort(goodsTypeStr);
+			if (goodsType==2) {
+				B_User user = (B_User) request.getSession().getAttribute("user");
+				if (user!=null&&!"".equals(user)) {
+					user = userService.selectByPrimaryKey(user.getId());
+					gardenId = user.getGardenId();
+				}
+			}
+		}
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Goods> typeGoodsList = goodsService.selectByCataLog_IdListPage(catagory_id, sign,flag,page, CommonParam.GOODS_STATUS_UP,goodsType,gardenId);
+		for (Iterator iterator = typeGoodsList.iterator(); iterator
+					.hasNext();) {
+			B_Goods b_Goods = (B_Goods) iterator.next();
+			b_Goods.setPublisher(userService.selectByPrimaryKey(b_Goods.getPublisherId()));
+		}
+		
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		map.put("page", page);
+		map.put("list", typeGoodsList);
+		return map;
+	}
+	@RequestMapping("toPmGoodsList")
+	public String toPmGoodsList(HttpServletRequest request){
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsOfPmList";
+	}
+	@ResponseBody
+	@RequestMapping("pmGoodsListPage")
+	public Map<String, Object> pmGoodsListPage(HttpServletRequest request){
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		String flag = request.getParameter("flag");
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		List<B_Goods> typeGoodsList = goodsService.selectByCataLog_IdListPage(null,null, flag, page, CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_AUCTION,null);
+		for (Iterator iterator = typeGoodsList.iterator(); iterator.hasNext();) {
+			B_Goods goods = (B_Goods) iterator.next();
+			int goods_id = goods.getId();
+			if (user!=null&&!"".equals(user)) {
+				B_Goods_Store store = storeService.selectInStore(user.getId(), goods_id,CommonParam.STORE_TYPE_GOODS);
+				B_Goods_Focus ISFocus = goodsService.getISFocused(goods.getPublisherId(), user.getId());
+				goods.setStore(store);
+				if (ISFocus!=null) {
+					goods.setISFocus(1);
+				}else {
+					goods.setISFocus(0);
+				}
+				
+			}
+			
+//			List<B_Goods_Ext> extList = extService.selectByGoods_id(goods_id);
+			List<B_Goods_Img> imgList = imgService.selectByGoods_id(goods_id,(short) 1);
+			List<B_Goods_Bid> bidList = goodsService.fingGoodsBidByGoodsId(goods_id);
+			List<B_Goods_Store> storeList = storeService.selectStorerByGoodsId(goods_id);
+			for (Iterator iterator1 = storeList.iterator(); iterator1.hasNext();) {
+				B_Goods_Store b_Goods_Store = (B_Goods_Store) iterator1.next();
+				B_User storer = userService.selectByPrimaryKey(b_Goods_Store.getUserId());
+				b_Goods_Store.setStorer(storer);
+			}
+			B_User publisher = userService.selectByPrimaryKey(goods.getPublisherId());
+			
+			goods.setBidList(bidList);
+			if (bidList.size()==0) {
+				goods.setBidMaxPrice(goods.getStartPrice());
+			}else {
+				goods.setBidMaxPrice(bidList.get(0).getPrice());
+			}
+			goods.setImgList(imgList);
+			goods.setStoreList(storeList);
+			goods.setStoreSize(storeList.size());
+			goods.setPublisher(publisher);
+			String endTime = goods.getEndTime().substring(0,goods.getEndTime().length()-2);
+			goods.setEndTime(endTime);
+		}
+		int totalCount = page.getTotalResult();
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("page", page);
+		map.put("list", typeGoodsList);
+		map.put("ASSET_URL", ASSET_URL);
+		request.setAttribute("typeGoodsList",typeGoodsList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return map;
+	}
+	@RequestMapping("getGoodsByKeyWListPage")
+	public String getGoodsByKeyWListPage(HttpServletRequest request){
+		String flag = request.getParameter("flag")==null?"sell":request.getParameter("flag");
+		String keyword = request.getParameter("keywordstr");
+		keyword = "%"+keyword+"%";
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Goods> typeGoodsList = goodsService.getGoodsByKeywordListPage(null,keyword, flag, page, CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL,null,null,null);
+		for (Iterator iterator = typeGoodsList.iterator(); iterator.hasNext();) {
+			B_Goods b_Goods = (B_Goods) iterator.next();
+			B_Goods_Bid maxBid = goodsService.fingMaxGoodsBidByGoodsId(b_Goods.getId());
+			if (maxBid!=null&&!"".equals(maxBid)) {
+				b_Goods.setMaxPrice(maxBid.getPrice());
+			}
+		}
+		
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		request.setAttribute("page", page);
+		request.setAttribute("flag", flag);
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("urlFlag", "keyWord");
+		request.setAttribute("typeGoodsList", typeGoodsList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsList";
+	}
+	@ResponseBody
+	@RequestMapping("getGoodsByKeywordListPage")
+	public Map<String, Object> getGoodsByKeywordListPage(HttpServletRequest request){
+		String flag = request.getParameter("flag")==null?"sell":request.getParameter("flag");
+		String keyword = request.getParameter("keywordstr");
+		String shopIdStr = request.getParameter("shopId");
+		Integer shopId;
+		List<ShopGoods> shopGoodsList = new ArrayList<ShopGoods>();
+		if (StringUtils.isBlank(shopIdStr)) {
+			shopId=null;
+		}else {
+			shopId=Integer.parseInt(shopIdStr);
+			shopGoodsList = shopGoodsService.selectByShopIdOrGoodsId(shopId, null, (short) 1);
+		}
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<Integer> catalogIdList = new ArrayList<Integer>();
+		String catalogId = request.getParameter("catalogId");
+		if (StringUtils.isNotBlank(catalogId)) {
+			B_Catalog catalog = catalogService.selectByPrimaryKey(Integer.parseInt(catalogId));
+			if (catalog.getCatalogLev()==2) {
+				catalogIdList.add(catalog.getId());
+			}else {
+				List<B_Catalog> catalogs = catalogService.selectByParentId(catalog.getId(), null);
+				for (Iterator iterator = catalogs.iterator(); iterator.hasNext();) {
+					B_Catalog b_Catalog = (B_Catalog) iterator.next();
+					catalogIdList.add(b_Catalog.getId());
+				}
+			}
+		}
+		List<B_Goods> typeGoodsList = goodsService.getGoodsByKeywordListPage(null,keyword, flag, page, CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL,shopId,catalogIdList,shopGoodsList);
+		for(B_Goods goods:typeGoodsList){
+			List<B_Goods_Ext> extList = extService.selectByGoods_id(goods.getId());
+			goods.setGoodsExts(extList);
+		}
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("page", page);
+		map.put("list", typeGoodsList);
+		return map;
+	}
+	@RequestMapping("getGoodsById")
+	public String getGoodsById(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String shopId = request.getParameter("shopId");
+		String flag = request.getParameter("flag");
+		request.setAttribute("flag", flag);
+		int goods_id = request.getParameter("id")==null?0:Integer.parseInt(request.getParameter("id"));
+		B_Goods goods = goodsService.selectByPrimaryKey(goods_id);
+		if (goods.getStatus()!=1) {
+			String message = "<meta http-equiv='refresh' content='3;url=../goods/index'/>未找到相关商品或已下架，将在3秒后跳转到首页，如果没有跳转，请点击<a href='../goods/index'>超链接</a>";  
+	        request.setAttribute("message", message);  
+	        request.getRequestDispatcher("/pages/message.jsp").forward(request, response);
+		}
+		B_User publisher = userService.selectByPrimaryKey(goods.getPublisherId());
+//		String backUrl = request.getParameter("backUrl");
+//		if (StringUtils.isNotEmpty(backUrl)) {
+//			String xzCatalogId = request.getParameter("xzCatalogId");
+//			if (StringUtils.isNotEmpty(xzCatalogId)) {
+//			backUrl = backUrl+"&xzCatalogId="+xzCatalogId;
+//			}
+//		}
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		if (user!=null&&!"".equals(user)) {
+			String shareId = request.getParameter("shareId");
+			if (StringUtils.isNotBlank(shareId)) {
+				request.setAttribute("shareId", shareId);
+				request.getSession().setAttribute("shareId", shareId);
+			}else {
+				if (user.getReferId()!=null) {
+					request.setAttribute("shareId", user.getReferId());
+				}
+			}
+			B_Goods_Store store = storeService.selectInStore(user.getId(), goods_id,CommonParam.STORE_TYPE_GOODS);
+			B_Goods_Focus ISFocus = goodsService.getISFocused(goods.getPublisherId(), user.getId());
+			goods.setStore(store);
+			if (ISFocus!=null) {
+				request.setAttribute("ISFocus", 1);
+			}else {
+				request.setAttribute("ISFocus", 0);
+			}
+			request.setAttribute("store", store);
+			request.setAttribute("user", user);
+			
+			//是否打折
+			if(user.getUserRoleId().contains(CommonParam.USER_ROLE_XF+"") && goods.getComsType()==CommonParam.COMS_TYPE_XF){
+				if(goods.getDiscount()!=null){
+					request.setAttribute("isDiscount", true);
+					request.setAttribute("discount", goods.getDiscount());
+					request.setAttribute("discountPrice", goods.getDiscount()*Double.parseDouble(goods.getPrice()));
+				}
+			}
+		}
+		List<B_Goods_Ext> extList = extService.selectByGoods_id(goods_id);
+		List<B_Goods_Img> imgList = imgService.selectByGoods_id(goods_id,(short) 1);
+		List<B_Goods_Bid> bidList = goodsService.fingGoodsBidByGoodsId(goods_id);
+		List<B_Goods_Reply> replyList = replyService.selectByGoods_id(goods_id, null,null);
+		for (Iterator iterator = replyList.iterator(); iterator.hasNext();) {
+			B_Goods_Reply b_Goods_Reply = (B_Goods_Reply) iterator.next();
+			B_Spec spec = specService.selectByPrimaryKey(b_Goods_Reply.getSpecId());
+			b_Goods_Reply.setSpec(spec);
+			B_User replyer = userService.selectByPrimaryKey(b_Goods_Reply.getUserId());
+			b_Goods_Reply.setUser(replyer);
+		}
+		goods.setClickCount(goods.getClickCount()+1);
+		goodsService.updateByPrimaryKey(goods);
+		List<B_Goods_Store> storeList = storeService.selectStorerByGoodsId(goods_id);
+		for (Iterator iterator = storeList.iterator(); iterator.hasNext();) {
+			B_Goods_Store b_Goods_Store = (B_Goods_Store) iterator.next();
+			B_User storer = userService.selectByPrimaryKey(b_Goods_Store.getUserId());
+			b_Goods_Store.setStorer(storer);
+		}
+		List<B_Spec> specList = specService.selectByGoodsId(goods_id);
+		request.setAttribute("specList", specList);
+		request.setAttribute("storeList", storeList);
+		request.setAttribute("storeSize", storeList.size());
+		request.setAttribute("goods", goods);
+		request.setAttribute("publisher", publisher);
+		request.setAttribute("imgList", imgList);
+		request.setAttribute("bidList", bidList);
+		request.setAttribute("bidSize", bidList.size());
+		request.setAttribute("extList", extList);
+		request.setAttribute("replyList", replyList);
+//		request.setAttribute("backUrl", backUrl);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		String webName = ProConfigMap.configMap.get("PRO_NAME");
+		request.setAttribute("webName", webName);
+		if (goods.getGoodsType()==1) {
+			String entTime = goods.getEndTime().substring(0,goods.getEndTime().length()-2);
+			request.setAttribute("endTime", entTime.replace("-", "/"));
+			return "goods/goods_detail";
+		}else if (goods.getGoodsType()==4) {
+			List<CrowdPresell> presellList = goodsService.selectByCid(goods_id);
+			if (presellList.size()>0) {
+				int num1 = goods.getSellCount();
+				int num2 = presellList.get(presellList.size()-1).getPresell();
+				// 创建一个数值格式化对象
+				NumberFormat numberFormat = NumberFormat.getInstance();
+				// 设置精确到小数点后2位
+				numberFormat.setMaximumFractionDigits(2);
+				String result="";
+				if (num1>=num2) {
+					result="100%";
+				}else {
+					result = numberFormat.format((float) num1 / (float) num2 * 100);
+				}
+				request.setAttribute("result", result+"%");
+				System.out.println("num1和num2的百分比为:" + result + "%");
+			}
+			String entTime = goods.getEndTime().substring(0,goods.getEndTime().length()-2);
+			request.setAttribute("endTime", entTime.replace("-", "/"));
+			request.setAttribute("presellList", presellList);
+			return "crowd/presell_detail";
+		}else if (goods.getGoodsType()==3) {
+			if (user!=null&&!"".equals(user)) {
+				List<DZReply> dz = goodsService.selectDzByUserId(user.getId(), goods.getId());
+				request.setAttribute("dz", dz);
+			}
+			return "goods/goodsDz";
+		}else {
+			B_Shop shop = new B_Shop();
+			if (StringUtils.isNotBlank(shopId)) {
+				shop = userService.selectShopByPrimaryKey(Integer.parseInt(shopId));
+			}else {
+				shop = userService.selectByUserId(goods.getPublisherId(), 1);
+			}
+			request.setAttribute("shop", shop);
+			if (webName.equals("YPH")) {
+				return "goods/goodsDetailYph";
+			}else if(webName.equals("YHLM")){
+				return "goods/goodsDetailYph";
+			}else {
+				if(goods.getId()==199 || goods.getId()==200 || goods.getId()==201){
+					return "goods/goodsDetailKxz";
+				}else{
+					return "goods/goodsPT_detail";
+				}
+			}
+			
+		}
+	}
+	@ResponseBody
+	@RequestMapping("getGoodsSpecList")
+	public Map<String, Object> getGoodsSpecList(HttpServletRequest request){
+		int goods_id = request.getParameter("goods_id")==null?0:Integer.parseInt(request.getParameter("goods_id"));
+		List<B_Spec> specList = specService.selectByGoodsId(goods_id);
+		String specName=null;
+		if (specList.size()>0) {
+			specName = specList.get(0).getSpecName();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("specList", specList);
+		map.put("specName", specName);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("getGoodsSpec")
+	public Map<String, Object> getGoodsSpec(HttpServletRequest request){
+		int spec_id = request.getParameter("spec_id")==null?0:Integer.parseInt(request.getParameter("spec_id"));
+		B_Spec spec = specService.selectByPrimaryKey(spec_id);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("spec", spec);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("saveGoodsInCar")
+	public B_User_Car saveGoodsInCar(HttpServletRequest request){
+		int goods_id = request.getParameter("goods_id")==null?0:Integer.parseInt(request.getParameter("goods_id"));
+		int spec_id = request.getParameter("spec_id")==null?0:Integer.parseInt(request.getParameter("spec_id"));
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		int stock = request.getParameter("stock")==null?0:Integer.parseInt(request.getParameter("stock"));
+		B_Goods goods = goodsService.selectByPrimaryKey(goods_id);
+		B_Spec spec = specService.selectByPrimaryKey(spec_id);
+		B_User_Car car = new B_User_Car();
+		car.setSpec(spec);
+		car.setUserId(user.getId());
+		car.setGoods(goods);
+		car.setStock(stock);
+		car.setShopId(goods.getShopId());
+		car.setCreateTime(DateUtils.currtime());
+		B_User_Car car1 = carService.selectInCars(car);
+		if (car1==null||"".equals(car1)) {
+			carService.insertSelective(car);
+			return car;
+		}else {
+			car1.setStock(stock+car1.getStock());
+			carService.updateByPrimaryKeySelective(car1);
+			return car1;
+		}
+	}
+	@ResponseBody
+	@RequestMapping("saveGoodsInStore")
+	public String saveGoodsInStore(HttpServletRequest request){
+		int goods_id = request.getParameter("goods_id")==null?0:Integer.parseInt(request.getParameter("goods_id"));
+		Short flag = request.getParameter("flag")==null?0:Short.parseShort(request.getParameter("flag"));
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		B_Goods goods = goodsService.selectByPrimaryKey(goods_id);
+		B_Goods_Store store = new B_Goods_Store();
+		store.setGoods(goods);
+		store.setUserId(user.getId());
+		if (goods.getCatalogId()!=null) {
+			store.setCatalogId(goods.getCatalogId());
+		}
+		store.setFlag(flag);
+		storeService.insertSelective(store);
+		return "success";
+	}
+	
+	@RequestMapping("getGoodsExt")
+	public String getGoodsExt(HttpServletRequest request){
+		int goods_id = request.getParameter("goods_id")==null?0:Integer.parseInt(request.getParameter("goods_id"));
+		List<B_Goods_Ext> extList = extService.selectByGoods_id(goods_id);
+		List<B_Goods_Img> imgList = imgService.selectByGoods_id(goods_id,(short) 1);
+		request.setAttribute("extList", extList);
+		request.setAttribute("imgList", imgList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsExt";
+	}
+	@RequestMapping("getGoodsCar")
+	public String getGoodsCar(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		List<B_User_Car> carList = carService.selectByUser_Id(user.getId());
+		if(carList!=null){
+			for(B_User_Car car : carList){
+				B_Goods goods = goodsService.selectByPrimaryKey(car.getGoods().getId());
+				car.setGoods(goods);
+			}
+		}
+		String shopId = request.getParameter("shopId");
+		request.setAttribute("shopId", shopId);
+		request.setAttribute("user", user);
+		request.setAttribute("carList", carList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsCar";
+	}
+	@RequestMapping("getGoodsCarYph")
+	public String getGoodsCarYph(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		List<Integer> shopIdList = carService.selectShopIdByUserId(user.getId());
+		List<ListMap> list = new ArrayList<ListMap>();
+		for (Iterator iterator = shopIdList.iterator(); iterator.hasNext();) {
+			Integer shopId = (Integer) iterator.next();
+			ListMap map1 = new ListMap();
+			B_Shop shop = userService.selectShopByPrimaryKey(shopId);
+			List<B_User_Car> carList = carService.selectByUserIdAndShopId(user.getId(),shopId);
+			if(carList.size()>0){
+				for(B_User_Car car : carList){
+					B_Goods goods = goodsService.selectByPrimaryKey(car.getGoods().getId());
+					goods.setHeadImgUrl(ASSET_URL+goods.getHeadImgUrl());
+					car.setGoods(goods);
+				}
+			}
+			map1.setId(shopId);
+			map1.setName(shop.getName());
+			map1.setDateList(carList);
+			list.add(map1);
+		}
+		request.setAttribute("list", list);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsCar-yph";
+	}
+	@RequestMapping("getGoodsStore")
+	public String getGoodsStore(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		List<B_Goods_Store> storeList = storeService.selectByUserId(user.getId(),null);
+		List<B_Catalog> catalogList = catalogService.selectStoreCatagory(user.getId());
+		request.setAttribute("storeList", storeList);
+		request.setAttribute("catalogList", catalogList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsStore";
+	}
+	@RequestMapping("getMyBids")
+	public String getMyBids(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		List<B_Goods_Bid> bidList = goodsService.selectMyBidGoods(user.getId());
+		for (Iterator iterator = bidList.iterator(); iterator.hasNext();) {
+			B_Goods_Bid b_Goods_Bid = (B_Goods_Bid) iterator.next();
+			B_Goods goods = goodsService.selectByPrimaryKey(b_Goods_Bid.getGoodsId());
+			b_Goods_Bid.setGoods(goods);
+		}
+		request.setAttribute("bidList", bidList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsBid";
+	}
+	@ResponseBody
+	@RequestMapping("getGoodsStoreList")
+	public List<B_Goods_Store> getGoodsStoreList(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		int catalog_id = request.getParameter("catalog_id")==null?0:Integer.parseInt(request.getParameter("catalog_id"));
+		List<B_Goods_Store> storeList = storeService.selectByUserId(user.getId(),catalog_id);
+		return storeList;
+	}
+	@ResponseBody
+	@RequestMapping("deleteGoodsStore")
+	public String deleteGoodsStore(HttpServletRequest request){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		Short flag = request.getParameter("flag")==null?0:Short.parseShort(request.getParameter("flag"));
+		int id = request.getParameter("id")==null?0:Integer.parseInt(request.getParameter("id"));
+		int goods_id = request.getParameter("goods_id")==null?0:Integer.parseInt(request.getParameter("goods_id"));
+		int i=0;
+		if(goods_id!=0) {
+			i = storeService.deleteInStore(user.getId(),goods_id,flag);
+		}else if(id!=0){
+			i = storeService.deleteByPrimaryKey(id);
+		}
+		if (i>0) {
+			return "1";
+		}else {
+			return "2";
+		}
+	}
+	@ResponseBody
+	@RequestMapping("deleteGoodsCar")
+	public String deleteGoodsCar(HttpServletRequest request){
+		int id = request.getParameter("id")==null?0:Integer.parseInt(request.getParameter("id"));
+		int i = carService.deleteByPrimaryKey(id);
+		if (i>0) {
+			return "1";
+		}else {
+			return "2";
+		}
+	}
+	@ResponseBody
+	@RequestMapping("updateGoodsCar")
+	public String updateGoodsCar(HttpServletRequest request){
+		int id = request.getParameter("id")==null?0:Integer.parseInt(request.getParameter("id"));
+		int stock = request.getParameter("stock")==null?1:Integer.parseInt(request.getParameter("stock"));
+		B_User_Car car = new B_User_Car();
+		car.setId(id);
+		car.setStock(stock);
+		carService.updateByPrimaryKeySelective(car);
+		return "success";
+	}
+	@ResponseBody
+	@RequestMapping("saveMyFocus")
+	public String saveMyFocus(HttpServletRequest request,Integer shopId){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		B_Goods_Focus focus = new B_Goods_Focus();
+		focus.setShopId(shopId);
+		focus.setUserId(user.getId());
+		goodsService.insertSelective(focus);
+		return "success";
+	}
+	
+	@RequestMapping("toCreateAddr")
+	public String toCreateAddr(HttpServletRequest request){
+		String orderIds = request.getParameter("orderIds");
+		request.setAttribute("orderIds", orderIds);
+		return "order/create_addr";
+	}
+	@RequestMapping("userAddrList")
+	public String userAddrList(HttpServletRequest request){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		String flag = request.getParameter("flag");
+		String orderIds = request.getParameter("orderIds");
+		List<B_User_Addr> addrList = addrService.selectByUser_Id(user.getId(), null);
+		request.setAttribute("addrList", addrList);
+		request.setAttribute("orderIds", orderIds);
+		request.setAttribute("flag", flag);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "order/userAddrList";
+	}
+	@RequestMapping("myVoucherListByStatus")
+	public String myVoucherListByStatus(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		List<B_User_Voucher> vouchers0 = voucherService.selectMyVoucherList(user.getId(), null,null);
+		List<B_User_Voucher> vouchers1 = voucherService.selectMyVoucherList(user.getId(), (short) 1,null);
+		List<B_User_Voucher> vouchers2 = voucherService.selectMyVoucherList(user.getId(), (short) 2,null);
+		List<B_User_Voucher> vouchers3 = voucherService.selectMyVoucherList(user.getId(), (short) 3,null);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("vouchers0", vouchers0);
+		request.setAttribute("vouchers1", vouchers1);
+		request.setAttribute("vouchers2", vouchers2);
+		request.setAttribute("vouchers3", vouchers3);
+		return "user/myVoucher";
+	}
+	@RequestMapping("voucherList")
+	public String voucherList(HttpServletRequest request){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		String flag = request.getParameter("flag");
+		String orderIds = request.getParameter("orderIds");
+		List<B_User_Voucher> userVoucherList =orderService.findMyVoucher(orderIds, user.getId());
+		request.setAttribute("myvouchers", userVoucherList);
+		request.setAttribute("flag", flag);
+		request.setAttribute("orderIds", orderIds);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "order/voucherList";
+	}
+	@RequestMapping("clickUserVoucher")
+	public String clickUserVoucher(HttpServletRequest request){
+		String voucherIds = request.getParameter("voucherIds");
+		request.setAttribute("voucherIds", voucherIds);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		String orderIds = request.getParameter("orderIds");
+		List<B_User_Voucher> userVoucherList = new ArrayList<B_User_Voucher>();
+		if (StringUtils.isNotBlank(voucherIds)) {
+			String [] vid = voucherIds.split("-");
+			for (int i = 0; i < vid.length; i++) {
+				B_User_Voucher myvoucher = voucherService.selectMyByPrimaryKey(Integer.parseInt(vid[i]));
+				userVoucherList.add(myvoucher);
+			}
+		}
+		
+		List<B_Order_Detail> detailList = new ArrayList<B_Order_Detail>();
+		
+		Map<String, Object> map = orderService.useVoucher(voucherIds, orderIds);
+		List<B_Order> orderList = (List<B_Order>) map.get("orderList");
+		for (Iterator iterator = orderList.iterator(); iterator.hasNext();) {
+			B_Order b_Order = (B_Order) iterator.next();
+			List<B_Order_Detail> details = order_DetailService.selectByorderNum(b_Order.getOrderNum());
+			detailList.addAll(details);
+			if (b_Order.getAddrId()!=null) {
+				B_User_Addr addr = addrService.selectByPrimaryKey(b_Order.getAddrId());
+				request.setAttribute("addr", addr);
+			}
+		}
+		request.setAttribute("userVoucherList", userVoucherList);
+		request.setAttribute("detailList", detailList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("orderIds", orderIds);
+		request.setAttribute("user", user);
+		request.setAttribute("totalPrice", map.get("totalPrice"));
+		return "order/create_order";
+	}
+	@RequestMapping("clickUserAddr")
+	public String clickUserAddr(HttpServletRequest request){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		Integer id = Integer.parseInt(request.getParameter("id"));
+		String orderIds = request.getParameter("orderIds");
+		B_User_Addr addr = addrService.selectByPrimaryKey(id);
+		request.setAttribute("addr", addr);
+		String[] orderNum1 = orderIds.split("_");
+		List<B_Order_Detail> detailList = new ArrayList<B_Order_Detail>();
+		boolean crowdIs = false;
+		Double totalPrice = 0.0;
+		for (int i = 0; i < orderNum1.length; i++) {
+			B_Order order = orderService.selectByPrimaryKey(Integer.parseInt(orderNum1[i]));
+			order.setAddrId(addr.getId());
+			orderService.updateByPrimaryKeySelective(order);
+			List<B_Order_Detail> details = order_DetailService.selectByorderNum(order.getOrderNum());
+			detailList.addAll(details) ;
+			request.setAttribute("order", order);
+			totalPrice=totalPrice+order.getTotalPrice();
+		}
+		request.setAttribute("detailList", detailList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("user", user);
+		request.setAttribute("totalPrice", totalPrice);
+		request.setAttribute("orderIds", orderIds);
+		if (detailList.get(0).getSign()==2) {
+			return "crowd/presellOrder";
+		}else {
+			return "order/create_order";
+		}
+	}
+	@RequestMapping("saveAddr")
+	public String saveAddr(HttpServletRequest request,B_User_Addr addr){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		addr.setUserId(user.getId());
+		if (addr.getFlag()==1) {
+			addrService.updateFlagByUserId(user.getId());
+		}
+		addrService.insert(addr);
+		request.setAttribute("addr", addr);
+		String orderIds = request.getParameter("orderIds");
+		String[] orderNum1 = orderIds.split("-");
+		Double totalPrice = 0.0;
+		List<B_Order_Detail> detailList = new ArrayList<B_Order_Detail>();
+		for (int i = 0; i < orderNum1.length; i++) {
+			B_Order order = orderService.selectByPrimaryKey(Integer.parseInt(orderNum1[i]));;
+			order.setAddrId(addr.getId());
+			orderService.updateByPrimaryKeySelective(order);
+			List<B_Order_Detail> details = order_DetailService.selectByorderNum(order.getOrderNum());
+			detailList.addAll(details);
+			request.setAttribute("order", order);
+			totalPrice=totalPrice+order.getTotalPrice();
+		}
+		request.setAttribute("detailList", detailList);
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("orderIds", orderIds);
+		request.setAttribute("user", user);
+		request.setAttribute("totalPrice", totalPrice);
+		if (detailList.get(0).getSign()==2) {
+			return "crowd/presellOrder";
+		}else {
+			return "order/create_order";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("saveGoodsBid")
+	public Map<String, Object> saveGoodsBid(HttpServletRequest request,int goods_id,double price){
+		Map<String, Object> map = new HashMap<String, Object>();
+		B_Goods_Bid maxBid = goodsService.fingMaxGoodsBidByGoodsId(goods_id);
+		if (maxBid!=null&&!"".equals(maxBid)) {
+			if (maxBid.getPrice()>=price) {
+				map.put("state", "500");
+				return map;
+			}
+		}
+		B_Goods_Bid bid = new B_Goods_Bid();
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		bid.setGoodsId(goods_id);
+		bid.setPrice(price);
+		bid.setUser(user);
+		bid.setUpdateTime(DateUtils.currtime());
+		goodsService.insertSelective(bid);
+		map.put("state", "200");
+		map.put("bid", bid);
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping("getIndexVoucher")
+	public Map<String, Object> getIndexVoucher(HttpServletRequest request){
+		Map<String, Object> map = new HashMap<String, Object>();
+		String disabled = (String) request.getSession().getAttribute("disabled");
+		map.put("disabled", disabled);
+		List<Voucher> vouchers = voucherService.getVoucherOfStatus(null, null, (short) 1, null, null);
+		if (vouchers.size()>0) {
+			map.put("voucher", vouchers.get(0));
+		}
+		map.put("ASSET_URL", ASSET_URL);
+		return map;
+	}
+	@RequestMapping("toReleaseGoods")
+	public String toReleaseGoods(HttpServletRequest request){
+		return "goods/goodsRelease";
+	}
+	
+	@RequestMapping("releaseGoods")
+	public String releaseGoods(HttpServletRequest request,B_Goods goods){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+//		B_User user = userService.selectByPrimaryKey(3327);
+		goods.setStatus((short) 0);
+		if (goods.getFreePost()==null||"".equals(goods.getFreePost())) {
+			goods.setFreePost((short) 0);
+		}
+		if (goods.getFreeReturn()==null||"".equals(goods.getFreeReturn())) {
+			goods.setFreeReturn((short) 0);
+		}
+		goods.setPublisherId(user.getId());
+		goods.setPublisherName(user.getNickName());
+		goods.setPublishTime(DateUtils.currtime());
+		int length =goods.getContent().length();
+		if (length>9) {
+			goods.setName(goods.getContent().substring(0, 10));
+		}else{
+			goods.setName(goods.getContent());
+		}
+//		goods.setEndIs((short) 0);
+		B_Shop shop = userService.selectByUserId(user.getId(),1);
+		if (shop!=null) {
+			goods.setShopId(shop.getId());
+		}
+		goods.setGoodsType(CommonParam.GOODS_TYPE_AUCTION);
+		String endtime = goods.getEndTime();
+		String time = endtime.substring(0, 5)+":00";
+		String currTime="";
+		if (endtime.contains("今天")) {
+			currTime = DateUtils.currtimeToString10();
+		}else {
+			currTime = DateUtils.dateToString(DateUtils.getAddDaysTime(new Date(), 1),"yyyy-MM-dd");
+		}
+		goods.setEndTime(currTime+" "+time);
+		goodsService.insertSelective(goods);
+		String[] imgs = goods.getImgUrl().split(",");
+		for (int i = 0; i < imgs.length; i++) {
+			B_Goods_Img img = new B_Goods_Img();
+			img.setGoodsId(goods.getId());
+			img.setImgUrl(imgs[i]);
+			img.setType((short) 1);
+			img.setSeq((short) (i+1));
+			imgService.saveGoodsImg(img);
+		}
+		return "redirect:getGoodsById?id="+goods.getId();
+	}
+	@RequestMapping("toReleasePTGoods")
+	public String toReleasePTGoods(HttpServletRequest request){
+		List<B_Catalog> catalogList = catalogService.selectAllSon(null);
+		String flag = request.getParameter("flag");
+		request.setAttribute("catalogList", catalogList);
+		request.setAttribute("flag", flag);
+		return "goods/goodsPTRelease";
+	}
+	@RequestMapping("releasePTGoods")
+	public String releasePTGoods(HttpServletRequest request,B_Goods goods,SpecList specList){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+//		B_User user = userService.selectByPrimaryKey(3327);
+		String flag = request.getParameter("flg");
+		B_Shop shop = userService.selectByUserId(user.getId(),1);
+		goods.setStatus((short) 0);
+		if (flag!=null&&!"".equals(flag)) {
+			goods.setGardenId(user.getGardenId());
+			goods.setGoodsType(CommonParam.GOODS_TYPE_BREAKER);
+		}else {
+			goods.setShopId(shop.getId());
+			goods.setGoodsType(CommonParam.GOODS_TYPE_NORMAL);
+		}
+		goods.setPublisherId(user.getId());
+		goods.setPublisherName(user.getNickName());
+		goods.setPublishTime(DateUtils.currtime());
+		goods.setCashPrice((double) 0);
+		goods.setSellType((short) 0);
+		goodsService.insertSelective(goods);
+		
+		List<B_Goods_Ext> goodsExts = goods.getGoodsExts();
+		if(goodsExts!=null && goodsExts.size()>0){
+			for(int i=0;i<goodsExts.size();i++){
+				B_Goods_Ext ext = goodsExts.get(i);
+				ext.setGoodsId(goods.getId());
+				ext.setSeq((short)(i+1));
+				goodsExtMapper.insert(ext);
+			}
+		}
+		
+		List<B_Spec> specs = specList.getSpecList();
+		Integer stock = 0;
+		for (Iterator iterator = specs.iterator(); iterator.hasNext();) {
+			B_Spec b_Spec = (B_Spec) iterator.next();
+			b_Spec.setGoodsId(goods.getId());
+			b_Spec.setStatus(0);
+			specService.saveSpec(b_Spec);
+			stock=stock+b_Spec.getStock();
+		}
+		goodsService.updateByPrimaryKeySelective(goods);
+		if(StringUtils.isNotBlank(goods.getImgUrl())){
+			String[] imgs = goods.getImgUrl().split(",");
+			for (int i = 0; i < imgs.length; i++) {
+				B_Goods_Img img = new B_Goods_Img();
+				img.setGoodsId(goods.getId());
+				img.setImgUrl(imgs[i]);
+				img.setSeq((short) (i+1));
+				img.setType((short) 1);
+				imgService.saveGoodsImg(img);
+			}
+		}
+		if (flag!=null&&!"".equals(flag)) {
+			return "redirect:../user/toMyBreaker";
+		}else {
+			return "redirect:../user/toMyShop";
+		}
+		
+	}
+	
+	//订单支付
+	@RequestMapping("orderPay")
+	public String orderPay(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String order_num = request.getParameter("order_num");
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		B_Order order = orderService.getOrderByOrderNum(order_num);
+		List<B_Order_Detail> details = order.getDetailList();
+		if (order.getAddrId()==null) {
+			List<B_User_Addr> addrList = addrService.selectByUser_Id(order.getBuyUserId(), (short) 1);
+			if (addrList.size()>0) {
+				request.setAttribute("addr", addrList.get(0));
+			}
+		}else {
+			B_User_Addr addr = addrService.selectByPrimaryKey(order.getAddrId());
+			request.setAttribute("addr", addr);
+		}
+			request.setAttribute("detailList", details);
+			request.setAttribute("orderNum", order_num);
+			request.setAttribute("order", order);
+			request.setAttribute("user", user);
+			request.setAttribute("totalPrice", order.getTotalPrice());
+			request.setAttribute("orderIds", order.getId());
+			request.setAttribute("ASSET_URL", ASSET_URL);
+			if (order.getSign()==2){
+				return "crowd/presellOrder";
+			}else {
+				return "order/create_order";
+			}
+	}
+	@ResponseBody
+	@RequestMapping("checkStock")
+	public String checkStock(HttpServletRequest request,int stock,int spec_id){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		B_Spec spec = specService.selectByPrimaryKey(spec_id);
+		int totalStock = spec.getStock().intValue();
+//		String goodsFlag = request.getParameter("goodsFlag");
+//		if (StringUtils.isNotEmpty(goodsFlag)) {
+//			if (goodsFlag.contains("6")) {
+//				List<B_Order> orderList = orderService.selectByStatusOrUser(user.getId(),null,null, null,goodsFlag,null);
+//				if (orderList.size()>0) {
+//					return "3";
+//				}
+//			}
+//		}
+		if (stock>totalStock) {
+			return "2";
+		}else {
+			return "1";
+		}
+	}
+	//立即支付
+	@RequestMapping("createOrder")
+	public String createOrder(HttpServletRequest request,Integer goods_id,Integer spec_id,double price,Integer stock,String postTime,Short sign,Integer shopId) throws Exception{
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		String shareId = request.getParameter("shareId");
+		List<B_User_Addr> addrList = addrService.selectByUser_Id(user.getId(), (short) 1);
+		String order_time = DateUtils.currtimeToString12();
+		String strRandom = TenpayUtil.buildRandom(6) + "";
+		String out_order_no= order_time+strRandom;
+		B_Goods goods = goodsService.selectByPrimaryKey(goods_id);
+		Double postPrice = 0.0;
+		if (goods.getPostPrice()!=null) {
+			postPrice = goods.getPostPrice();
+		}
+		short status = CommonParam.ORDER_STATUS_NO;
+		if (sign==2) {
+			status = CommonParam.ORDER_STATUS_PRESELL;
+		}else {
+			if(goods.getGoodsType()==0){
+				status = CommonParam.ORDER_STATUS_NO;
+			}else if (goods.getGoodsType()==2) {
+				status = CommonParam.ORDER_STATUS_UNREC;
+			}
+		}
+		int publishId = goods.getPublisherId();
+		if(spec_id!=null){
+			B_Spec spec = specService.selectByPrimaryKey(spec_id);
+			spec.setStock(spec.getStock()-stock);
+			specService.updateByPrimaryKeySelective(spec);
+		}
+		B_Order_Detail order_Detail = new B_Order_Detail();
+		order_Detail.setGoods(goods);
+		order_Detail.setOrderNum(out_order_no);
+		//折前价
+		order_Detail.setPriceSource(price);
+		//计算折后价
+		if(user.getUserRoleId().contains(CommonParam.USER_ROLE_XF+"") && goods.getComsType()==CommonParam.COMS_TYPE_XF){
+			if(goods.getDiscount()!=null){
+				price = price*goods.getDiscount();
+			}
+		}
+		order_Detail.setPrice(price);
+		order_Detail.setSpecId(spec_id);
+		order_Detail.setStock(stock);
+		order_Detail.setStatus(status);
+		order_Detail.setGoodsId(goods_id);
+		order_Detail.setGoodsName(goods.getName());
+		order_Detail.setSign(sign);
+		order_Detail.setPrePayment(0d);
+		order_Detail.setShopId(shopId);
+		order_Detail.setPostPrice(postPrice);
+		order_Detail.setTotalPrice(price*stock+postPrice);
+		order_Detail.setCheckRed((short) 0);
+		if (StringUtils.isNotBlank(shareId)) {
+			order_Detail.setShareId(Integer.parseInt(shareId));
+		}
+		order_DetailService.insert(order_Detail);
+		B_Order order = new B_Order();
+		order.setBuyUserId(user.getId());
+		order.setCreateTime(DateUtils.currtime());
+		order.setChange_time(DateUtils.currtime());
+		order.setOrderNum(out_order_no);
+		order.setStatus(CommonParam.ORDER_STATUS_NO);
+		order.setPostTime(postTime);
+		order.setSellUserId(publishId);
+		order.setPayWay((short) 1);
+		order.setShopId(goods.getShopId());
+		Double totalPrice = price*stock+postPrice;
+		order.setTotalPrice(totalPrice);
+		order.setTotalStock(stock);
+		order.setPrePayment(0d);
+		order.setAssessed((short) 0);
+		order.setSign(sign);
+		if (addrList.size()>0) {
+			request.setAttribute("addr", addrList.get(0));
+			order.setAddrId(addrList.get(0).getId());
+		}
+		orderService.insert(order);
+		List<B_Order_Detail> detailList = new ArrayList<B_Order_Detail>();
+		detailList.add(order_Detail);
+		order.setDetailList(detailList);
+		request.setAttribute("detailList", detailList);
+		request.setAttribute("order", order);
+		request.setAttribute("user", user);
+		request.setAttribute("totalPrice", totalPrice);
+		request.setAttribute("orderIds", order.getId());
+		request.setAttribute("orderNum", order.getOrderNum());
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		if (sign==2) {
+			return "crowd/presellOrder";
+		}else {
+			return "order/create_order";
+		}
+	}
+	//购物车支付
+	@RequestMapping("createCarOrder")
+	public String createCarOrder(HttpServletRequest request){
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		List<B_User_Addr> addrList = addrService.selectByUser_Id(user.getId(), (short) 1);
+		String Ids = request.getParameter("ListId");
+		Short sign = Short.parseShort(request.getParameter("sign"));
+		String[] ListId = Ids.split(",");
+		HttpSession session = request.getSession();
+		session.setAttribute("ListId", ListId);
+		List<B_User_Car> carList = carService.selectByListId(ListId);
+		Map<Integer, List<B_User_Car>> map = new HashMap<Integer, List<B_User_Car>>();
+		for (B_User_Car b_User_Car : carList) {
+			Integer seller_id = b_User_Car.getGoods().getPublisherId();
+			if (!map.containsKey(seller_id)) {
+				List<B_User_Car> list = new ArrayList<B_User_Car>();
+				list.add(b_User_Car);
+				map.put(seller_id, list);
+			}else {
+				map.get(seller_id).add(b_User_Car);
+			}
+		}
+		List<B_Order> orderList = new ArrayList<B_Order>();
+		List<B_Order_Detail> detailList = new ArrayList<B_Order_Detail>();
+		String orderNumAll = "";
+		String order_id = "";
+		Double totalPrice = 0.0;
+		boolean flag = false;
+		for (Map.Entry<Integer, List<B_User_Car>> entry:map.entrySet()) {
+			String order_time = DateUtils.currtimeToString12();
+			String strRandom = TenpayUtil.buildRandom(6) + "";
+			String out_order_no= order_time+strRandom;
+			orderNumAll+=(out_order_no+"-");
+			List<B_User_Car> cars = entry.getValue();
+			double price= 0 ;
+			int stock=0;
+			for (Iterator iterator = cars.iterator(); iterator.hasNext();) {
+				B_User_Car b_User_Car = (B_User_Car) iterator.next();
+				B_Goods goods = goodsService.selectByPrimaryKey(b_User_Car.getGoods().getId());
+				Double postPrice = 0.0;
+				if (goods.getPostPrice()!=null) {
+					postPrice = goods.getPostPrice();
+				}
+				B_Order_Detail order_Detail = new B_Order_Detail();
+				order_Detail.setGoods(b_User_Car.getGoods());
+				order_Detail.setGoodsId(b_User_Car.getGoods().getId());
+				order_Detail.setGoodsName(b_User_Car.getGoods().getName());
+				order_Detail.setOrderNum(out_order_no);
+				//折前价
+				order_Detail.setPriceSource(b_User_Car.getSpec().getPrice());
+				//计算折后价
+				double curPrice = b_User_Car.getSpec().getPrice();
+				String webIn = (String) request.getSession().getAttribute("webIn");
+				if (webIn.equals("kxz")) {
+					if(user.getUserRoleId().contains(CommonParam.USER_ROLE_XF+"") && goods.getComsType()==CommonParam.COMS_TYPE_XF){
+						if(goods.getDiscount()!=null){
+							curPrice = b_User_Car.getSpec().getPrice()*goods.getDiscount();
+						}
+					}
+				}
+				order_Detail.setPostPrice(postPrice);
+				order_Detail.setPrice(curPrice);
+				order_Detail.setSpecId(b_User_Car.getSpec().getId());
+				order_Detail.setStock(b_User_Car.getStock());
+				order_Detail.setStatus((short) 0);
+				order_Detail.setSign(sign);
+				order_Detail.setShopId(b_User_Car.getShopId());
+				order_Detail.setPrePayment(0d);
+				order_Detail.setTotalPrice(curPrice*b_User_Car.getStock()+postPrice);
+				order_Detail.setCheckRed((short) 0);
+				if (user.getReferId()!=null) {
+					order_Detail.setShareId(user.getReferId());
+				}
+				order_DetailService.insert(order_Detail);
+				detailList.add(order_Detail);
+				stock+=b_User_Car.getStock();
+				price+=(curPrice*b_User_Car.getStock()+postPrice);
+			}
+			B_Order order = new B_Order();
+			order.setBuyUserId(user.getId());
+			order.setCreateTime(DateUtils.currtime());
+			order.setChange_time(DateUtils.currtime());
+			order.setOrderNum(out_order_no);
+			order.setStatus((short) 0);
+			order.setSellUserId(entry.getKey());
+			order.setTotalPrice(price);
+			order.setTotalStock(stock);
+			order.setPayWay((short) 1);
+			order.setPrePayment(0d);
+			order.setAssessed((short) 0);
+			B_Shop shop = userService.selectByUserId(entry.getKey(), 1);
+			order.setShopId(shop.getId());
+			order.setSign(sign);
+			if (addrList.size()!=0) {
+				B_User_Addr addr = addrList.get(0);
+				order.setAddrId(addr.getId());
+				request.setAttribute("addr", addr);
+			}
+			orderService.insert(order);
+			order_id+=(order.getId()+"_");
+			order.setDetailList(detailList);
+			orderList.add(order);
+			totalPrice+=price;
+		}
+		carService.deleteByListId(ListId);
+		request.setAttribute("orderNum", orderNumAll.substring(0, orderNumAll.length()-1));
+		request.setAttribute("detailList", detailList);
+		request.setAttribute("user", user);
+		request.setAttribute("totalPrice", totalPrice);
+		request.setAttribute("orderIds", order_id.substring(0, order_id.length()-1));
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "order/create_order";
+	}
+	@RequestMapping("submitOrder")
+	public String submitOrder(HttpServletRequest request) throws Exception{
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		String orderNum = request.getParameter("orderNum");
+		String comments = request.getParameter("comments");
+		B_Order order = orderService.getOrderByOrderNum(orderNum);
+		order.setComments(comments);
+		orderService.updateByPrimaryKeySelective(order);
+		B_User_Addr addr = addrService.selectByPrimaryKey(order.getAddrId());
+		request.setAttribute("addr", addr);
+		request.setAttribute("order", order);
+		request.setAttribute("detail", order.getDetailList().get(0));
+		request.setAttribute("detailList", order.getDetailList());
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		request.setAttribute("orderNum", orderNum);
+		request.setAttribute("order_id", order.getId());
+		return "crowd/submitOrder";
+	}
+	
+	@RequestMapping("balanceOrder")
+	public String balanceOrder(HttpServletRequest request){
+		String[] orderNum = request.getParameter("orderNum").split("-");
+		Short payWay = Short.parseShort(request.getParameter("payWay"));
+		for (int i = 0; i < orderNum.length; i++) {
+			B_Order order = orderService.getOrderByOrderNum(orderNum[i]);
+			order.setStatus(CommonParam.ORDER_STATUS_NOEMS);
+			order.setWxOrderNum("balanceOrder");
+			orderService.updateByPrimaryKeySelective(order);
+			List<B_Order_Detail> details = order_DetailService.selectByorderNum(orderNum[i]);
+			if(ProConfigMap.configMap.get("PRO_NAME").equals("KXZ")){
+				//计算佣金和积分
+				orderService.dealComsAndJIfenAfterPaySus(order, details);
+			}
+			
+			for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+				B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator.next();
+				b_Order_Detail.setStatus(CommonParam.ORDER_STATUS_NOEMS);
+				order_DetailService.updateByPrimaryKey(b_Order_Detail);
+			}
+			if (payWay!=1) {
+				RedPacketRecord record = new RedPacketRecord();
+				record.setCreateTime(DateUtils.currtime());
+				record.setGivemoney(order.getTotalPrice());
+				record.setOrderNum(order.getOrderNum());
+				record.setRedNum(0);
+				record.setLooked((short) 0);
+				record.setUserId(order.getBuyUserId());
+				if (payWay==3) {
+					record.setType((short) 7);
+				}else if(payWay==4) {
+					record.setType((short) 1);
+				}
+				redPacketService.insertSelective(record);
+			}
+		}
+		return "redirect:../user/mycenter";
+	}
+	@ResponseBody
+	@RequestMapping("addComments")
+	public String addComments(HttpServletRequest request){
+		String comments = request.getParameter("comments");
+		String[] orderNum = request.getParameter("orderIds").split("_");
+		for (int i = 0; i < orderNum.length; i++) {
+			B_Order order = orderService.selectByPrimaryKey(Integer.parseInt(orderNum[i]));
+			order.setComments(comments);
+			orderService.updateByPrimaryKeySelective(order);
+		}
+		return "success";
+	}
+	@ResponseBody
+	@RequestMapping("updateBalance")
+	public String updateBalance(HttpServletRequest request,String orderIds,Short payWay,String voucherId) throws IOException{
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		Map<String, Object> map = orderService.useVoucher(voucherId, orderIds);
+		List<B_Order> orderList = (List<B_Order>) map.get("orderList");
+		Double totalPrice = Double.parseDouble(map.get("totalPrice").toString());
+		if (payWay==3) {
+			if (user.getBalance()<totalPrice) {
+				return "fail";
+			}
+		}else if (payWay==4) {
+			if (user.getRechargeNum()<totalPrice) {
+				return "fail";
+			}
+		}else {
+			return "fail";
+		}
+		List<B_User_Voucher> userVoucherList = (List<B_User_Voucher>) map.get("userVoucherList");
+		for (Iterator iterator = orderList.iterator(); iterator.hasNext();) {
+			B_Order order = (B_Order) iterator.next();
+			order.setStatus(CommonParam.ORDER_STATUS_NOEMS);
+			if (payWay==3) {
+				order.setWxOrderNum("balanceOrder");
+			}else if (payWay==4) {
+				order.setWxOrderNum("hxfOrder");
+			}
+			order.setPayWay(payWay);
+			Double orderPrePayment = 0.0;
+			List<B_Order_Detail> details = order_DetailService.selectByorderNum(order.getOrderNum());
+			for (Iterator iterator1 = details.iterator(); iterator1.hasNext();) {
+				B_Order_Detail b_Order_Detail = (B_Order_Detail) iterator1.next();
+				b_Order_Detail.setStatus(CommonParam.ORDER_STATUS_NOEMS);
+				order_DetailService.updateByPrimaryKey(b_Order_Detail);
+				if (userVoucherList!=null&&userVoucherList.size()>0) {
+					Double delPrice = orderService.updateVoucher(userVoucherList, b_Order_Detail);
+					orderPrePayment = orderPrePayment+delPrice;
+				}
+				if (b_Order_Detail.getGoodsId()!=null) {
+					B_Goods goods = goodsService.selectByPrimaryKey(b_Order_Detail.getGoodsId());
+					if (goods.getGoodsType()!=5) {
+						goods.setSellCount(goods.getSellCount()+b_Order_Detail.getStock());
+						goodsService.updateByPrimaryKey(goods);
+					}
+				}
+				if(ProConfigMap.configMap.get("PRO_NAME").equals("YPH")){
+					if (!b_Order_Detail.getShopId().equals(order.getShopId())) {
+						B_Shop shop1 = userService.selectShopByPrimaryKey(b_Order_Detail.getShopId());
+						JavaSmsApi.sendMsgByTplId(shop1.getPhone(), CommonParam.SHOP_NEW_TPL);
+					}
+				}
+			}
+			if (payWay!=1) {
+				RedPacketRecord record = new RedPacketRecord();
+				record.setCreateTime(DateUtils.currtime());
+				record.setGivemoney(totalPrice);
+				record.setOrderNum(order.getOrderNum());
+				record.setRedNum(0);
+				record.setLooked((short) 0);
+				record.setUserId(order.getBuyUserId());
+				if (payWay==3) {
+					record.setType((short) 7);
+					user.setBalance(user.getBalance()-totalPrice);
+					userService.updateBalance(user);
+				}else if(payWay==4) {
+					record.setType((short) 1);
+					user.setRechargeNum(user.getRechargeNum()-totalPrice);
+					userService.updateRechargeNum(user);
+				}
+				redPacketService.insertSelective(record);
+			}
+			order.setPrePayment(orderPrePayment);
+			orderService.updateByPrimaryKeySelective(order);
+			if(ProConfigMap.configMap.get("PRO_NAME").equals("KXZ")){
+				orderService.dealComsAndJIfenAfterPaySus(order, details);
+			}
+			if(ProConfigMap.configMap.get("PRO_NAME").equals("YPH")){
+				orderService.dealYphComsAfterPaySus(order.getOrderNum());
+				B_User seller = userService.selectByPrimaryKey(order.getSellUserId());
+				JavaSmsApi.sendMsgByTplId(seller.getPhone(), CommonParam.SELLER_NEW_TPL);
+			}
+		}
+		if(ProConfigMap.configMap.get("PRO_NAME").equals("YPH")){
+			JavaSmsApi.sendMsgByTplId(user.getPhone(), CommonParam.BUYER_PAY_TPL);
+		}
+		request.getSession().setAttribute("user", user);
+		return "success";
+	}
+	@ResponseBody
+	@RequestMapping("addUserBalance")
+	public String addUserBalance(HttpServletRequest request,Double balance,String orderIds){
+		String[] ids = orderIds.split("_");
+		Short payWay = 1;
+		for (int i = 0; i < ids.length; i++) {
+			B_Order order = orderService.selectByPrimaryKey(Integer.parseInt((ids[i])));
+			payWay = order.getPayWay();
+		}
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		user = userService.selectByPrimaryKey(user.getId());
+		if (payWay==3) {
+			user.setBalance(user.getBalance()+balance);
+			userService.updateBalance(user);
+		}else if (payWay==4) {
+			user.setRechargeNum(user.getRechargeNum()+balance);
+			userService.updateRechargeNum(user);
+			
+		}
+		request.getSession().setAttribute("user", user);
+		return "success";
+	}
+	//商品下架
+	@ResponseBody
+	@RequestMapping("downGoods")
+	public String downGoods(HttpServletRequest request){
+		Integer id = Integer.parseInt(request.getParameter("id"));
+		B_Goods goods = goodsService.selectByPrimaryKey(id);
+		goods.setStatus(CommonParam.GOODS_STATUS_DOWN);
+		goodsService.updateByPrimaryKey(goods);
+		return "success";
+	}
+	//商品上架
+	@ResponseBody
+	@RequestMapping("upGoods")
+	public String upGoods(HttpServletRequest request){
+		Integer id = Integer.parseInt(request.getParameter("id"));
+		B_Goods goods = goodsService.selectByPrimaryKey(id);
+		goods.setStatus(CommonParam.GOODS_STATUS_UP);
+		goodsService.updateByPrimaryKey(goods);
+		return "success";
+	}
+	@RequestMapping("toPreSellIndex")
+	public String toPreSellIndex(HttpServletRequest request){
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "crowd/preSellList";
+	}
+	@ResponseBody
+	@RequestMapping("preSellList")
+	public Map<String, Object> crowdList(HttpServletRequest request){
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}	
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Goods> typeGoodsList = goodsService.selectByCataLog_IdListPage(null,null, "no", page, CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_PRE,null);
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("page", page);
+		map.put("list", typeGoodsList);
+		return map;
+	}
+	
+	@RequestMapping("toDzIndex")
+	public String toDzIndex(HttpServletRequest request,Integer id){
+		request.setAttribute("ASSET_URL", ASSET_URL);
+		return "goods/goodsDzIndex";
+	}
+	@ResponseBody
+	@RequestMapping("dzListPage")
+	public Map<String, Object> dzListPage(HttpServletRequest request){
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		String flag = request.getParameter("flag");
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Goods> typeGoodsList = goodsService.selectByCataLog_IdListPage(null,null, flag, page, CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_DZ,null);
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("page", page);
+		map.put("list", typeGoodsList);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("replyDz")
+	public String replyDz(HttpServletRequest request,DZReply dz){
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		dz.setUserId(user.getId());
+		dz.setReplayTime(DateUtils.currtime());
+		B_Goods goods = goodsService.selectByPrimaryKey(dz.getDzId());
+		goods.setSellCount(goods.getSellCount()+1);
+		dz.setSellerId(goods.getPublisherId());
+		goodsService.insertDzSelective(dz);
+		goodsService.updateByPrimaryKey(goods);
+		return "success";
+	}
+	@ResponseBody
+	@RequestMapping("wxindex")
+	public Map<String, Object> wxindex(HttpServletRequest request) throws Exception{
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		List<B_Goods> new_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_NEW,3,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		List<B_Goods> sell_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_SELL,3,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		List<B_Goods> you_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_YOU,10,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		List<B_Goods> top_goodsList = goodsService.selectByFlag(null,CommonParam.FLAG_TOP,4,CommonParam.GOODS_STATUS_UP,CommonParam.GOODS_TYPE_NORMAL);
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("tokenKey", user.getOpenId());
+		map1.put("memberId", user.getId());
+		map1.put("storeId", "");
+		map1.put("rotatePic", top_goodsList);
+		map1.put("goldprice", "");
+		map1.put("platinumprice", "");
+		map1.put("new_list", new_goodsList);
+		map1.put("chaozhi_list", sell_goodsList);
+		map1.put("recommend_list", you_goodsList);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response", "");
+		map.put("error", "0");
+		map.put("message", "ok");
+		map.put("ASSET_URL", ASSET_URL);
+		map.put("data", map1);
+		
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("wxcatagory")
+	public Map<String, Object> wxcatagory(HttpServletRequest request) throws Exception{
+		List<B_Catalog> catagoryAllParent = catalogService.selectAllParent(null);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response", "");
+		map.put("error", "0");
+		map.put("message", "ok");
+		map.put("ASSET_URL", ASSET_URL);
+		for (Iterator iterator = catagoryAllParent.iterator(); iterator
+				.hasNext();) {
+			B_Catalog b_Catalog = (B_Catalog) iterator.next();
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("pic", b_Catalog.getImgUrl());
+			map1.put("categoryId", b_Catalog.getId());
+			map1.put("categoryName", b_Catalog.getName());
+			map1.put("parentId", b_Catalog.getParentId());
+			List<B_Catalog> catalogList = catalogService.selectByParentId(b_Catalog.getParentId(),null);
+			map1.put("subCategoryList", catalogList);
+			map.put("data", map1);
+		}
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("wxcar")
+	public Map<String, Object> wxcar(HttpServletRequest request) throws Exception{
+		Integer id = request.getParameter("id")==null?102:Integer.parseInt(request.getParameter("id"));
+//		B_User user = userService.selectByPrimaryKey(3327);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		List<B_User_Car> carList = carService.selectByUser_Id(id);
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("cartInfo", carList);
+		map1.put("list_count", carList.size());
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response", "");
+		map.put("error", "0");
+		map.put("message", "ok");
+		map.put("ASSET_URL", ASSET_URL);
+		map.put("data", map1);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("wxcenter")
+	public Map<String, Object> wxcenter(HttpServletRequest request) throws Exception{
+		Integer id = request.getParameter("id")==null?102:Integer.parseInt(request.getParameter("id"));
+//		B_User user = userService.selectByPrimaryKey(id);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response", "");
+		map.put("error", "0");
+		map.put("message", "ok");
+		map.put("ASSET_URL", ASSET_URL);
+		map.put("data", user);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("wxdetail")
+	public Map<String, Object> wxdetail(HttpServletRequest request) throws Exception{
+//		B_User user = userService.selectByPrimaryKey(102);
+		B_User user = (B_User) request.getSession().getAttribute("user");
+		int goods_id = request.getParameter("id")==null?1:Integer.parseInt(request.getParameter("id"));
+		B_Goods goods = goodsService.selectByPrimaryKey(goods_id);
+		B_User publisher = userService.selectByPrimaryKey(goods.getPublisherId());
+		B_Goods_Store store = storeService.selectInStore(user.getId(), goods_id,CommonParam.STORE_TYPE_GOODS);
+//		List<B_Goods_Ext> extList = extService.selectByGoods_id(goods_id);
+		List<B_Goods_Img> imgList = imgService.selectByGoods_id(goods_id,(short) 1);
+		List<B_Goods_Ext> extList = extService.selectByGoods_id(goods_id);
+		List<B_Spec> specList = specService.selectByGoodsId(goods_id);
+		List<String> specName = new ArrayList<String>();
+		for (Iterator iterator = specList.iterator(); iterator.hasNext();) {
+			B_Spec b_Spec = (B_Spec) iterator.next();
+			specName.add(b_Spec.getSpecValue());
+		}
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("id", "");
+		map2.put("title", specList.get(0).getSpecName());
+		map2.put("attrName", "");
+		map2.put("specSubTitle", specName);
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("proId", goods_id);
+		map1.put("name", goods.getName());
+		map1.put("attribute", extList);
+		map1.put("desc", "\"image\"\"image\"\"image\"");
+		map1.put("pic", imgList);
+		map1.put("price", goods.getPrice());
+		map1.put("proNum",goods_id);
+		map1.put("pics", imgList);
+		map1.put("memberId", user.getId());
+		map1.put("productSpecList", map2);
+		map1.put("productSpecPrice", specList);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response", "");
+		map.put("error", "0");
+		map.put("message", "ok");
+		map.put("ASSET_URL", ASSET_URL);
+		map.put("data", map1);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("wxlist")
+	public Map<String, Object> wxlist(HttpServletRequest request) throws Exception{
+		String flag = request.getParameter("flag")==null?"sell":request.getParameter("flag");
+		String sign = request.getParameter("sign")==""?null:request.getParameter("sign");
+		String catagory_id = request.getParameter("catagory_id")==null?null:request.getParameter("catagory_id");
+		int currentPage = request.getParameter("pages")==null?1:Integer.parseInt(request.getParameter("pages"));
+		int pageSize = 10;
+		if (currentPage<=0){
+			currentPage =1;
+		}
+		int currentResult = (currentPage-1) * pageSize;
+		
+		PageInfo page = new PageInfo();
+		page.setShowCount(pageSize);
+		page.setCurrentResult(currentResult);
+		List<B_Goods> typeGoodsList = goodsService.selectByCataLog_IdListPage(catagory_id,sign, flag, page, CommonParam.GOODS_STATUS_UP,(short) 0,null);
+		int totalCount = page.getTotalResult();
+		
+		int lastPage=0;
+		if (totalCount % pageSize==0){
+			lastPage = totalCount / pageSize;
+		}
+		else{
+			lastPage =1+ totalCount / pageSize;
+		}
+		if (currentPage>=lastPage){
+			currentPage =lastPage;
+		}
+		
+		page.setTotalPage(lastPage);
+		page.setCurrentPage(currentPage);
+		
+		List<B_Catalog> catalogList = catalogService.selectByParentId(Integer.parseInt(catagory_id),null);
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("search", "");
+		map1.put("list_count", typeGoodsList.size());
+		map1.put("goodsCategory", catalogList);
+		map1.put("goodsShape", "");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response", "");
+		map.put("error", "0");
+		map.put("message", "ok");
+		map.put("ASSET_URL", ASSET_URL);
+		map.put("data", map1);
+		return map;
+	}
+}

@@ -1,0 +1,65 @@
+package com.tyh.model;
+
+
+public class B_Goods_Bid {
+    private Integer id;
+
+    private Integer goodsId;
+
+    private double price;
+
+    private B_User user;
+
+    private String updateTime;
+
+    private B_Goods goods;
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
+    }
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public B_User getUser() {
+		return user;
+	}
+
+	public void setUser(B_User user) {
+		this.user = user;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public B_Goods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(B_Goods goods) {
+		this.goods = goods;
+	}
+
+}

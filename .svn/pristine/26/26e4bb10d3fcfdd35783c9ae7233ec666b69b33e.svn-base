@@ -1,0 +1,135 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class B_Bill {
+    private Integer id;
+
+    private Integer bankId;
+
+    private Integer sellerUserId;
+
+    private double totalPrice;
+
+    private double commRate;
+
+    private double commSum;
+
+    private double countAll;
+
+    private String periodCode;
+
+    private Short status;
+
+    private String checkResult;
+
+    private String createTime;
+
+    private Short type;
+
+    private Date updateTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
+    }
+
+    public Integer getSellerUserId() {
+        return sellerUserId;
+    }
+
+    public void setSellerUserId(Integer sellerUserId) {
+        this.sellerUserId = sellerUserId;
+    }
+
+    public String getPeriodCode() {
+        return periodCode;
+    }
+
+    public void setPeriodCode(String periodCode) {
+        this.periodCode = periodCode == null ? null : periodCode.trim();
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public String getCheckResult() {
+        return checkResult;
+    }
+
+    public void setCheckResult(String checkResult) {
+        this.checkResult = checkResult == null ? null : checkResult.trim();
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public double getCommSum() {
+		return commSum;
+	}
+
+	public void setCommSum(double commSum) {
+		this.commSum = commSum;
+	}
+
+	public double getCountAll() {
+		return countAll;
+	}
+
+	public void setCountAll(double countAll) {
+		this.countAll = countAll;
+	}
+
+	public double getCommRate() {
+		return commRate;
+	}
+
+	public void setCommRate(double commRate) {
+		this.commRate = commRate;
+	}
+}

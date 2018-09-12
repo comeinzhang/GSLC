@@ -1,0 +1,95 @@
+package com.tyh.model;
+
+import java.util.Date;
+
+public class Credit {
+    private Integer id;
+
+    private String title;
+
+    private Double price;
+
+    private Integer totalStock;
+    
+    private Integer stock;
+
+    private Double discount;
+    
+    private Integer ownum;
+
+    private Short type;
+
+    private Date updateTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public Integer getOwnum() {
+		return ownum;
+	}
+
+	public void setOwnum(Integer ownum) {
+		this.ownum = ownum;
+	}
+
+	public Integer getTotalStock() {
+		return totalStock;
+	}
+
+	public void setTotalStock(Integer totalStock) {
+		this.totalStock = totalStock;
+	}
+}

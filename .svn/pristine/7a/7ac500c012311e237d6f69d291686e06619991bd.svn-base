@@ -1,0 +1,17 @@
+package com.tyh.mapper;
+
+import com.tyh.model.Symptom;
+
+public interface SymptomMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Symptom record);
+
+    int insertSelective(Symptom record);
+
+    Symptom selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Symptom record);
+
+    int updateByPrimaryKey(Symptom record);
+}

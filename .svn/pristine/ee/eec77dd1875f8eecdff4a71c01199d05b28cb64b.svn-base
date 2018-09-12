@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyh.mapper.B_Goods_ExtMapper" >
+  <resultMap id="BaseResultMap" type="com.tyh.model.B_Goods_Ext" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="INTEGER" />
+    <result column="PRO_KEY" property="proKey" jdbcType="VARCHAR" />
+    <result column="PRO_VALUE" property="proValue" jdbcType="VARCHAR" />
+    <result column="SEQ" property="seq" jdbcType="SMALLINT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GOODS_ID, PRO_KEY, PRO_VALUE, SEQ, UPDATE_TIME
+  </sql>
+  <select id="selectByGoods_id" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_goods_ext
+    where GOODS_ID = #{goods_id,jdbcType=INTEGER} order by SEQ
+  </select>
+  
+  <insert id="insert" parameterType="com.tyh.model.B_Goods_Ext" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into b_goods_ext (GOODS_ID, PRO_KEY, PRO_VALUE, SEQ)
+    values (#{goodsId,jdbcType=INTEGER}, #{proKey,jdbcType=VARCHAR}, #{proValue,jdbcType=VARCHAR}, #{seq,jdbcType=SMALLINT})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyh.model.B_Goods_Ext" >
+    update b_goods_ext
+    <set >
+      <if test="goodsId != null" >
+        GOODS_ID = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="proKey != null" >
+        PRO_KEY = #{proKey,jdbcType=VARCHAR},
+      </if>
+      <if test="proValue != null" >
+        PRO_VALUE = #{proValue,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null" >
+        SEQ = #{seq,jdbcType=SMALLINT},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
